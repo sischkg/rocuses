@@ -1,0 +1,8 @@
+2012-11-20  Toshifumi Sakaguchi  <sischkg@gmail.com>
+
+	* リソース情報を保持するクラスRPerf::Resourceを追加
+
+	* Webrickを使用した簡易エージェントを追加
+
+
+

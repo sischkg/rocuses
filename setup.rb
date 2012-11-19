@@ -7,6 +7,9 @@
 # You can distribute/modify this program under the terms of
 # the GNU LGPL, Lesser General Public License version 2.1.
 #
+#
+
+require 'pp'
 
 unless Enumerable.method_defined?(:map)   # Ruby 1.4.6
   module Enumerable
@@ -1476,7 +1479,8 @@ class Installer
       runner = Test::Unit::AutoRunner.new(true)
       runner.to_run << TESTDIR
       runner.run
-    rescue NameError   # seems Ruby 1.9 (MiniTest)
+    rescue NameError => e  # seems Ruby 1.9 (MiniTest)
+      pp e
       Test::Unit.setup_argv
     end
   end
