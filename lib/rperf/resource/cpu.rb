@@ -7,6 +7,7 @@ module RPerf
 
     # CPUの処理時間を保持するクラス
     class CPU 
+      include Comparable
 
       # データ取得時刻
       attr_reader :time
@@ -42,6 +43,26 @@ module RPerf
         @user   = args[:user]
         @system = args[:system]
         @wait   = args[:wait]
+      end
+
+      def <=>( other )
+        time_compare   = ( @time   <=> other.time )
+        name_compare   = ( @name   <=> other.name )
+        user_compare   = ( @user   <=> other.user )
+        system_compare = ( @system <=> other.system )
+        wait_compare   = ( @wait   <=> other.wait )
+
+        if time_compare != 0
+          return time_compare
+        elsif name_compare != 0
+          return name_compare
+        elsif user_compare != 0
+          return user_compare
+        elsif system_compare != 0
+          return system_compare
+        else
+          return wait_compare
+        end
       end
     end
   end

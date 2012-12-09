@@ -14,10 +14,13 @@ module RPerf
   # リソースを表すクラス
   class Resource
 
+    # 全CPUの統計情報の平均
+    attr_accessor :cpu_average
+
     # 各CPUの統計情報
     attr_accessor :cpus
 
-    # メモリ・スワップの統計情報
+    # VMの統計情報
     attr_accessor :virtual_memory
 
     # 各ファイルシステムの統計情報

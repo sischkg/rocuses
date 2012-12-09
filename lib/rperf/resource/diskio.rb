@@ -26,20 +26,11 @@ module RPerf
       # writeしたサイズ(byte)
       attr_reader :write_data_size
 
-      # read/wait待ち状態の数
-      attr_reader :wait_count
+      # Queueが空でない時間(nanosecond)
+      attr_reader :wait_time
 
-      # read/wait状態の数
-      attr_reader :run_count
-
-      # soft error count
-      attr_reader :soft_error_count
-
-      # hard error count
-      attr_reader :hard_error_count
-
-      # transport error count
-      attr_reader :transport_error_count
+      # Queue内のIO Requestの数と経過時間の積の和
+      attr_reader :queue_length_time
 
       # time:: データ取得時刻(epoch)
       # name:: デバイス名
@@ -47,39 +38,30 @@ module RPerf
       # read_data_size:: readしたサイズ(byte)
       # write_count:: writeした回数
       # write_data_size:: writeしたサイズ(byte)
-      # wait_count:: read/wait待ち状態の数
-      # run_count:: read/wait状態の数
-      # soft_error_count:: soft error count
-      # hard_error_count:: hard error count
-      # transport_error_count:: transport error count
+      # wait_time:: Queueが空でない時間(nanosecond)
+      # queue_length_time:: Queue内のIO Requestの数と経過時間(nanoseocnd)の積の和
       def initialize( args )
         RPerf::Utils::check_args( args,
                                   {
-                                    :time             => :req,
-                                    :name             => :req,
-                                    :read_count       => :req,
-                                    :read_data_size   => :req,
-                                    :write_count      => :req,
-                                    :write_data_size  => :req,
-                                    :wait_count       => :req,
-                                    :run_count        => :req,
-                                    :soft_error_count => :req,
-                                    :hard_error_count => :req,
-                                    :transport_error_count => :req,
+                                    :time              => :req,
+                                    :name              => :req,
+                                    :read_count        => :req,
+                                    :read_data_size    => :req,
+                                    :write_count       => :req,
+                                    :write_data_size   => :req,
+                                    :wait_time         => :req,
+                                    :queue_length_time => :req,
                                   } )
         
         
-        @time            = args[:time]
-        @name            = args[:name]
-        @read_count      = args[:read_count]
-        @read_data_size  = args[:read_data_size]
-        @write_count     = args[:write_count]
-        @write_data_size = args[:write_data_size]
-        @wait_count      = args[:wait_count]
-        @run_count       = args[:run_count]
-        @soft_error_count      = args[:soft_error_count]
-        @hard_error_count      = args[:hard_error_count]
-        @transport_error_count = args[:transport_error_count]
+        @time              = args[:time]
+        @name              = args[:name]
+        @read_count        = args[:read_count]
+        @read_data_size    = args[:read_data_size]
+        @write_count       = args[:write_count]
+        @write_data_size   = args[:write_data_size]
+        @wait_time         = args[:wait_time]
+        @queue_length_time = args[:queue_length_time]
       end
     end
   end

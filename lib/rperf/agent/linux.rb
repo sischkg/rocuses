@@ -6,6 +6,8 @@ require 'rperf/resource'
 module RPerf
   class Agent
     class Linux
+      include RPerf
+
       # RETURN:: true: RedHat,CentOS Linux 6.x false, Debian wheezy/sidである場合
       def self.match_environment?
         begin
@@ -35,8 +37,38 @@ module RPerf
         return false
       end
 
+      # 全CPUの統計情報の平均を取得する
+      def get_cpu_average( resource )
+        clock_tick = get_clock_tick()
+
+        File.open( '/proc/stat' ) { |input|
+          input.each { |line|
+            line.chomp!
+            if line =~ /\A
+                          cpu          # CPU ID
+                          \s+
+                          (\d+)        # user
+                          \s+
+                          (\d+)        # nice
+                          \s+
+                          (\d+)        # system
+                          \s+
+                          (\d+)        # io wait
+                          \s
+                        /xm
+              resource.cpu_average = Resource::CPU.new( :time   => Time.now,
+                                                        :name   => 'AVERAGE',
+                                                        :user   => $1.to_i * clock_tick,
+                                                        :system => $3.to_i * clock_tick,
+                                                        :wait   => $4.to_i * clock_tick )
+            end
+          }
+        }
+      end
+
       # CPUの統計情報を取得する
-      def get_cpu_status( resource )
+      def get_cpus( resource )
+        clock_tick = get_clock_tick()
         cpus = Array.new
         File.open( '/proc/stat' ) { |input|
           input.each { |line|
@@ -53,11 +85,11 @@ module RPerf
                           (\d+)        # io wait
                           \s
                         /xm
-              cpus.push( RPerf::Resource::CPU.new( :time   => Time.now,
-                                                   :name   => $1,
-                                                   :user   => ( $2.to_i + $3.to_i ) * 0.1,
-                                                   :system => $3.to_i * 0.1,
-                                                   :wait   => $4.to_i * 0.1 ) )
+              cpus.push( Resource::CPU.new( :time   => Time.now,
+                                            :name   => $1,
+                                            :user   => $2.to_i * clock_tick,
+                                            :system => $4.to_i * clock_tick,
+                                            :wait   => $5.to_i * clock_tick ) )
             end
           }
         }
@@ -102,13 +134,13 @@ module RPerf
             end
           }
 
-          resource.virtual_memory = RPerf::Resource::VirtualMemory.new( :time          => Time.now,
-                                                                        :total_memory  => total_memory,
-                                                                        :used_memory   => used_memory,
-                                                                        :cache_memory  => cache_memory,
-                                                                        :buffer_memory => buffer_memory,
-                                                                        :total_swap    => total_swap,
-                                                                        :used_swap     => used_swap )
+          resource.virtual_memory = Resource::VirtualMemory.new( :time          => Time.now,
+                                                                 :total_memory  => total_memory,
+                                                                 :used_memory   => used_memory,
+                                                                 :cache_memory  => cache_memory,
+                                                                 :buffer_memory => buffer_memory,
+                                                                 :total_swap    => total_swap,
+                                                                 :used_swap     => used_swap )
         }
       end
 
@@ -135,7 +167,7 @@ module RPerf
               interface[:inbound_data_size]  = $1.to_i
               interface[:outbound_data_size] = $2.to_i
             elsif line =~ /\A\s*\z/                                                                       # end of nic statistics infomation
-              resource.network_interfaces.push( RPerf::Resource::NetworkInterface.new( interface ) )
+              resource.network_interfaces.push( Resource::NetworkInterface.new( interface ) )
               interface = Hash.new
               interface[:link_status] = :down
               interface[:time] = Time.now
@@ -169,27 +201,27 @@ module RPerf
               elapsed_time_str = $5
               elapsed_time = 0
               if elapsed_time_str =~ /\A(\d+)-(\d+):(\d+):(\d+)\z/
-                elapsed_time = RPerf::Utils::datetime_to_second( :day    => $1,
-                                                                 :hour   => $2,
-                                                                 :minute => $3,
-                                                                 :second => $4 )
+                elapsed_time = Utils::datetime_to_second( :day    => $1,
+                                                          :hour   => $2,
+                                                          :minute => $3,
+                                                          :second => $4 )
               elsif elapsed_time_str =~ /\A(\d+):(\d+):(\d+)\z/
-                elapsed_time = RPerf::Utils::datetime_to_second( :hour   => $1,
-                                                                 :minute => $2,
-                                                                 :second => $3 )
+                elapsed_time = Utils::datetime_to_second( :hour   => $1,
+                                                          :minute => $2,
+                                                          :second => $3 )
               elsif elapsed_time_str =~ /(\d+):(\d+)\z/
-                elapsed_time = RPerf::Utils::datetime_to_second( :minute => $1,
-                                                                 :second => $2 )
+                elapsed_time = Utils::datetime_to_second( :minute => $1,
+                                                          :second => $2 )
               end
               now = Time.now
               start_time = now - elapsed_time
-              resource.processes.push( RPerf::Resource::Process.new( :time       => now,
-                                                                     :argument   => argument,
-                                                                     :start_time => start_time,
-                                                                     :pid        => pid,
-                                                                     :parent_pid => parent_pid,
-                                                                     :uid        => uid.to_i,
-                                                                     :gid        => gid.to_i ) )
+              resource.processes.push( Resource::Process.new( :time       => now,
+                                                              :argument   => argument,
+                                                              :start_time => start_time,
+                                                              :pid        => pid,
+                                                              :parent_pid => parent_pid,
+                                                              :uid        => uid.to_i,
+                                                              :gid        => gid.to_i ) )
             end
           }
         }
@@ -230,7 +262,7 @@ module RPerf
 
         filesystem_of.each { |mount_point, filesystem|
           if filesystem.key?( :total_files )
-            resource.filesystems.push( RPerf::Resource::Filesystem.new( filesystem ) )
+            resource.filesystems.push( Resource::Filesystem.new( filesystem ) )
           end
         }
       end
@@ -240,15 +272,80 @@ module RPerf
         IO.popen( '/usr/bin/uptime' ) { |input|
           line = input.gets
           if line =~ /load average: ([\d\.]+), ([\d\.]+), ([\d\.]+)\s*/
-            resource.load_average = RPerf::Resource::LoadAverage.new( :time => Time.now,
-                                                                      :la1  => $1.to_f,
-                                                                      :la5  => $2.to_f,
-                                                                      :la15 => $3.to_f )
+            resource.load_average = Resource::LoadAverage.new( :time => Time.now,
+                                                               :la1  => $1.to_f,
+                                                               :la5  => $2.to_f,
+                                                               :la15 => $3.to_f )
           end
         }
       end
-    end
 
+      # DiskIOを取得する
+      def get_disk_ios( resource )
+        File.open( '/proc/diskstats' ) { |input|
+          input.each { |line|
+            columns = line.split( /\s+/ )
+            name              = columns[3]
+            device = name.gsub( /\d+/, %q{} )
+            sector_size       = get_sector_size( device )
+            read_count        = columns[4].to_i
+            read_data_size    = columns[6].to_i  * sector_size
+            write_count       = columns[8].to_i
+            write_data_size   = columns[10].to_i * sector_size
+            wait_time         = columns[13].to_i * 1000 * 1000
+            queue_length_time = columns[14].to_i * 1000 * 1000
+            
+            resource.disk_ios.push( Resource::DiskIO.new( :time              => Time.now,
+                                                          :name              => name,
+                                                          :read_count        => read_count,
+                                                          :read_data_size    => read_data_size,
+                                                          :write_count       => write_count,
+                                                          :write_data_size   => write_data_size,
+                                                          :wait_time         => wait_time,
+                                                          :queue_length_time => queue_length_time ) )
+          }
+        }
+      end
+
+      private
+
+      # デバイスdeviceのSector Size(bytes)を取得する。
+      # deviceはパーティション(sda1,sda2...)ではなく、ディスクのデバイス(sda,sdb...)とする。
+      # sector sizeを取得できなかった場合は、512を返す。
+      def get_sector_size( device )
+        [ "physcal_block_size", "hw_sector_size" ].each { |filename|
+          begin
+            FIle.open( "/sys/block/#{ device }/queue/#{filename}" ) { |input|
+              line = input.gets
+              line.chomp!
+              return line.to_i
+            }
+          rescue => e
+            # ignore
+          end
+        }
+        return 512
+      end
+
+
+      def get_clock_tick()
+        if @clock_tick
+          return @clock_tick
+        end
+
+        clock_tick = 10
+        begin
+          IO.popen( '/usr/bin/getconf CLK_TCK' ) { |input|
+            line = input.gets
+            clock_tick = 1000 / line.chomp.to_i
+          }
+        rescue => e
+        end
+
+        @clock_tick = clock_tick
+        return @clock_tick
+      end
+    end
   end
 end
 

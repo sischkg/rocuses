@@ -3,9 +3,9 @@
 $LOAD_PATH.push( File.join( File.dirname( __FILE__ ), '..', 'lib' ) )
 
 require 'rperf/resource'
-require 'rperf/test'
-require 'flexmock/test_unit'
+require 'args/test'
 
 class ResourceTest < Test::Unit::TestCase
-
+  must 'to do' do
+  end
 end

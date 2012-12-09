@@ -3,7 +3,7 @@
 $LOAD_PATH.insert( 0, File.join( File.dirname( __FILE__ ), '..', 'lib' ) )
 
 require 'pp'
-require 'rperf/test'
+require 'args/test'
 require 'rperf/agent/linux'
 
 class AgentLinuxTest < Test::Unit::TestCase
@@ -11,7 +11,7 @@ class AgentLinuxTest < Test::Unit::TestCase
 
   must "matched Red Hat Enterprise Linux Server release 6" do
     generate_read_mock( '/etc/redhat-release' =>
-                            [ 'Red Hat Enterprise Linux Server release 6' ] )
+                        [ 'Red Hat Enterprise Linux Server release 6' ] )
     assert( RPerf::Agent::Linux.match_environment?, "matched RedHat Enterprise Linux Server 6" )
   end
 
@@ -268,5 +268,65 @@ class AgentLinuxTest < Test::Unit::TestCase
                       :start_time_second => 0,
                     } )
   end
+
+
+  must "read diskstats" do
+    generate_read_mock( '/proc/diskstats' => [ "  8       0 sda  31292 23536 1969110 143680 60310 55329 3358544 233720 0 64644 377440\n",
+                                               "  8       0 sda1 31200 23500 1969000 143680 60300 55329 3358500 233720 0 64600 377400\n", ],
+                        '/sys/block/sda/queue/physical_block_size' => [ "512\n" ] )
+    resource = RPerf::Resource.new
+    RPerf::Agent::Linux.new.get_disk_ios( resource )
+    assert_equal( "sda",         resource.disk_ios[0].name,             "device" )
+    assert_equal( 31292,         resource.disk_ios[0].read_count,       "read count" )
+    assert_equal( 1969110 * 512, resource.disk_ios[0].read_data_size,   "read size" )
+    assert_equal( 60310,         resource.disk_ios[0].write_count,      "write count" )
+    assert_equal( 3358544 * 512, resource.disk_ios[0].write_data_size,  "write size" )
+    assert_equal(  64644 * 1000 * 1000, resource.disk_ios[0].wait_time,         "wait time" )
+    assert_equal( 377440 * 1000 * 1000, resource.disk_ios[0].queue_length_time, "queue length time" )
+
+    assert_equal( "sda1",        resource.disk_ios[1].name,             "device" )
+    assert_equal( 31200,         resource.disk_ios[1].read_count,       "read count" )
+    assert_equal( 1969000 * 512, resource.disk_ios[1].read_data_size,   "read size" )
+    assert_equal( 60300,         resource.disk_ios[1].write_count,      "write count" )
+    assert_equal( 3358500 * 512, resource.disk_ios[1].write_data_size,  "write size" )
+    assert_equal(  64600 * 1000 * 1000, resource.disk_ios[1].wait_time,         "wait time" )
+    assert_equal( 377400 * 1000 * 1000, resource.disk_ios[1].queue_length_time, "queue length time" )
+  end
+
+
+  must "read stat for cpu" do
+    generate_read_mock( '/proc/stat' => [ "cpu  1000 3 3000 400 50\n",
+                                          "cpu0 700 0 2000 300 40\n",
+                                          "cpu1 300 3 1000 100 10\n" ] )
+    generate_popen_mock( '/usr/bin/getconf CLK_TCK' => [ "100\n" ] )
+    generate_time_mock( Time.at( 100 ) )
+
+    resource = RPerf::Resource.new
+    expected_cpu_average = RPerf::Resource::CPU.new( :time   => Time.at( 100 ),
+                                                     :name   => 'AVERAGE',
+                                                     :user   => 1000 * ( 1000 / 100 ),
+                                                     :system => 3000 * ( 1000 / 100 ),
+                                                     :wait   =>  400 * ( 1000 / 100 ) )
+    expected_cpu0 = RPerf::Resource::CPU.new( :time   => Time.at( 100 ),
+                                              :name   => '0',
+                                              :user   =>  700 * ( 1000 / 100 ),
+                                              :system => 2000 * ( 1000 / 100 ),
+                                              :wait   =>  300 * ( 1000 / 100 ) )
+    expected_cpu1 = RPerf::Resource::CPU.new( :time   => Time.at( 100 ),
+                                              :name   => '1',
+                                              :user   =>  300 * ( 1000 / 100 ),
+                                              :system => 1000 * ( 1000 / 100 ),
+                                              :wait   =>  100 * ( 1000 / 100 ) )
+
+    RPerf::Agent::Linux.new.get_cpu_average( resource )
+    assert_equal( expected_cpu_average, resource.cpu_average,  'CPU Average' )
+
+    RPerf::Agent::Linux.new.get_cpus( resource )
+    assert_equal( expected_cpu0, resource.cpus[0],   'CPU 0' )
+    assert_equal( expected_cpu1, resource.cpus[1],   'CPU 1' )
+    assert_equal( 2,             resource.cpus.size, 'count of CPU' )
+  end
+
+
 end
 
