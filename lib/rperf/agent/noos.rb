@@ -6,6 +6,10 @@ require 'rperf/resource'
 module RPerf
   class Agent
     class NoOS
+      def name
+        return "RPerf::Agent::NoOS"
+      end
+
       # RETURN:: true
       def self.match_environment?
         return true

@@ -4,18 +4,21 @@ $LOAD_PATH.insert( 0, File.join( File.dirname( __FILE__ ), '..', 'lib' ) )
 
 require 'pp'
 require 'args/test'
+require 'rperf/resource'
 require 'rperf/agent/linux'
 
 class AgentLinuxTest < Test::Unit::TestCase
   CHECKED_TIME = Time.local( 2012, 11, 12, 00, 12, 34 )
 
   must "matched Red Hat Enterprise Linux Server release 6" do
+    generate_readable_mock( '/etc/redhat-release' => true )
     generate_read_mock( '/etc/redhat-release' =>
                         [ 'Red Hat Enterprise Linux Server release 6' ] )
     assert( RPerf::Agent::Linux.match_environment?, "matched RedHat Enterprise Linux Server 6" )
   end
 
   must "unmatched Red Hat Enterprise Linux Server release 5" do
+    generate_readable_mock( '/etc/redhat-release' => true )
     generate_read_mock( '/etc/redhat-release' =>
                         [ 'Red Hat Enterprise Linux Server release 5' ] )
     assert( ! RPerf::Agent::Linux.match_environment?, "unmatched RedHat Enterprise Linux Server 5" )
@@ -295,28 +298,30 @@ class AgentLinuxTest < Test::Unit::TestCase
 
 
   must "read stat for cpu" do
-    generate_read_mock( '/proc/stat' => [ "cpu  1000 3 3000 400 50\n",
-                                          "cpu0 700 0 2000 300 40\n",
-                                          "cpu1 300 3 1000 100 10\n" ] )
-    generate_popen_mock( '/usr/bin/getconf CLK_TCK' => [ "100\n" ] )
-    generate_time_mock( Time.at( 100 ) )
+    CLK_TCK = 100
 
+    generate_read_mock( '/proc/stat' => [ "cpu  1000 3 3000 400 600 \n",
+                                          "cpu0 700 0 2000 300 400 \n",
+                                          "cpu1 300 3 1000 100 200 \n" ] )
+    generate_popen_mock( '/usr/bin/getconf CLK_TCK' => [ "#{ CLK_TCK }\n" ] )
+    generate_time_mock( Time.at( 100 ) )
+    
     resource = RPerf::Resource.new
     expected_cpu_average = RPerf::Resource::CPU.new( :time   => Time.at( 100 ),
                                                      :name   => 'AVERAGE',
-                                                     :user   => 1000 * ( 1000 / 100 ),
-                                                     :system => 3000 * ( 1000 / 100 ),
-                                                     :wait   =>  400 * ( 1000 / 100 ) )
+                                                     :user   => 1000 / CLK_TCK,
+                                                     :system => 3000 / CLK_TCK,
+                                                     :wait   =>  600 / CLK_TCK )
     expected_cpu0 = RPerf::Resource::CPU.new( :time   => Time.at( 100 ),
                                               :name   => '0',
-                                              :user   =>  700 * ( 1000 / 100 ),
-                                              :system => 2000 * ( 1000 / 100 ),
-                                              :wait   =>  300 * ( 1000 / 100 ) )
+                                              :user   =>  700 / CLK_TCK,
+                                              :system => 2000 / CLK_TCK,
+                                              :wait   =>  400 / CLK_TCK )
     expected_cpu1 = RPerf::Resource::CPU.new( :time   => Time.at( 100 ),
                                               :name   => '1',
-                                              :user   =>  300 * ( 1000 / 100 ),
-                                              :system => 1000 * ( 1000 / 100 ),
-                                              :wait   =>  100 * ( 1000 / 100 ) )
+                                              :user   =>  300 / CLK_TCK,
+                                              :system => 1000 / CLK_TCK,
+                                              :wait   =>  200 / CLK_TCK )
 
     RPerf::Agent::Linux.new.get_cpu_average( resource )
     assert_equal( expected_cpu_average, resource.cpu_average,  'CPU Average' )

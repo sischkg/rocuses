@@ -18,13 +18,11 @@ OptionParser.new { |opt|
 }
 
 
-agent_config = RPerf::Config::AgentConfig.new
+agentconfig = RPerf::Config::AgentConfig.new
 File.open( AGENT_CONFIG_FILE ) { |configfile|
-  agent_config.load( t = configfile.gets( nil ) )
-  pp t
+  agentconfig.load( configfile.gets( nil ) )
 }
-pp agent_config
-http_server = RPerf::HTTPServer.new( :config    => agent_config,
-                                     :daemonize => daemonize )
+http_server = RPerf::HTTPServer.new( :agentconfig => agentconfig,
+                                     :daemonize   => daemonize )
 http_server.start
 
