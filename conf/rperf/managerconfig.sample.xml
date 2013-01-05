@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rperf>
+  <manager>
+    <options>
+      <rrdtool path="/usr/local/bin/rrdtool"/>
+      <step time="300"/>
+      <rra directory="/var/rperf/rra"/>
+    </options>
+  </manager>
+</rperf>
+

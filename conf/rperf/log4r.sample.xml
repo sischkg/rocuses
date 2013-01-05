@@ -1,0 +1,10 @@
+<log4r_config>
+  <pre-config>
+    <global level="DEBUG"/>
+  </pre-config>
+ 
+  <outputter name="rperf::agent" type="StdoutOutputter"/>
+  <outputter name="rperf::agent::httpd" type="DateFileOutputter">
+    <dirname>/var/log/rperf</dirname>
+  </outputter>
+</log4r_config>
