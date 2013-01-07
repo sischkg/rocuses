@@ -1,3 +1,10 @@
+2013-01-08  Toshifumi Sakaguchi  <sischkg@gmail.com>
+
+	* プロジェクト名をrocusesへ変更
+	プロジェクト名の変更に伴い、スクリプト名・モジュール名を変更
+
+	* 特定かつ複数のリソースを同時に取得する機能を追加
+
 2012-11-20  Toshifumi Sakaguchi  <sischkg@gmail.com>
 
 	* リソース情報を保持するクラスRPerf::Resourceを追加

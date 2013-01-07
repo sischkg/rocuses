@@ -21,7 +21,7 @@ module Rocuses
       GET_RESOURCE_METHOD_OF = {
         :CPU              => :get_cpus,
         :CPUAverage       => :get_cpu_average,
-        :VirtulMemory     => :get_virtual_memory_status,
+        :VirtualMemory    => :get_virtual_memory_status,
         :Filesystem       => :get_filesystems_status,
         :Processe         => :get_processes,
         :DiskIO           => :get_disk_ios,

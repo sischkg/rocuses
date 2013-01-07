@@ -3,7 +3,7 @@
 require 'rrdtool/rpn'
 require 'rrdtool/graph'
 
-module RPerf
+module Rocuses
   module GraphTemplate
     module Utils
 

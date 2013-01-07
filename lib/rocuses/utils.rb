@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-module RPerf
+module Rocuses
   module Utils
 
     # メソッドの引数に使用するHashのキーの有無をチェックする

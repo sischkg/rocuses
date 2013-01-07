@@ -3,11 +3,11 @@
 require 'rrdtool/rpn'
 require 'rrdtool/graph'
 
-module RPerf
+module Rocuses
   module GraphTemplate
 
     class CPU
-      include RPerf::GraphTemplate
+      include Rocuses::GraphTemplate
 
       GRPINT_FORMAT = '%5.2lf %%'
 

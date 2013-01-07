@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-module RPerf
+module Rocuses
   module Config
     module Default
       BIND_PORT = 20080;

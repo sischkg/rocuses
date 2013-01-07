@@ -59,8 +59,9 @@ module Rocuses
   end
 
   class HTTPServer
-    HTTP_DOCUMENT_ROOT = "/usr/local/share/rocuses/www"
-    PID_FILE           = "/var/run/rocusesagent.pid"
+    HTTP_DOCUMENT_ROOT      = "/usr/local/share/rocuses/www"
+    PID_FILE                = "/var/run/rocusagent.pid"
+    RESOURCE_TYPE_DELIMITOR = %q{,}
 
     include Log4r
 
@@ -68,9 +69,9 @@ module Rocuses
       args = Args::check_args( args, { :agentconfig => :req, :daemonize => :op, }, { :daemonize => false } )
       @agent         = Rocuses::Agent.new
       @agentconfig   = args[:agentconfig]
-      @daemonize     = args[:daemonize] ? WEBrick::Daemon : WEBrick::SimpleServer
-      @error_logger  = Logger.new( 'rocuses::agent::httpd::error_log' )
-      @access_logger = Logger.new( 'rocuses::agent::httpd::access_log' )
+      @daemonize     = args[:daemonize]
+      @error_logger  = Logger.new( 'rocus::agent::httpd::error_log' )
+      @access_logger = Logger.new( 'rocus::agent::httpd::access_log' )
 
       @access_logger.outputters = DateFileOutputter.new( 'access_log', { :dirname => LOG_DIRECTORY, :lavel => INFO } )
       @error_logger.outputters  = DateFileOutputter.new( 'error_log',  { :dirname => LOG_DIRECTORY, :lavel => INFO } )
@@ -80,7 +81,7 @@ module Rocuses
       @http_server = WEBrick::HTTPServer.new( :DocumentRoot => HTTP_DOCUMENT_ROOT,
                                               :Port         => @agentconfig.bind_port,
                                               :BindAddress  => @agentconfig.bind_address,
-                                              :ServerType   => @daemonize,
+                                              :ServerType   => WEBrick::SimpleServer,
                                               :Logger       => @error_logger,
                                               :AccessLog    => [ [ @access_logger, WEBrick::AccessLog::COMMON_LOG_FORMAT ] ],
                                               :DoNotReverseLookup => true )
@@ -95,12 +96,15 @@ module Rocuses
       }
       
       mount('/type' ) { |request,response|
-        type = request.path_info
-        type.gsub!( %r{/}, %q{} )
-        @error_logger.info( "request #{ type } from #{ request.peeraddr[2] } " )
+        path_info = request.path_info
+        path_info.gsub!( %r{/}, %q{} )
+        @error_logger.info( "request #{ path_info } from #{ request.peeraddr[2] } " )
+        types = path_info.split( RESOURCE_TYPE_DELIMITOR )
 
         resource = Resource.new
-        @agent.get_resource_status( type, resource )
+        types.each { |type|
+          @agent.get_resource_status( type, resource )
+        }
         response.body = resource.serialize
       }
 
@@ -109,6 +113,9 @@ module Rocuses
 
       trap("INT"){ @http_server.shutdown }
       @error_logger.info( "starting httpd" )
+      if @daemonize
+        daemonize_agent()
+      end
       @http_server.start()
     end
 
@@ -144,11 +151,32 @@ module Rocuses
           end
         rescue => e
           @error_logger.error( "caught expection: #{ e }:#{ e.backtrace }" )
-          STDERR.printf( "%s\n", e )
-          STDERR.printf( "%s\n", e.backtrace )
+          if ! @daemonize
+            STDERR.printf( "%s\n", e )
+            STDERR.printf( "%s\n", e.backtrace )
+          end
           raise e
         end
       }
+    end
+
+    private
+
+    def daemonize_agent()
+      if Process.respond_to?( :daemon )  # Ruby 1.9
+        Process.daemon
+      else                            # Ruby 1.8
+        WEBrick::Daemon.start
+      end     
+
+      begin 
+        File.open( PID_FILE, 'w' ) { |pidfile|
+          pidfile.printf( "%d\n", Process.pid )
+        }
+      rescue => e
+        @error_logger.error( "cannot write pid file: #{ e }:#{ e.backtrace }" )
+        exit
+      end
     end
   end
 end

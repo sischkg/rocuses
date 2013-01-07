@@ -3,7 +3,7 @@
 require 'pp'
 require 'rrdtool/datasource'
 
-module RPerf
+module Rocuses
   module DataSource
 
     class CPU
