@@ -2,7 +2,7 @@
 
 $LOAD_PATH.push( File.join( File.dirname( __FILE__ ), '..', 'lib' ) )
 
-require 'rperf/resource'
+require 'rocuses/resource'
 require 'args/test'
 
 class ResourceTest < Test::Unit::TestCase

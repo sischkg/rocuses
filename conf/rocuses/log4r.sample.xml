@@ -1,0 +1,10 @@
+<log4r_config>
+  <pre-config>
+    <global level="DEBUG"/>
+  </pre-config>
+ 
+  <outputter name="rocuses::agent" type="StdoutOutputter"/>
+  <outputter name="rocuses::agent::httpd" type="DateFileOutputter">
+    <dirname>/var/log/rocuses</dirname>
+  </outputter>
+</log4r_config>

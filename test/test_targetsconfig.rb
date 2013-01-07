@@ -3,20 +3,20 @@
 $LOAD_PATH.insert( 0, File.join( File.dirname( __FILE__ ), '..', 'lib' ) )
 
 require 'args/test'
-require 'rperf/config/targetsconfig'
+require 'rocuses/config/targetsconfig'
 
 class LoadTargetsXMLTest < Test::Unit::TestCase
 
   def detect_error_test( xml )
-    config = RPerf::Config::TargetsConfig.new
+    config = Rocuses::Config::TargetsConfig.new
     assert_raise( ArgumentError ) {
       config.load( xml )
     }
   end
 
   must "parse empty xml file" do
-    test_xml = "<rperf><targets></targets></rperf>"
-    config = RPerf::Config::TargetsConfig.new
+    test_xml = "<rocuses><targets></targets></rocuses>"
+    config = Rocuses::Config::TargetsConfig.new
     assert_nothing_raised {
       config.load( test_xml )
     }
@@ -25,7 +25,7 @@ class LoadTargetsXMLTest < Test::Unit::TestCase
 
   must "parse xml file" do
     test_xml = <<'END_XML'
-<rperf>
+<rocuses>
   <targets>
     <target name="node01" hostname="192.168.0.1">
     </target>
@@ -48,10 +48,10 @@ class LoadTargetsXMLTest < Test::Unit::TestCase
       </traffic>
     </target>
   </targets>
-</rperf>
+</rocuses>
 END_XML
 
-    config = RPerf::Config::TargetsConfig.new
+    config = Rocuses::Config::TargetsConfig.new
     assert_nothing_raised {
       config.load( test_xml )
     }
@@ -99,12 +99,12 @@ END_XML
 
   must "detect error of target element(no name)" do
     test_xml = <<'END_XML'
-<rperf>
+<rocuses>
   <targets>
     <target hostname="192.168.0.1">
     </target>
   </targets>
-</rperf>
+</rocuses>
 END_XML
 
     detect_error_test( test_xml )
@@ -112,12 +112,12 @@ END_XML
 
   must "detect error of target element(no hostname)" do
     test_xml = <<'END_XML'
-<rperf>
+<rocuses>
   <targets>
     <target name="node01">
     </target>
   </targets>
-</rperf>
+</rocuses>
 END_XML
 
     detect_error_test( test_xml )
@@ -125,13 +125,13 @@ END_XML
 
   must "detect error of filesystem element(no mount point)" do
     test_xml = <<'END_XML'
-<rperf>
+<rocuses>
   <targets>
     <target name="node01" hostname="192.168.0.1">
       <filesystem />
     </target>
   </targets>
-</rperf>
+</rocuses>
 END_XML
 
     detect_error_test( test_xml )
@@ -139,13 +139,13 @@ END_XML
 
   must "detect error of process element(no name)" do
     test_xml = <<'END_XML'
-<rperf>
+<rocuses>
   <targets>
     <target name="node01" hostname="192.168.0.1">
       <process pattern="/usr/lib/sendmail -bd" />
     </target>
   </targets>
-</rperf>
+</rocuses>
 END_XML
 
     detect_error_test( test_xml )
@@ -153,13 +153,13 @@ END_XML
 
   must "detect error of process element(no pattern)" do
     test_xml = <<'END_XML'
-<rperf>
+<rocuses>
   <targets>
     <target name="node01" hostname="192.168.0.1">
       <process name="sendmail" />
     </target>
   </targets>
-</rperf>
+</rocuses>
 END_XML
 
     detect_error_test( test_xml )
@@ -167,13 +167,13 @@ END_XML
 
   must "detect error of disk_io element(no device)" do
     test_xml = <<'END_XML'
-<rperf>
+<rocuses>
   <targets>
     <target name="node01" hostname="192.168.0.1">
       <disk_io />
     </target>
   </targets>
-</rperf>
+</rocuses>
 END_XML
 
     detect_error_test( test_xml )
@@ -181,7 +181,7 @@ END_XML
 
   must "detect error of traffic element(no name)" do
     test_xml = <<'END_XML'
-<rperf>
+<rocuses>
   <targets>
     <target name="node01" hostname="192.168.0.1">
       <traffic>
@@ -189,7 +189,7 @@ END_XML
       </traffic>
     </target>
   </targets>
-</rperf>
+</rocuses>
 END_XML
 
     detect_error_test( test_xml )
@@ -197,14 +197,14 @@ END_XML
 
   must "detect error of traffic element(no interface)" do
     test_xml = <<'END_XML'
-<rperf>
+<rocuses>
   <targets>
     <target name="node01" hostname="192.168.0.1">
       <traffic name="global">
       </traffic>
     </target>
   </targets>
-</rperf>
+</rocuses>
 END_XML
 
     detect_error_test( test_xml )
@@ -212,7 +212,7 @@ END_XML
 
   must "detect error of interface element(no name)" do
     test_xml = <<'END_XML'
-<rperf>
+<rocuses>
   <targets>
     <target name="node01" hostname="192.168.0.1">
       <traffic name="global">
@@ -220,7 +220,7 @@ END_XML
       </traffic>
     </target>
   </targets>
-</rperf>
+</rocuses>
 END_XML
 
     detect_error_test( test_xml )
