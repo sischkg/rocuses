@@ -33,9 +33,14 @@ module Rocuses
         return GET_RESOURCE_METHOD_OF.key?( type.to_sym )
       end
 
-      # typeでしたリソースの統計情報を返す
+      def list_enable_resources()
+        return GET_RESOURCE_METHOD_OF.keys
+      end
+
+      # typeで指定したリソースの統計情報を取得し、resourceにその値を追加する
+      # typeで指定したリソースを取得できない場合は、ArgumetErrorをraiseする。
       # type:: リソースのタイプ GET_RESOURCE_METHOD_OFのkeyのいずれか
-      # RETRURN:: typeに対応するRocuses::Resource::xxxクラスのインスタンスまたは、そのArray
+      # resource:: 取得したリソースの統計情報の保存先
       def get_resource( type, resource )
         if ! enable_resource?( type )
           raise ArgumentError.new( "not support type #{type}" )

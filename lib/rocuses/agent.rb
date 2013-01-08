@@ -53,7 +53,11 @@ module Rocuses
     end
 
     def get_resource_status( type, resource )
-      return @os_agent.get_resource( type, resource )
+      begin
+        @os_agent.get_resource( type, resource )
+      rescue ArgumentError => e
+        @logger.info( "resource type #{ type } is not supported" )
+      end
     end
     
   end
@@ -77,6 +81,7 @@ module Rocuses
       @error_logger.outputters  = DateFileOutputter.new( 'error_log',  { :dirname => LOG_DIRECTORY, :lavel => INFO } )
     end
 
+    # エージェントのサービスを開始数する。
     def start()
       @http_server = WEBrick::HTTPServer.new( :DocumentRoot => HTTP_DOCUMENT_ROOT,
                                               :Port         => @agentconfig.bind_port,
@@ -121,6 +126,9 @@ module Rocuses
 
     private
 
+    # HTTPリクエストの接続元IPアドレスを参照し、正しい接続元であるかを確かめる。
+    # request:: リクエストのHTTPRequestインスタンス
+    # RETURN:: true:接続元はManagerである / false: 接続元はManagerではない
     def validate_manager( request )
       msg = sprintf( "request: %s, magager %s", request.peeraddr.to_s, @agentconfig.managers.join( "," ) )
       @error_logger.info( msg )
@@ -139,6 +147,9 @@ module Rocuses
       response.body = 'forbiden'
     end
 
+    # pathに対するHTTPリクエストの処理内容を定義する。
+    # path:: HTTPリクエストのPATH
+    # block:: requestに対する処理 
     def mount( path )
       @http_server.mount_proc( path ) { |request,response|
         begin 
@@ -160,8 +171,7 @@ module Rocuses
       }
     end
 
-    private
-
+    # プロセスをデーモン化し、そのデーモンのプロセスのPIDをPID_FILEへ保存する。
     def daemonize_agent()
       if Process.respond_to?( :daemon )  # Ruby 1.9
         Process.daemon
