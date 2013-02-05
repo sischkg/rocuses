@@ -2,6 +2,10 @@
 
 require 'pp'
 require 'net/http'
+require 'rubygems'
+require 'log4r'
+require 'log4r/outputter/datefileoutputter'
+require 'log4r/configurator'
 require 'rocuses/rrdtool'
 require 'rocuses/config/managerconfig'
 require 'rocuses/config/targetsconfig'
@@ -14,80 +18,117 @@ require 'rocuses/device'
 require 'rocuses/managerparameters'
 
 module Rocuses
-  module Manager
+  class Manager
+    include Log4r
+    LOG_DIRECTORY      = '/var/log/rocuses'
 
-    module_function
+    def initialize
+      @logger = Logger.new( 'rocuses::manager' )
+      @devices = Array.new
+      @logger.outputters  = DateFileOutputter.new( 'error_log',
+                                                   {
+                                                     :dirname      => LOG_DIRECTORY,
+                                                     :date_pattern => 'error_log.%Y-%m-%d',
+                                                   } )
+    end
 
     def fetch_resource()
-      manager_config = Rocuses::Config::ManagerConfig.new
-      File.open( Rocuses::ManagerParameters::MANAGER_CONFIG_FILENAME ) { |xml|
-        manager_config.load( xml )
-      }
+      manager_config = load_manager_config()
+      targets_config = load_targets_config()
 
       RRDTool::set_parameters( :rrdtool_path   => manager_config.rrdtool_path,
                                :rrd_store_path => manager_config.rra_directory )
 
-      targets_config = Rocuses::Config::TargetsConfig.new
-      File.open( Rocuses::ManagerParameters::TARGETS_CONFIG_FILENAME ) { |xml|
-        targets_config.load( xml )
-      }
-
-      graphs = Array.new
-
       targets_config.targets.each { |target|
         begin
-          unix_server = Rocuses::Device::UnixServer.new( target )
+          unix_server = Device::UnixServer.new( target )
 
-          data = Rocuses::Fetch.new.fetch( target )
-          resource = Rocuses::Resource.deserialize( data )
+          data = Fetch.new.fetch( target )
+          resource = Resource.deserialize( data )
           unix_server.update( manager_config, resource )
 
-          graphs = Array.new
-          unix_server.make_graph_templates().each { |graph_template|
-            graph = graph_template.make_graph
-            Rocuses::ManagerParameters::GRAPH_TIME_PERIOD_OF.each { |period_suffix,period|
-              begin_time = Time.now - period
-              end_time   = Time.now
-              image = graph.draw( :begin_time => begin_time,
-                                  :end_time   => end_time,
-                                  :width      => manager_config.image_width,
-                                  :height     => manager_config.image_height )
+          @devices << unix_server
+        rescue => e
+          @logger.error( e.to_s )
+          @logger.error( e.backtrace )
+        end
+      }
 
-              graph_info = Graph.new( :image      => image,
-                                      :name       => sprintf( "%s %s %s",
-                                                              target.name,
-                                                              graph_template.name,
-                                                              period_suffix ),
-                                      :filename   => sprintf( "%s/%s_%s_%s.png",
-                                                              manager_config.graph_directory,
-                                                              target.name,
-                                                              graph_template.name,
-                                                              period_suffix ),
-                                      :begin_time => begin_time,
-                                      :end_time   => end_time )
+      def draw_graph
+        manager_config = load_manager_config()
 
-              graphs << graph_info
+        graphs = Array.new
+
+        @devices.each { |device|
+          begin 
+            device.make_graph_templates().each { |graph_template|
+              graph = graph_template.make_graph
+              ManagerParameters::GRAPH_TIME_PERIOD_OF.each { |period_suffix,period|
+                end_time   = Time.now
+                begin_time = end_time - period
+
+                image = graph.make_image( :begin_time => begin_time,
+                                          :end_time   => end_time,
+                                          :width      => manager_config.image_width,
+                                          :height     => manager_config.image_height )
+
+                graph_info = Graph.new( :image      => image,
+                                        :name       => sprintf( "%s %s %s",
+                                                                device.name,
+                                                                graph_template.name,
+                                                                period_suffix ),
+                                        :filename   => sprintf( "%s/%s_%s_%s.png",
+                                                                manager_config.graph_directory,
+                                                                device.name,
+                                                                graph_template.name,
+                                                                period_suffix ),
+                                        :begin_time => begin_time,
+                                        :end_time   => end_time )
+
+                graphs << graph_info
+              }
             }
-          }
 
-        rescue => e
-          p e
-          p e.backtrace
-        end
-      }
+          rescue => e
+            @logger.error( e.to_s )
+            @logger.error( e.backtrace )
+          end
+        }
 
-      graphs.each { |graph_info|
-        begin
-          File.open( graph_info.filename, File::WRONLY | File::CREAT || File::TRUNCATE ) { |output|
-            output.print( graph_info.image )
-          }                                                                                                                                                 
-        rescue => e
-          p e
-          p e.backtrace
-        end
-      }
+        graphs.each { |graph_info|
+          begin
+            File.open( graph_info.filename, File::WRONLY | File::CREAT || File::TRUNCATE ) { |output|
+              output.print( graph_info.image )
+            }                           
+          rescue => e
+            @logger.error( e.to_s )
+            @logger.error( e.backtrace )
+          end
+        }
 
+      end
     end
+
+    private
+
+    def load_config( config_class, filename )
+      config = config_class.new
+      File.open( filename ) { |xml|
+        config.load( xml )
+      }
+      return config
+    end
+
+    def load_manager_config()
+      return load_config( Config::ManagerConfig,
+                          ManagerParameters::MANAGER_CONFIG_FILENAME )
+    end
+
+    def load_targets_config()
+      return load_config( Config::TargetsConfig,
+                          ManagerParameters::TARGETS_CONFIG_FILENAME )
+
+    end      
   end
 end
 

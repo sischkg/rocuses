@@ -46,6 +46,7 @@ module Rocuses
         if @value.is_vdef
           raise %Q[ RPM "#{ @value }" must be CDEF( do not contain DEF ).]
         end
+        
       end
 
       def depend_on
@@ -294,7 +295,7 @@ module Rocuses
       # vertical_label:: Y軸のラベル
       # rigid:: autoscale
       # RETURN:: グラフ画像（png)
-      def draw( args )
+      def make_image( args )
         args = Utils::check_args( args,
                                   {
                                     :title          => :op,
@@ -370,7 +371,7 @@ module Rocuses
           cmd += sprintf( " %s ", item.rpn_expression )
         }
 
-        return RRDTool.draw( cmd )
+        return RRDTool.make_image( cmd )
       end
     end
   end

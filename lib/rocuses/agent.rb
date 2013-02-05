@@ -29,13 +29,18 @@ module Rocuses
     include Log4r
 
     def initialize
-      @logger = Logger.new( 'rocuses::agent' )
-      @logger.outputters  = DateFileOutputter.new( 'error_log',  { :dirname => LOG_DIRECTORY, :lavel => INFO } )
+      @error_logger = Logger.new( 'rocuses::agent' )
+      @error_logger.outputters  = DateFileOutputter.new( 'error_log',
+                                                   {
+                                                     :dirname      => LOG_DIRECTORY,
+                                                     :date_pattern => 'error_log.%Y-%m-%d',
+                                                     :level        => INFO,
+                                                   } )
 
       OS_AGENTS.each { |os_agent|
         if os_agent.match_environment?
           @os_agent = os_agent.new
-          @logger.info( "Agent #{ @os_agent.name } is selected" )
+          @error_logger.info( "Agent #{ @os_agent.name } is selected" )
           return
         end
       }
@@ -56,7 +61,7 @@ module Rocuses
       begin
         @os_agent.get_resource( type, resource )
       rescue ArgumentError => e
-        @logger.info( "resource type #{ type } is not supported" )
+        @error_logger.info( "resource type #{ type } is not supported" )
       end
     end
     
@@ -75,11 +80,21 @@ module Rocuses
       @agent         = Rocuses::Agent.new
       @agentconfig   = args[:agentconfig]
       @daemonize     = args[:daemonize]
-      @error_logger  = Logger.new( 'rocus::agent::httpd::error_log' )
       @access_logger = Logger.new( 'rocus::agent::httpd::access_log' )
+      @error_logger = Logger.new( 'rocus::agent::httpd::error_log' )
 
-      @access_logger.outputters = DateFileOutputter.new( 'access_log', { :dirname => LOG_DIRECTORY, :lavel => INFO } )
-      @error_logger.outputters  = DateFileOutputter.new( 'error_log',  { :dirname => LOG_DIRECTORY, :lavel => INFO } )
+      @access_logger.outputters = DateFileOutputter.new( 'httpd_access_log',
+                                                         {
+                                                           :dirname      => LOG_DIRECTORY,
+                                                           :date_pattern => 'httpd_access_log',
+                                                           :level        => INFO,
+                                                         } )
+      @error_logger.outputters = DateFileOutputter.new( 'httpd_error_log',
+                                                         {
+                                                           :dirname      => LOG_DIRECTORY,
+                                                           :date_pattern => 'httpd_error_log',
+                                                           :level        => INFO,
+                                                         } )
     end
 
     # エージェントのサービスを開始数する。

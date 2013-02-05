@@ -7,25 +7,28 @@ require 'rocuses/config/default'
 module Rocuses
   module Config
 
+    # プロセス数の取得対象を表すクラス
     class Process
 
+      # グラフ名
       attr_reader :name
 
       attr_reader :pattern
 
       def initialize( args )
-        Args::check_args( args, { :name => :req, :pattern => :req } )
+        Utils::check_args( args, { :name => :req, :pattern => :req } )
         @name    = args[:name]
         @pattern = args[:pattern]
       end
     end
 
+    # トラフィック取得対象を表すクラス
     class Traffic
 
       # トラフィック取得対象のネットワークインターフェースのArray
       attr_reader :interfaces
 
-      # 
+      # グラフ名
       attr_reader :name
 
       def initialize( args )
@@ -131,10 +134,10 @@ module Rocuses
       # doc:: REXML::Document
       # name:: Elementの名前
       def load_targets( doc )
-        doc.elements.each( "rocuses/targets/target" ) { |element|
-          name     = element.attributes["name"]
-          hostname = element.attributes["hostname"]
-          port     = element.attributes["port"]
+        doc.elements.each( 'rocuses/targets/target' ) { |element|
+          name     = element.attributes['name']
+          hostname = element.attributes['hostname']
+          port     = element.attributes['port']
 
           if name.nil? || hostname.nil?
             raise ArgumentError.new( %q{please set name,hostname( <target name="..." hostname="..." ></targets> )} )
@@ -156,7 +159,7 @@ module Rocuses
       def load_filesystems( target )
         filesystems = Array.new
         target.elements.each( 'filesystem' ) { |child|
-          mount_point = child.attributes["mount_point"]
+          mount_point = child.attributes['mount_point']
           
           if mount_point.nil?
             raise ArgumentError.new( %q{please set mount_point( <filesystem mount_point="...." )/> )} )
@@ -170,8 +173,8 @@ module Rocuses
       def load_processes( target )
         processes = Array.new
         target.elements.each( 'process' ) { |child|
-          name    = child.attributes["name"]
-          pattern = child.attributes["pattern"]
+          name    = child.attributes['name']
+          pattern = child.attributes['pattern']
           
           if name.nil? || pattern.nil?
             raise ArgumentError.new( %q{please set name,pattern( <process name="..." pattern="...." )/> )} )
@@ -185,7 +188,7 @@ module Rocuses
       def load_disk_ios( target )
         disk_ios = Array.new
         target.elements.each( 'disk_io' ) { |child|
-          device = child.attributes["device"]
+          device = child.attributes['device']
           
           if device.nil?
             raise ArgumentError.new( %q{please set device( <disk_io device="...." )/> )} )

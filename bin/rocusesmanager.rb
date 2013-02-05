@@ -1,6 +1,8 @@
-#! /usr/bin/ruby1.9.1
+#! /usr/bin/ruby1.8
 # -*- coding: utf-8 -*-
 
 require 'rocuses/manager'
 
-Rocuses::Manager::fetch_resource()
+manager = Rocuses::Manager.new
+manager.fetch_resource()
+manager.draw_graph()

@@ -27,8 +27,8 @@ module Rocuses
       RRDTool::RRDToolImp.instance.update( cmd )
     end
 
-    def draw( cmd )
-      RRDTool::RRDToolImp.instance.draw( cmd )
+    def make_image( cmd )
+      RRDTool::RRDToolImp.instance.make_image( cmd )
     end
 
     def assign_name()

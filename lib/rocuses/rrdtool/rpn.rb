@@ -30,6 +30,14 @@ module Rocuses
         }
         return super
       end
+
+      def to_vdef
+        return RPN_Value.new( self, true )
+      end
+
+      def to_cdef
+        return RPN_Value.new( self, false )
+      end
     end
 
     class RPN_UnaryOperator
@@ -60,14 +68,20 @@ module Rocuses
       end
 
       def definition
-        return sprintf( "%sDEF:%s=%s %sDEF:%s=%s,%s",
-                        @arg.is_vdef() ? 'V' : 'C',
+        return sprintf( "CDEF:%s=%s VDEF:%s=%s,%s",
                         @tmp_value_name,
                         @arg.rpn_expression(),
-                        @is_vdef ? 'V' : 'C',
                         @name, 
                         @tmp_value_name,
                         @operator )
+#        return sprintf( "%sDEF:%s=%s %sDEF:%s=%s,%s",
+#                        @arg.is_vdef() ? 'V' : 'C',
+#                        @tmp_value_name,
+#                        @arg.rpn_expression(),
+#                        @is_vdef ? 'V' : 'C',
+#                        @name, 
+#                        @tmp_value_name,
+#                        @operator )
       end
 
       def rpn_expression
@@ -101,8 +115,8 @@ module Rocuses
       end
 
       def definition
-        return sprintf( "%sDEF:%s=%s,%s,%s",
-                        is_vdef() ? 'V' : 'C',
+        return sprintf( "CDEF:%s=%s,%s,%s",
+#                        is_vdef() ? 'V' : 'C',
                         @name,
                         @lhs.rpn_expression(),
                         @rhs.rpn_expression(),
@@ -114,8 +128,9 @@ module Rocuses
       end
 
       def is_vdef
-        return @lhs.is_vdef && @rhs.is_vdef
+        return false
       end
+
     end
 
     class RPN_Value < Numeric
@@ -128,9 +143,12 @@ module Rocuses
 
       attr_reader :name
 
-      def initialize( arg )
-        @arg = arg.to_rpn
-        @name = RRDTool.assign_name()
+      attr_reader :is_vdef
+
+      def initialize( arg, type = false )
+        @arg     = arg.to_rpn
+        @is_vdef = type
+        @name    = RRDTool.assign_name()
       end
 
       def depend_on
@@ -138,18 +156,19 @@ module Rocuses
       end
 
       def definition
-        return sprintf( '%sDEF:%s=%s',
-                        is_vdef() ? 'V' : 'C',
-                        @name,
-                        @arg.rpn_expression() )
+        if @is_vdef
+          return sprintf( 'VDEF:%s=%s,AVERAGE',
+                          @name,
+                          @arg.rpn_expression() )
+        else
+          return sprintf( 'CDEF:%s=%s',
+                          @name,
+                          @arg.rpn_expression() )
+        end
       end
 
       def rpn_expression
         return @name
-      end
-
-      def is_vdef
-        return @arg.is_vdef
       end
     end
 
@@ -278,25 +297,25 @@ end
 
 class Integer
   def to_rpn
-    return RRDTool::RPN_Constant.new( self )
+    return Rocuses::RRDTool::RPN_Constant.new( self )
   end
 end
 
 class Float
   def to_rpn
-    return RRDTool::RPN_Constant.new( self )
+    return Rocuses::RRDTool::RPN_Constant.new( self )
   end
 end
 
 class Fixnum
   def to_rpn
-    return RRDTool::RPN_Constant.new( self )
+    return Rocuses::RRDTool::RPN_Constant.new( self )
   end
 end
 
 class Bignum
   def to_rpn
-    return RRDTool::RPN_Constant.new( self )
+    return Rocuses::RRDTool::RPN_Constant.new( self )
   end
 end
 

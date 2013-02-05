@@ -35,7 +35,7 @@ module Rocuses
       # predict_gamma:: 0-1.0
       # predict_seasonal_period:: 周期( second )
       def initialize( args )
-        args = Args::check_args( args,
+        args = Utils::check_args( args,
                                  {
                                    :name        => :req,
                                    :type        => :req,

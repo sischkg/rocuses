@@ -11,6 +11,10 @@ module Rocuses
         @target = target
       end
 
+      def name
+        @target.name
+      end
+
       def update( manager_config, resource )
         @cpu_usages = Array.new
         resource.cpus.each { |cpu|

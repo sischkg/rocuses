@@ -25,30 +25,30 @@ module Rocuses
         graph = RRDTool::Graph.new( :title       => title,
                                     :upper_limit => 100 * @cpu_datasource.cpu_count,
                                     :lower_limit => 0,
-                                    :rigid       => false )
+                                    :rigid       => true )
 
-        Utils::draw_line( graph,
+        Utils::draw_area( graph,
                           {
                             :label  => 'user  ',
                             :value  => @cpu_datasource.user,
-                            :width  => 1,
+                            :factor => 100,
                             :color  => '#0000ff',
                             :format => GPRINT_FORMAT,
                           } )
-        Utils::draw_line( graph,
+        Utils::draw_area( graph,
                           {
                             :label  => 'system',
                             :value  => @cpu_datasource.system,
-                            :width  => 1,
+                            :factor => 100,
                             :stack  => true,
                             :color  => '#ff0000',
                             :format => GPRINT_FORMAT,
                           } )
-        Utils::draw_line( graph,
+        Utils::draw_area( graph,
                           {
                             :label  => 'wait  ',
                             :value  => @cpu_datasource.wait,
-                            :width  => 1,
+                            :factor => 100,
                             :stack  => true,
                             :color  => '#00ff00',
                             :format => GPRINT_FORMAT,

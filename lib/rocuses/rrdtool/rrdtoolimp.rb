@@ -46,7 +46,7 @@ module Rocuses
         parse_result( @stdin, @stdout )
       end
 
-      def draw( cmd )
+      def make_image( cmd )
         open()
 
         @stdin.print( "graphv -  --imgformat PNG #{ cmd }\n" )
@@ -78,7 +78,6 @@ module Rocuses
 
       def parse_result( output, input )
         while line = input.readline
-          pp line
           if line =~ /\AOK/
             return
           elsif line =~ /\AERROR/

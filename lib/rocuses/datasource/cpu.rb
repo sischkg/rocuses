@@ -33,8 +33,6 @@ module Rocuses
       def update( config, resource )
         resource.cpus.each { |cpu|
           if cpu.name == @name
-            pp cpu
-
             @user   = create_rrd( config, 'user' )
             @system = create_rrd( config, 'system' )
             @wait   = create_rrd( config, 'wait' )
