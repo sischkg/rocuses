@@ -36,16 +36,16 @@ module Rocuses
       # used_swap:: スワップ使用量(byte)
       # total_swap:: 全スワップ(byte)
       def initialize( args )
-        Rocuses::Utils::check_args( args, 
-                                    {
-                                      :time          => :req,
-                                      :used_memory   => :req,
-                                      :total_memory  => :req,
-                                      :cache_memory  => :op,
-                                      :buffer_memory => :op,
-                                      :used_swap     => :req,
-                                      :total_swap    => :req,
-                                    } )
+        Utils::check_args( args, 
+                           {
+                             :time          => :req,
+                             :used_memory   => :req,
+                             :total_memory  => :req,
+                             :cache_memory  => :op,
+                             :buffer_memory => :op,
+                             :used_swap     => :req,
+                             :total_swap    => :req,
+                           } )
         @time          = args[:time]
         @used_memory   = args[:used_memory]
         @total_memory  = args[:total_memory]

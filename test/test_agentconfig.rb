@@ -2,7 +2,8 @@
 
 $LOAD_PATH.insert( 0, File.join( File.dirname( __FILE__ ), '..', 'lib' ) )
 
-require 'args/test'
+require 'rocuses/test'
+require 'rocuses/utils'
 require 'rocuses/config/agentconfig'
 
 class LoadXMLTest < Test::Unit::TestCase

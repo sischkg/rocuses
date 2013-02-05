@@ -41,17 +41,17 @@ module Rocuses
       # wait_time:: Queueが空でない時間(nanosecond)
       # queue_length_time:: Queue内のIO Requestの数と経過時間(nanoseocnd)の積の和
       def initialize( args )
-        Rocuses::Utils::check_args( args,
-                                    {
-                                      :time              => :req,
-                                      :name              => :req,
-                                      :read_count        => :req,
-                                      :read_data_size    => :req,
-                                      :write_count       => :req,
-                                      :write_data_size   => :req,
-                                      :wait_time         => :req,
-                                      :queue_length_time => :req,
-                                    } )
+        Utils::check_args( args,
+                           {
+                             :time              => :req,
+                             :name              => :req,
+                             :read_count        => :req,
+                             :read_data_size    => :req,
+                             :write_count       => :req,
+                             :write_data_size   => :req,
+                             :wait_time         => :req,
+                             :queue_length_time => :req,
+                           } )
         
         
         @time              = args[:time]

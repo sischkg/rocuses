@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-require 'rrdtool/rpn'
-require 'rrdtool/graph'
+require 'rocuses/utils'
+require 'rocuses/rrdtool/rpn'
+require 'rocuses/rrdtool/graph'
 
 module Rocuses
   module GraphTemplate
@@ -10,7 +11,7 @@ module Rocuses
       module_function
 
       def draw_line( graph, args )
-        args = Args::check_args( args,
+        args = Utils::check_args( args,
                                  {
                                    :label  => :req,
                                    :value  => :req,

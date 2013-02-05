@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-require 'rrdtool/rpn'
-require 'rrdtool/graph'
+require 'rocuses/rrdtool/rpn'
+require 'rocuses/rrdtool/graph'
 require 'rocuses/graphtemplate/utils'
 
 module Rocuses
@@ -15,8 +15,17 @@ module Rocuses
         @cpu_datasource = cpu_datasource
       end
 
-      def draw( config, begin_time, end_time )
-        graph = RRDTool::Graph.new
+      def name
+        return 'CPU_Average'
+      end
+
+      def make_graph()
+        title = "CPU - #{ @cpu_datasource.nodename }"
+
+        graph = RRDTool::Graph.new( :title       => title,
+                                    :upper_limit => 100 * @cpu_datasource.cpu_count,
+                                    :lower_limit => 0,
+                                    :rigid       => false )
 
         Utils::draw_line( graph,
                           {
@@ -44,13 +53,8 @@ module Rocuses
                             :color  => '#00ff00',
                             :format => GPRINT_FORMAT,
                           } )
-        
-        title = "CPU - #{ @cpu_datasource.nodename }"
-        return graph.draw( :title       => title,
-                           :width       => config.image_width,
-                           :height      => config.image_height,
-                           :upper_limit => 100,
-                           :lower_limit => 0 )
+
+        return graph
       end
     end
   end

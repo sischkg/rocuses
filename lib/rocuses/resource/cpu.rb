@@ -7,6 +7,7 @@ module Rocuses
 
     # CPUの処理時間を保持するクラス
     class CPU 
+      include Rocuses
       include Comparable
 
       # データ取得時刻
@@ -30,14 +31,14 @@ module Rocuses
       # system:: カーネルのCPU使用時間(second)
       # wait:: I/O Wait (second)
       def initialize( args )
-        Rocuses::Utils::check_args( args,
-                                    {
-                                      :time   => :req,
-                                      :name   => :req,
-                                      :user   => :req,
-                                      :system => :req,
-                                      :wait   => :req,
-                                    } )
+        Utils::check_args( args,
+                           {
+                             :time   => :req,
+                             :name   => :req,
+                             :user   => :req,
+                             :system => :req,
+                             :wait   => :req,
+                           } )
         @time   = args[:time]
         @name   = args[:name]
         @user   = args[:user]

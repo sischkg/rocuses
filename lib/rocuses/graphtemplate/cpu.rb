@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-require 'rrdtool/rpn'
-require 'rrdtool/graph'
+require 'rocuses/rrdtool/rpn'
+require 'rocuses/rrdtool/graph'
 
 module Rocuses
   module GraphTemplate
@@ -15,12 +15,19 @@ module Rocuses
         @cpu_datasources = cpu_datasources
       end
 
-      def draw( config, begin_time, end_time )
+      def name
+        return 'CPU'
+      end
+
+      def make_graph()
         if @cpu_datasources.size <= 0
           return nil
         end
 
-        graph = RRDTool::Graph.new
+        title = "CPU - #{ @cpu_datasources[0].nodename }"
+        graph = RRDTool::Graph.new( :title       => title,
+                                    :upper_limit => @cpu_datasources.size,
+                                    :lower_limit => 0 )
 
         @cpu_datasources.each { |cpu|
           cpu_usage =
@@ -57,12 +64,7 @@ module Rocuses
           graph.add_item( RRDTool::LineFeed.new( :left ) )
         }
 
-        title = "CPU - #{ @cpu_datasources[0].nodename }"
-        return graph.draw( :title       => title,
-                           :width       => config.image_width,
-                           :height      => config.image_height,
-                           :upper_limit => @cpu_datasources.size * 100,
-                           :lower_limit => 0 )
+        return graph
       end
     end
   end

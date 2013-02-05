@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 require 'pp'
-require 'rrdtool/datasource'
+require 'rocuses/rrdtool/datasource'
 
 module Rocuses
   module DataSource

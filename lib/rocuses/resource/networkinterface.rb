@@ -44,18 +44,18 @@ module Rocuses
       # outbound_data_size::   送信したデータサイズ(byte)
       # outbound_error_count:: 送信時のエラー数
       def initialize( args )
-        Rocuses::Utils::check_args( args,
-                                    {
-                                      :time                  => :req,
-                                      :name                  => :req,
-                                      :inbound_packet_count  => :req,
-                                      :inbound_data_size     => :req,
-                                      :inbound_error_count   => :req,
-                                      :outbound_packet_count => :req,
-                                      :outbound_data_size    => :req,
-                                      :outbound_error_count  => :req,
-                                      :link_status           => :req,
-                                    } )
+        Utils::check_args( args,
+                           {
+                             :time                  => :req,
+                             :name                  => :req,
+                             :inbound_packet_count  => :req,
+                             :inbound_data_size     => :req,
+                             :inbound_error_count   => :req,
+                             :outbound_packet_count => :req,
+                             :outbound_data_size    => :req,
+                             :outbound_error_count  => :req,
+                             :link_status           => :req,
+                           } )
         
         
         @time                  = args[:time]

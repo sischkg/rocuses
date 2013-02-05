@@ -3,7 +3,7 @@
 $LOAD_PATH.insert( 0, File.join( File.dirname( __FILE__ ), '..', 'lib' ) )
 
 require 'pp'
-require 'args/test'
+require 'rocuses/test'
 require 'rocuses/resource'
 require 'rocuses/agent/linux'
 

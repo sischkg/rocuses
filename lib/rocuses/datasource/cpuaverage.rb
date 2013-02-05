@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 require 'pp'
-require 'rrdtool/datasource'
+require 'rocuses/rrdtool/datasource'
 
 module Rocuses
   module DataSource
@@ -20,9 +20,13 @@ module Rocuses
       # CPU使用率のWAITのRRDTool::DataSource
       attr_reader :wait
 
+      # CPU数
+      attr_reader :cpu_count
+
       # nodename:: nodename
       def initialize( nodename ) 
-        @nodename = nodename
+        @nodename  = nodename
+        @cpu_count = 1
       end
 
       def update( config, resource )
@@ -34,6 +38,10 @@ module Rocuses
           @user.update(   resource.cpu_average.time, resource.cpu_average.user )
           @system.update( resource.cpu_average.time, resource.cpu_average.system )
           @wait.update(   resource.cpu_average.time, resource.cpu_average.wait )
+        end
+
+        if resource.cpus
+          @cpu_count = resource.cpus.size
         end
       end
 

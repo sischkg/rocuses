@@ -6,7 +6,7 @@ require 'log4r'
 require 'log4r/outputter/datefileoutputter'
 require 'log4r/configurator'
 require 'webrick'
-require 'args'
+require 'rocuses/utils'
 require 'rocuses/agent/linux'
 require 'rocuses/agent/noos'
 require 'rocuses/config/agentconfig'
@@ -68,9 +68,10 @@ module Rocuses
     RESOURCE_TYPE_DELIMITOR = %q{,}
 
     include Log4r
+    include Rocuses
 
     def initialize( args )
-      args = Args::check_args( args, { :agentconfig => :req, :daemonize => :op, }, { :daemonize => false } )
+      args = Utils::check_args( args, { :agentconfig => :req, :daemonize => :op, }, { :daemonize => false } )
       @agent         = Rocuses::Agent.new
       @agentconfig   = args[:agentconfig]
       @daemonize     = args[:daemonize]

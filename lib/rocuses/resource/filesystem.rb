@@ -37,16 +37,16 @@ module Rocuses
       # total_files:: 全inode
       # used_files:: 使用inode
       def initialize( args )
-        Rocuses::Utils::check_args( args,
-                                    {
-                                      :time        => :req,
-                                      :mount_point => :req,
-                                      :total_size  => :req,
-                                      :used_size   => :req,
-                                      :free_size   => :req,
-                                      :total_files => :req,
-                                      :used_files  => :req,
-                                    } )
+        Utils::check_args( args,
+                           {
+                             :time        => :req,
+                             :mount_point => :req,
+                             :total_size  => :req,
+                             :used_size   => :req,
+                             :free_size   => :req,
+                             :total_files => :req,
+                             :used_files  => :req,
+                           } )
         @time        = args[:time]
         @mount_point = args[:mount_point]
         @total_size  = args[:total_size]

@@ -25,13 +25,13 @@ module Rocuses
       # la5:: 5 minutes load average
       # la15:: 15 minutes load avarage
       def initialize( args )
-        Rocuses::Utils::check_args( args,
-                                    {
-                                      :time => :req,
-                                      :la1 =>  :req,
-                                      :la5  => :req,
-                                      :la15 => :req,
-                                    } )
+        Utils::check_args( args,
+                           {
+                             :time => :req,
+                             :la1 =>  :req,
+                             :la5  => :req,
+                             :la15 => :req,
+                           } )
         @time = args[:time]
         @la1  = args[:la1]
         @la5  = args[:la5]

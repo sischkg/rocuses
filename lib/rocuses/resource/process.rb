@@ -41,17 +41,17 @@ module Rocuses
       # gid:: GID
       # time:: 監視時刻
       def initialize( args )
-        Rocuses::Utils::check_args( args,
-                                    {
-                                      :time       => :req,
-                                      :argument   => :req,
-                                      :start_time => :req,
-                                      :size       => :op,
-                                      :pid        => :req,
-                                      :parent_pid => :req,
-                                      :uid        => :req,
-                                      :gid        => :req,
-                                    } )
+        Utils::check_args( args,
+                           {
+                             :time       => :req,
+                             :argument   => :req,
+                             :start_time => :req,
+                             :size       => :op,
+                             :pid        => :req,
+                             :parent_pid => :req,
+                             :uid        => :req,
+                             :gid        => :req,
+                           } )
         @time       = args[:time]
         @argument   = args[:argument]
         @start_time = args[:start_time]

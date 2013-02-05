@@ -20,6 +20,7 @@ module Rocuses
     #       <step time="300"/>
     #       <heartbeat step="600"/>
     #       <rra directory="/var/rocuses/rra"/>
+    #       <graph directory="/var/rocuses/graph"/>
     #       <image width="500" height="200"/>
     #     </options>
     #   </manager>
@@ -39,6 +40,9 @@ module Rocuses
       # RRDToolのファイルの保存先ディレクトリ
       attr_reader :rra_directory
 
+      # Grahpの画像ファイルの保存先ディレクトリ
+      attr_reader :graph_directory
+
       # グラフ領域の幅(dots)
       attr_reader :image_width
 
@@ -48,12 +52,13 @@ module Rocuses
       #
       def initialize
         # default values.
-        @rrdtool_path  = 'rrdtool'
-        @step          = 300
-        @heartbeat     = 600
-        @rra_directory = '/var/rocuses/rra' 
-        @image_width   = 500
-        @image_height  = 120
+        @rrdtool_path    = 'rrdtool'
+        @step            = 300
+        @heartbeat       = 600
+        @rra_directory   = '/var/rocuses/rra' 
+        @graph_directory = '/var/rocuses/graph' 
+        @image_width     = 500
+        @image_height    = 120
       end
 
       # 設定XMLファイルをロードする
@@ -61,12 +66,13 @@ module Rocuses
       def load( input )
         doc = REXML::Document.new( input )
 
-        @rrdtool_path  = load_option( doc, 'rrdtool',   'path',      @rrdtool_path )
-        @step          = load_option( doc, 'step',      'time',      @step ).to_i
-        @heartbeat     = load_option( doc, 'heartbeat', 'step',      @heartbeat ).to_i
-        @rra_directory = load_option( doc, 'rra',       'directory', @rra_directory )
-        @image_widht   = load_option( doc, 'image',     'width',     @image_width ).to_i
-        @image_height  = load_option( doc, 'image',     'height',    @image_height ).to_i
+        @rrdtool_path    = load_option( doc, 'rrdtool',   'path',      @rrdtool_path )
+        @step            = load_option( doc, 'step',      'time',      @step ).to_i
+        @heartbeat       = load_option( doc, 'heartbeat', 'step',      @heartbeat ).to_i
+        @rra_directory   = load_option( doc, 'rra',       'directory', @rra_directory )
+        @graph_directory = load_option( doc, 'graph',     'directory', @graph_directory )
+        @image_widht     = load_option( doc, 'image',     'width',     @image_width ).to_i
+        @image_height    = load_option( doc, 'image',     'height',    @image_height ).to_i
       end
 
       private

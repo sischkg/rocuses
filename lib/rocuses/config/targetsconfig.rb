@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 require 'rexml/document'
-require 'args'
+require 'rocuses/utils'
 require 'rocuses/config/default'
 
 module Rocuses
@@ -29,7 +29,7 @@ module Rocuses
       attr_reader :name
 
       def initialize( args )
-        Args::check_args( args, { :name => :req, :interfaces => :req } )
+        Utils::check_args( args, { :name => :req, :interfaces => :req } )
         @name       = args[:name]
         @interfaces = args[:interfaces]
       end
@@ -60,7 +60,7 @@ module Rocuses
       attr_reader :disk_ios
 
       def initialize( args )
-        Args::check_args( args, {
+        Utils::check_args( args, {
                             :name        => :req,
                             :hostname    => :req,
                             :port        => :req,
