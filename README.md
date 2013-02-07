@@ -1,7 +1,7 @@
 rocuses
 =======
 
-monitoring servers tool.
+Monitoring servers tool.
 
 # Requirements
 
@@ -16,12 +16,44 @@ If configration file is installed to /usr/local/etc
 
     # ln -s /usr/local/etc/rocuses /etc/
 
-# config agent
+# configration
+## agent configration
+Edit agent configration file `/etc/rocuses/agentconfig.xml` from sample.xml. 
 
     # cp /etc/rocuses/agentconfig.sample.xml /etc/rocuses/agentconfig.xml
     # vi /etc/rocuses/agentconfig.xml
 
+You should set IP addresses or hostnames of manager. Agent reject connections from non-manager IP address.
+If you have not set IP addresses of manager, the agent accept connections from any IP addresses.
+
+    <manager hostname="manager1.in.example.com"/>
+    <manager hostname="192.168.0.1"/>
+
 # config manager
+Edit agent configration file `/etc/rocuses/managerconfig.xml` from sample.xml. 
 
     # cp /etc/rocuses/managerconfig.sample.xml /etc/rocuses/managerconfig.xml
     # vi /etc/rocuses/managerconfig.xml
+
+RRDTool PATH.
+
+    <rrdtool path="/usr/local/bin/rrdtool"/>
+
+RRDTool DataSource Step,
+
+    <step time="300"/>
+
+Directory of RRDTool Database files.
+
+    <rra directory="/var/rocuses/rra"/>
+
+Directory of graph images.
+
+    <graph directory="/var/rocuses/graph"/>
+
+Make directories of Databases and graph images.
+
+    # mkdir -p /var/rocuses/rra
+    # mkdir -p /var/rocuses/graph
+
+

@@ -5,6 +5,7 @@
       <rrdtool path="/usr/local/bin/rrdtool"/>
       <step time="300"/>
       <rra directory="/var/rocuses/rra"/>
+      <graph directory="/var/rocuses/graph"/>
     </options>
   </manager>
 </rocuses>

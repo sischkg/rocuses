@@ -143,11 +143,17 @@ module Rocuses
     private
 
     # HTTPリクエストの接続元IPアドレスを参照し、正しい接続元であるかを確かめる。
+    # ManagerのIPアドレスを登録していない場合（@agentconfig.managers == [] )は、任意のIPアドレスからの接続を許可する。
     # request:: リクエストのHTTPRequestインスタンス
     # RETURN:: true:接続元はManagerである / false: 接続元はManagerではない
     def validate_manager( request )
       msg = sprintf( "request: %s, magager %s", request.peeraddr.to_s, @agentconfig.managers.join( "," ) )
       @error_logger.info( msg )
+
+      if @agentconfig.managers.size == 0
+        return true
+      end
+
       is_valid_manager = false
       @agentconfig.managers.each { |manager|
         if request.peeraddr[2] == manager || request.peeraddr[3] == manager
