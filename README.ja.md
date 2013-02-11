@@ -79,5 +79,6 @@ RRDToolのデータベースファイルの保存先ディレクトリを指定�
 
 ## マネージャの実行（データ取得・グラフ作成）
 
-    # rocusesmanager
+    # crontab -e
+    */5 * * * * /usr/bin/rocusesmanager
 

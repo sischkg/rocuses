@@ -56,4 +56,27 @@ Make directories of Databases and graph images.
     # mkdir -p /var/rocuses/rra
     # mkdir -p /var/rocuses/graph
 
+create `/etc/rocuses/targetsconfig.xml`.
 
+    # vi /etc/rocuses/targetsconfig.xml
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <rocuses>
+      <targets>
+        <target node="node01" hostname="192.168.0.1">
+        </target>
+        <target node="node02" hostname="192.168.0.2">
+        </target>
+      </targets>
+    </rocuses>
+
+## start agent
+
+    # rocusagent
+
+## execute manager
+
+add to crontab
+
+    # crontab -e
+    */5 * * * * /usr/bin/rocusesmanager
