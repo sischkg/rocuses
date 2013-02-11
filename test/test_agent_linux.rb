@@ -25,15 +25,17 @@ class AgentLinuxTest < Test::Unit::TestCase
   end
 
   must "return load average" do
-    uptime_results = [ "4:16pm  up 50 day(s), 23:57,  1 user,  load average: 1.01, 0.55, 0.2\n" ]
     generate_time_mock( CHECKED_TIME )
-    generate_popen_mock( '/usr/bin/uptime' => uptime_results )
+    generate_readable_mock( '/proc/loadavg' => true )
+    generate_read_mock( '/proc/loadavg' =>
+                        [ '1.11 2.22 3.33 2/300 10001' ] )
+    assert( ! Rocuses::Agent::Linux.match_environment?, "unmatched RedHat Enterprise Linux Server 5" )
 
     resource = Rocuses::Resource.new
     Rocuses::Agent::Linux.new.get_load_average( resource )
-    assert_in_delta( 1.01, resource.load_average.la1,  0.1, "get 1 minute load average" ) 
-    assert_in_delta( 0.55, resource.load_average.la5,  0.1, "get 5 minute load average" ) 
-    assert_in_delta( 0.2,  resource.load_average.la15, 0.1, "get 15 minute load average" ) 
+    assert_in_delta( 1.11, resource.load_average.la1,  0.1, "get 1 minute load average" ) 
+    assert_in_delta( 2.22, resource.load_average.la5,  0.1, "get 5 minute load average" ) 
+    assert_in_delta( 3.33, resource.load_average.la15, 0.1, "get 15 minute load average" ) 
     assert_equal( CHECKED_TIME, resource.load_average.time, "get checked time" ) 
   end
 

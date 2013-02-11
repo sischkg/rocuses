@@ -342,9 +342,9 @@ module Rocuses
       # Load Averageを取得する。
       def get_load_average( resource )
         begin
-          IO.popen( '/usr/bin/uptime' ) { |input|
+          File.open( '/proc/loadavg' ) { |input|
             line = input.gets
-            if line =~ /load average: ([\d\.]+), ([\d\.]+), ([\d\.]+)\s*/
+            if line =~ %r{([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+(\d+)/(\d+)\s+(\d+)\s*}
               resource.load_average = Resource::LoadAverage.new( :time => Time.now,
                                                                  :la1  => $1.to_f,
                                                                  :la5  => $2.to_f,

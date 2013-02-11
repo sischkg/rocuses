@@ -1,15 +1,21 @@
+2013-02-12  Toshifumi Sakaguchi  <toshi@gmail.com>
+
+	* Load Averageを/proc/loadavgから取得するように変更
+	READMEにインストール・設定方法を追加
+	ChangeLogをUTF-8へ変更
+
 2013-01-08  Toshifumi Sakaguchi  <sischkg@gmail.com>
 
-	* �ץ���������̾��rocuses���ѹ�
-	�ץ���������̾���ѹ���ȼ����������ץ�̾���⥸�塼��̾���ѹ�
+	* プロジェクト名をrocusesへ変更
+	プロジェクト名の変更に伴い、スクリプト名・モジュール名を変更
 
-	* ���꤫��ʣ���Υ꥽������Ʊ���˼������뵡ǽ���ɲ�
+	* 特定かつ複数のリソースを同時に取得する機能を追加
 
 2012-11-20  Toshifumi Sakaguchi  <sischkg@gmail.com>
 
-	* �꥽����������ݻ����륯�饹RPerf::Resource���ɲ�
+	* リソース情報を保持するクラスRPerf::Resourceを追加
 
-	* Webrick����Ѥ����ʰץ���������Ȥ��ɲ�
+	* Webrickを使用した簡易エージェントを追加
 
 
 
