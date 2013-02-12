@@ -286,16 +286,16 @@ class AgentLinuxTest < Test::Unit::TestCase
     assert_equal( 1969110 * 512, resource.disk_ios[0].read_data_size,   "read size" )
     assert_equal( 60310,         resource.disk_ios[0].write_count,      "write count" )
     assert_equal( 3358544 * 512, resource.disk_ios[0].write_data_size,  "write size" )
-    assert_equal(  64644 * 1000 * 1000, resource.disk_ios[0].wait_time,         "wait time" )
-    assert_equal( 377440 * 1000 * 1000, resource.disk_ios[0].queue_length_time, "queue length time" )
+    assert_equal(  64644 * 1000 * 1000, resource.linux_disk_ios[0].wait_time,         "wait time" )
+    assert_equal( 377440 * 1000 * 1000, resource.linux_disk_ios[0].queue_length_time, "queue length time" )
 
     assert_equal( "sda1",        resource.disk_ios[1].name,             "device" )
     assert_equal( 31200,         resource.disk_ios[1].read_count,       "read count" )
     assert_equal( 1969000 * 512, resource.disk_ios[1].read_data_size,   "read size" )
     assert_equal( 60300,         resource.disk_ios[1].write_count,      "write count" )
     assert_equal( 3358500 * 512, resource.disk_ios[1].write_data_size,  "write size" )
-    assert_equal(  64600 * 1000 * 1000, resource.disk_ios[1].wait_time,         "wait time" )
-    assert_equal( 377400 * 1000 * 1000, resource.disk_ios[1].queue_length_time, "queue length time" )
+    assert_equal(  64600 * 1000 * 1000, resource.linux_disk_ios[1].wait_time,         "wait time" )
+    assert_equal( 377400 * 1000 * 1000, resource.linux_disk_ios[1].queue_length_time, "queue length time" )
   end
 
 

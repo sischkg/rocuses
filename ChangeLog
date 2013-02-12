@@ -1,8 +1,12 @@
 2013-02-12  Toshifumi Sakaguchi  <toshi@gmail.com>
 
 	* Load Averageを/proc/loadavgから取得するように変更
-	READMEにインストール・設定方法を追加
-	ChangeLogをUTF-8へ変更
+
+	* READMEにインストール・設定方法を追加
+
+	* ChangeLogをUTF-8へ変更
+
+	* Rocuses::Resouce::DiskIOの一部をLinuxDiskIOへ分離
 
 2013-01-08  Toshifumi Sakaguchi  <sischkg@gmail.com>
 

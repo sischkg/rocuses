@@ -371,14 +371,16 @@ module Rocuses
               wait_time         = columns[13].to_i * 1000 * 1000
               queue_length_time = columns[14].to_i * 1000 * 1000
               
-              resource.disk_ios.push( Resource::DiskIO.new( :time              => Time.now,
-                                                            :name              => name,
-                                                            :read_count        => read_count,
-                                                            :read_data_size    => read_data_size,
-                                                            :write_count       => write_count,
-                                                            :write_data_size   => write_data_size,
-                                                            :wait_time         => wait_time,
-                                                            :queue_length_time => queue_length_time ) )
+              resource.disk_ios.push( Resource::DiskIO.new( :time            => Time.now,
+                                                            :name            => name,
+                                                            :read_count      => read_count,
+                                                            :read_data_size  => read_data_size,
+                                                            :write_count     => write_count,
+                                                            :write_data_size => write_data_size ) )
+              resource.linux_disk_ios.push( Resource::LinuxDiskIO.new( :time              => Time.now,
+                                                                       :name              => name,
+                                                                       :wait_time         => wait_time,
+                                                                       :queue_length_time => queue_length_time ) )
             }
           }
         rescue => e

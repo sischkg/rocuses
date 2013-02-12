@@ -8,6 +8,7 @@ require 'rocuses/resource/process'
 require 'rocuses/resource/loadaverage'
 require 'rocuses/resource/networkinterface'
 require 'rocuses/resource/diskio'
+require 'rocuses/resource/linuxdiskio'
 
 
 module Rocuses
@@ -38,12 +39,17 @@ module Rocuses
     # 各ディスクのIO
     attr_accessor :disk_ios
 
+    # 各ディスクのIO(Linux)
+    attr_accessor :linux_disk_ios
+
+
     def initialize
       @cpus               = Array.new
       @filesystems        = Array.new
       @processes          = Array.new
       @network_interfaces = Array.new
       @disk_ios           = Array.new
+      @linux_disk_ios     = Array.new
     end
 
     def serialize
