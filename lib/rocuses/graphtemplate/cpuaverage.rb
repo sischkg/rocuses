@@ -19,6 +19,10 @@ module Rocuses
         return 'CPU_Average'
       end
 
+      def filename
+        return 'CPU_Average'
+      end
+
       def make_graph()
         title = "CPU - #{ @cpu_datasource.nodename }"
 

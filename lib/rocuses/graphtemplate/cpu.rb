@@ -19,6 +19,10 @@ module Rocuses
         return 'CPU'
       end
 
+      def filename
+        return 'CPU'
+      end
+
       def make_graph()
         if @cpu_datasources.size <= 0
           return nil

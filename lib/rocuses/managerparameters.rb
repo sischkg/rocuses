@@ -14,6 +14,13 @@ module Rocuses
       :yearly  => 60 * 60 * 24 * 365,
     }
 
+
+    SKIP_FILESYSTEMS = [
+                        %r{\A/run},
+                        %r{\A/dev},
+                        %r{\A/media},
+                       ]
+
   end
 end
 

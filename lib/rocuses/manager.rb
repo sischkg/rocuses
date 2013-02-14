@@ -80,11 +80,10 @@ module Rocuses
                                         :filename   => sprintf( "%s/%s_%s_%s.png",
                                                                 manager_config.graph_directory,
                                                                 device.name,
-                                                                graph_template.name,
+                                                                graph_template.filename,
                                                                 period_suffix ),
                                         :begin_time => begin_time,
                                         :end_time   => end_time )
-
                 graphs << graph_info
               }
             }

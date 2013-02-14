@@ -1,4 +1,10 @@
-2013-02-12  Toshifumi Sakaguchi  <toshi@gmail.com>
+2013-02-15  Toshifumi Sakaguchi  <sischkg@gmail.com>
+
+	* ファイルシステムの使用量のグラフを作成する機能を追加
+
+	* メモリ使用量のグラフを作成する機能を追加
+
+2013-02-12  Toshifumi Sakaguchi  <sischkg@gmail.com>
 
 	* Load Averageを/proc/loadavgから取得するように変更
 
