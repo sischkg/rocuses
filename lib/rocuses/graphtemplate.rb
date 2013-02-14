@@ -6,4 +6,5 @@ require 'rocuses/graphtemplate/cpuaverage'
 require 'rocuses/graphtemplate/memory'
 require 'rocuses/graphtemplate/swap'
 require 'rocuses/graphtemplate/filesystemsize'
+require 'rocuses/graphtemplate/filesystemfiles'
 

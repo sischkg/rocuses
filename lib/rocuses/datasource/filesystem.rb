@@ -26,8 +26,8 @@ module Rocuses
       # Total Files
       attr_reader :total_files
 
-      # Used Size(byte)
-      attr_reader :used_size
+      # Used FIles
+      attr_reader :used_files
 
       # nodename:: nodename
       # mount_point:: mount point

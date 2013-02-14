@@ -52,6 +52,7 @@ module Rocuses
 
         @filesystems.each { |filesystem|
           graph_templates << GraphTemplate::FilesystemSize.new( filesystem )
+          graph_templates << GraphTemplate::FilesystemFiles.new( filesystem )
         }
 
         return graph_templates
