@@ -25,6 +25,9 @@ module Rocuses
 
         @cpu_average_usage = DataSource::CPUAverage.new( @target.name )
         @cpu_average_usage.update( manager_config, resource )          
+
+        @memory = DataSource::Memory.new( @target.name )
+        @memory.update( manager_config, resource )
       end
 
       def make_graph_templates
@@ -32,6 +35,7 @@ module Rocuses
 
         graph_templates << GraphTemplate::CPU.new( @cpu_usages )
         graph_templates << GraphTemplate::CPUAverage.new( @cpu_average_usage )
+        graph_templates << GraphTemplate::Memory.new( @memory )
         
         return graph_templates
       end

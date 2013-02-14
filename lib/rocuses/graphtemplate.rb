@@ -3,4 +3,5 @@
 require 'rocuses/utils'
 require 'rocuses/graphtemplate/cpu'
 require 'rocuses/graphtemplate/cpuaverage'
+require 'rocuses/graphtemplate/memory'
 
