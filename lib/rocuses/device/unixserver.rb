@@ -29,6 +29,8 @@ module Rocuses
 
         @memory = DataSource::Memory.new( @target.name )
         @memory.update( manager_config, resource )
+        @swap = DataSource::Swap.new( @target.name )
+        @swap.update( manager_config, resource )
 
         @filesystems = Array.new
         resource.filesystems.each { |filesystem|
@@ -46,6 +48,7 @@ module Rocuses
         graph_templates << GraphTemplate::CPU.new( @cpu_usages )
         graph_templates << GraphTemplate::CPUAverage.new( @cpu_average_usage )
         graph_templates << GraphTemplate::Memory.new( @memory )
+        graph_templates << GraphTemplate::Swap.new( @swap )
 
         @filesystems.each { |filesystem|
           graph_templates << GraphTemplate::FilesystemSize.new( filesystem )
