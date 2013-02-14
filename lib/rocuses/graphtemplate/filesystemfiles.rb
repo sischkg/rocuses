@@ -9,7 +9,7 @@ module Rocuses
     class FilesystemFiles
       include Rocuses::GraphTemplate
 
-      GPRINT_FORMAT = '%7.2lf'
+      GPRINT_FORMAT = '%10.0lf'
 
       def initialize( filesystem_datasource )
         @filesystem_datasource = filesystem_datasource
@@ -32,7 +32,7 @@ module Rocuses
 
         Utils::draw_area( graph,
                           {
-                            :label  => 'total ',
+                            :label  => 'total: ',
                             :value  => @filesystem_datasource.total_files,
                             :factor => 1,
                             :color  => '#0000ff',
@@ -40,7 +40,7 @@ module Rocuses
                           } )
         Utils::draw_area( graph,
                           {
-                            :label  => 'used  ',
+                            :label  => 'used:  ',
                             :value  => @filesystem_datasource.used_files,
                             :factor => 1,
                             :stack  => false,

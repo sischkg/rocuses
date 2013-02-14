@@ -58,7 +58,7 @@ module Rocuses
           graph.add_item( RRDTool::Line.new( :value => cpu_usage,
                                              :width => 1,
                                              :color => '#000000',
-                                             :label => cpu.name ) )
+                                             :label => "#{ cpu.name }: " ) )
           graph.add_item( RRDTool::GPrint.new( :value  => RRDTool::RPN_Last.new( cpu_usage_last ),
                                                :format => "Current: #{ GRPINT_FORMAT }" ) )
           graph.add_item( RRDTool::GPrint.new( :value  => RRDTool::RPN_Average.new( cpu_usage_avg ),

@@ -32,7 +32,7 @@ module Rocuses
 
         Utils::draw_area( graph,
                           {
-                            :label  => 'total ',
+                            :label  => 'total: ',
                             :value  => @vm_datasource.total_memory,
                             :factor => 1,
                             :color  => '#0000ff',
@@ -40,7 +40,7 @@ module Rocuses
                           } )
         Utils::draw_area( graph,
                           {
-                            :label  => 'used  ',
+                            :label  => 'used:  ',
                             :value  => @vm_datasource.used_memory,
                             :factor => 1,
                             :stack  => false,
@@ -49,7 +49,7 @@ module Rocuses
                           } )
         Utils::draw_area( graph,
                           {
-                            :label  => 'cache ',
+                            :label  => 'cache: ',
                             :value  => @vm_datasource.cache_memory,
                             :factor => 1,
                             :stack  => true,
@@ -58,7 +58,7 @@ module Rocuses
                           } )
         Utils::draw_area( graph,
                           {
-                            :label  => 'buffer',
+                            :label  => 'buffer:',
                             :value  => @vm_datasource.buffer_memory,
                             :factor => 1,
                             :stack  => true,

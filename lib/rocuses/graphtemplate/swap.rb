@@ -32,7 +32,7 @@ module Rocuses
 
         Utils::draw_area( graph,
                           {
-                            :label  => 'total ',
+                            :label  => 'total: ',
                             :value  => @vm_datasource.total_swap,
                             :factor => 1,
                             :color  => '#0000ff',
@@ -40,7 +40,7 @@ module Rocuses
                           } )
         Utils::draw_area( graph,
                           {
-                            :label  => 'used  ',
+                            :label  => 'used:  ',
                             :value  => @vm_datasource.used_swap,
                             :factor => 1,
                             :stack  => false,

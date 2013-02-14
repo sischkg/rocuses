@@ -4,6 +4,7 @@ require 'rocuses/utils'
 
 module Rocuses
   module RRDTool
+
     # グラフへLineを表示する
     class Line
       include Rocuses
@@ -62,7 +63,7 @@ module Rocuses
                      @width,
                      @value.name,
                      @color,
-                     @label )
+                     Rocuses::RRDTool::escape_colon( @label ) )
         if @stack
           e += ":STACK"
         end
@@ -118,7 +119,7 @@ module Rocuses
         e = sprintf( %q{AREA:%s%s:"%s"},
                      @value.name,
                      @color,
-                     @label )
+                     Rocuses::RRDTool::escape_colon( @label ) )
         if @stack
           e += ":STACK"
         end
@@ -161,7 +162,7 @@ module Rocuses
       def rpn_expression()
         return sprintf( %q{GPRINT:%s:"%s"},
                         @value.name,
-                        @format.gsub( ':', "" ) )
+                        Rocuses::RRDTool::escape_colon( @format ) )
       end
     end
 
@@ -189,7 +190,7 @@ module Rocuses
       end
 
       def rpm_expression()
-        return sprintf( %q{COMMENT:"%s"}, @comment )
+        return sprintf( %q{COMMENT:"%s"}, Rocuses::RRDTool::escape_colon( @comment ) )
       end
     end
 
@@ -374,5 +375,12 @@ module Rocuses
         return RRDTool.make_image( cmd )
       end
     end
+
+    module_function
+
+    def escape_colon( str )
+      return str.gsub( ':', '\\:' )
+    end
+
   end
 end

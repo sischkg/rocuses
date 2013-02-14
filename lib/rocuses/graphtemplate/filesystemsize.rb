@@ -32,7 +32,7 @@ module Rocuses
 
         Utils::draw_area( graph,
                           {
-                            :label  => 'total ',
+                            :label  => 'total: ',
                             :value  => @filesystem_datasource.total_size,
                             :factor => 1,
                             :color  => '#000000',
@@ -40,7 +40,7 @@ module Rocuses
                           } )
         Utils::draw_area( graph,
                           {
-                            :label  => 'used  ',
+                            :label  => 'used:  ',
                             :value  => @filesystem_datasource.used_size,
                             :factor => 1,
                             :stack  => false,
@@ -49,7 +49,7 @@ module Rocuses
                           } )
         Utils::draw_area( graph,
                           {
-                            :label  => 'free  ',
+                            :label  => 'free:  ',
                             :value  => @filesystem_datasource.free_size,
                             :factor => 1,
                             :stack  => true,

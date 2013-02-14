@@ -33,7 +33,7 @@ module Rocuses
 
         Utils::draw_area( graph,
                           {
-                            :label  => 'user  ',
+                            :label  => 'user:  ',
                             :value  => @cpu_datasource.user,
                             :factor => 100,
                             :color  => '#0000ff',
@@ -41,7 +41,7 @@ module Rocuses
                           } )
         Utils::draw_area( graph,
                           {
-                            :label  => 'system',
+                            :label  => 'system:',
                             :value  => @cpu_datasource.system,
                             :factor => 100,
                             :stack  => true,
@@ -50,7 +50,7 @@ module Rocuses
                           } )
         Utils::draw_area( graph,
                           {
-                            :label  => 'wait  ',
+                            :label  => 'wait:  ',
                             :value  => @cpu_datasource.wait,
                             :factor => 100,
                             :stack  => true,
