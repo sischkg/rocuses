@@ -53,7 +53,9 @@ class AgentLinuxTest < Test::Unit::TestCase
     Rocuses::Agent::Linux.new.get_virtual_memory_status( resource )
 
     assert_equal( 1020580, resource.virtual_memory.total_memory,  "get total memory" )
-    assert_equal(  947604, resource.virtual_memory.used_memory,   "get used memory" )
+    assert_equal(  947604 - 150100 - 351424,
+                   resource.virtual_memory.used_memory,
+                   "get used memory" )
     assert_equal(  150100, resource.virtual_memory.buffer_memory, "get buffer memory" )
     assert_equal( 2097144, resource.virtual_memory.total_swap,    "get total swap" )
     assert_equal(       0, resource.virtual_memory.used_swap,     "get used swap" )

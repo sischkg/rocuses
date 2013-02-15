@@ -3,6 +3,7 @@
 require 'pp'
 require 'log4r'
 require 'rocuses/resource'
+require 'rocuses/agentparameters'
 
 module Rocuses
   class Agent
@@ -178,9 +179,9 @@ module Rocuses
                      (\d+)      # cache
                      \s*/xm
                 total_memory  = $1.to_i
-                used_memory   = $2.to_i + $4.to_i
                 buffer_memory = $5.to_i
                 cache_memory  = $6.to_i
+                used_memory   = $2.to_i - cache_memory - buffer_memory
               elsif line =~ /Swap:\s+
                            (\d+)   # total
                            \s+
@@ -305,13 +306,16 @@ module Rocuses
             input.each { |line|
               #            dev    total   used    available     mount point
               if line =~ /\A\S+\s+(\d+)\s+(\d+)\s+(\d+)\s+\S+\s+(\S+)\s*/
-                filesystem_of[$4] = {
-                  :mount_point => $4,
-                  :total_size  => $1.to_i * 1024,
-                  :used_size   => $2.to_i * 1024,
-                  :free_size   => $3.to_i * 1024,
-                  :time        => Time.now,
-                }
+                mount_point = $4
+                if check_filesystem?( mount_point )
+                  filesystem_of[mount_point] = {
+                    :mount_point => mount_point,
+                    :total_size  => $1.to_i * 1024,
+                    :used_size   => $2.to_i * 1024,
+                    :free_size   => $3.to_i * 1024,
+                    :time        => Time.now,
+                  }
+                end
               end
             }
           }
@@ -321,9 +325,11 @@ module Rocuses
             input.each { |line|
               if line =~ /\A\S+\s+(\d+)\s+(\d+)\s+\d+\s+\S+\s+(\S+)\s*/
                 mount_point = $3
-                if filesystem_of.key?( mount_point )
-                  filesystem_of[mount_point][:total_files] = $1.to_i
-                  filesystem_of[mount_point][:used_files]  = $2.to_i
+                if check_filesystem?( mount_point )
+                  if filesystem_of.key?( mount_point )
+                    filesystem_of[mount_point][:total_files] = $1.to_i
+                    filesystem_of[mount_point][:used_files]  = $2.to_i
+                  end
                 end
               end
             }
@@ -430,6 +436,19 @@ module Rocuses
         @clock_tick = clock_tick
         return @clock_tick
       end
+
+      # ファイルシステムの使用量取得対象あるかを判定する
+      # mount_point:: ファイルシステムのmount_point
+      # RETURN:: true: mount_pointは使用量取得対象である / false: mountは使用量取得対象ではない
+      def check_filesystem?( mount_point )
+        AgentParameters::SKIP_FILESYSTEMS_ON_LINUX.each { |pattern|
+          if mount_point =~ pattern
+            return false
+          end
+        }
+        return true
+      end
+
     end
   end
 end

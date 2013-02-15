@@ -1,11 +1,9 @@
-#! /usr/bin/ruby1.9.1
+#! /usr/bin/ruby
 # -*- coding: utf-8 -*-
 
 require 'pp'
 require 'optparse'
 require 'rocuses/agent'
-
-AGENT_CONFIG_FILE = '/etc/rocuses/agentconfig.xml'
 
 daemonize = false
 
@@ -19,7 +17,7 @@ OptionParser.new { |opt|
 
 
 agentconfig = Rocuses::Config::AgentConfig.new
-File.open( AGENT_CONFIG_FILE ) { |configfile|
+File.open( Rocuses::AgentParameters::AGENT_CONFIG_FILENAME ) { |configfile|
   agentconfig.load( configfile.gets( nil ) )
 }
 http_server = Rocuses::HTTPServer.new( :agentconfig => agentconfig,

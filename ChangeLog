@@ -4,6 +4,11 @@
 
 	* メモリ使用量のグラフを作成する機能を追加
 
+	* Linuxのused_memoryにcache_memoryとbuffer_memoryを含まないように修正
+
+	* Linuxのファイルシステムの使用量・i-nodeの使用量を取得する対象に
+	/dev/(/dev/shmを除く), /sys, /run, /mediaを含まないように変更
+
 2013-02-12  Toshifumi Sakaguchi  <sischkg@gmail.com>
 
 	* Load Averageを/proc/loadavgから取得するように変更
