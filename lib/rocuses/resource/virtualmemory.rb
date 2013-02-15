@@ -55,28 +55,27 @@ module Rocuses
         @total_swap    = args[:total_swap]
       end
     end
-  end
 
-  # ページイン・ページアウトしたページ数
-  class PageIO
+    # ページイン・ページアウトしたページ数
+    class PageIO
 
-    # データ取得時刻(epoch time);
-    attr_reader :time
+      # データ取得時刻(epoch time);
+      attr_reader :time
 
-    # ページインしたページ数
-    attr_reader :page_in
+      # ページインしたページ数
+      attr_reader :page_in
 
-    # ページアウトしたページ数
-    attr_reader :page_out
+      # ページアウトしたページ数
+      attr_reader :page_out
 
-    # データ取得時刻(epoch time);
-    # page_in:: ページインしたページ数
-    # page_out::　ページアウトしたページ数
-    def initialize( time, page_in, page_out )
-      @time     = time
-      @page_in  = page_in
-      @page_out = page_out
+      # データ取得時刻(epoch time);
+      # page_in:: ページインしたページ数
+      # page_out::　ページアウトしたページ数
+      def initialize( time, page_in, page_out )
+        @time     = time
+        @page_in  = page_in
+        @page_out = page_out
+      end
     end
   end
 end
-

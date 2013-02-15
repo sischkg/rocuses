@@ -51,6 +51,7 @@ module Rocuses
       @os_agent.get_cpu_average( resource )
       @os_agent.get_cpus( resource )
       @os_agent.get_virtual_memory_status( resource )
+      @os_agent.get_page_io_status( resource )
       @os_agent.get_network_interface_status( resource )
       @os_agent.get_processes( resource )
       @os_agent.get_filesystem_status( resource )

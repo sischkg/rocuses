@@ -27,6 +27,9 @@ module Rocuses
     # 各ファイルシステムの統計情報
     attr_accessor :filesystems
 
+    # Page In/Out
+    attr_accessor :page_io
+
     # 全プロセス
     attr_accessor :processes
 
@@ -41,7 +44,6 @@ module Rocuses
 
     # 各ディスクのIO(Linux)
     attr_accessor :linux_disk_ios
-
 
     def initialize
       @cpus               = Array.new

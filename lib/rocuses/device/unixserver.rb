@@ -32,6 +32,11 @@ module Rocuses
         @swap = DataSource::Swap.new( @target.name )
         @swap.update( manager_config, resource )
 
+        if resource.page_io
+          @page_io = DataSource::PageIO.new( @target.name )
+          @page_io.update( manager_config, resource )
+        end
+
         @filesystems = Array.new
         resource.filesystems.each { |filesystem|
           filesystem_ds = DataSource::Filesystem.new( @target.name, filesystem.mount_point )
@@ -47,6 +52,9 @@ module Rocuses
         graph_templates << GraphTemplate::CPUAverage.new( @cpu_average_usage )
         graph_templates << GraphTemplate::Memory.new( @memory )
         graph_templates << GraphTemplate::Swap.new( @swap )
+        if @page_io
+          graph_templates << GraphTemplate::PageIO.new( @page_io )
+        end
 
         @filesystems.each { |filesystem|
           graph_templates << GraphTemplate::FilesystemSize.new( filesystem )

@@ -336,6 +336,16 @@ class AgentLinuxTest < Test::Unit::TestCase
     assert_equal( 2,             resource.cpus.size, 'count of CPU' )
   end
 
+  must "read stat for page io" do
+    generate_read_mock( '/proc/stat' => [ "page 10 20\n", ] )
+    generate_time_mock( Time.at( 100 ) )
+    
+    resource = Rocuses::Resource.new
+    Rocuses::Agent::Linux.new.get_page_io_status( resource )
+    assert_equal( 10, resource.page_io.page_in,  'page in' )
+    assert_equal( 20, resource.page_io.page_out, 'page out' )
+  end
+
 
 end
 

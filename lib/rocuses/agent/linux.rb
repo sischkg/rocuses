@@ -23,6 +23,7 @@ module Rocuses
         :CPU              => :get_cpus,
         :CPUAverage       => :get_cpu_average,
         :VirtualMemory    => :get_virtual_memory_status,
+        :PageIO           => :get_page_io_status,
         :Filesystem       => :get_filesystems_status,
         :Processe         => :get_processes,
         :DiskIO           => :get_disk_ios,
@@ -202,6 +203,29 @@ module Rocuses
           }
         rescue => e
           @logger.error( "cannot execute free -b( #{ e.to_s } )" )          
+        end
+      end
+
+
+      # PageIOの統計情報を取得する
+      def get_page_io_status( resource )
+        begin
+          File.open( '/proc/stat' ) { |input|
+            input.each { |line|
+              line.chomp!
+              if line =~ /\A
+                          page
+                          \s+
+                          (\d+)        # page in
+                          \s+
+                          (\d+)        # page out
+                        /xm
+                resource.page_io = Resource::PageIO.new( Time.now, $1.to_i, $2.to_i )
+              end
+            }
+          }
+        rescue => e
+          @logger.error( "cannot read /proc/stat( #{ e.to_s } )" )
         end
       end
 
