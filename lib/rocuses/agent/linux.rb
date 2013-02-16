@@ -253,7 +253,9 @@ module Rocuses
                 interface[:inbound_data_size]  = $1.to_i
                 interface[:outbound_data_size] = $2.to_i
               elsif line =~ /\A\s*\z/                                                                       # end of nic statistics infomation
-                resource.network_interfaces.push( Resource::NetworkInterface.new( interface ) )
+                if check_network_interface?( interface[:name] )
+                  resource.network_interfaces.push( Resource::NetworkInterface.new( interface ) )
+                end
                 interface               = Hash.new
                 interface[:link_status] = :down
                 interface[:time]        = Time.now
@@ -461,12 +463,24 @@ module Rocuses
         return @clock_tick
       end
 
-      # ファイルシステムの使用量取得対象あるかを判定する
+      # ファイルシステムmount_pointは使用量取得対象あるかを判定する
       # mount_point:: ファイルシステムのmount_point
       # RETURN:: true: mount_pointは使用量取得対象である / false: mountは使用量取得対象ではない
       def check_filesystem?( mount_point )
         AgentParameters::SKIP_FILESYSTEMS_ON_LINUX.each { |pattern|
           if mount_point =~ pattern
+            return false
+          end
+        }
+        return true
+      end
+
+      # ネットワークインターフェースnameは情報取得対象あるかを判定する
+      # name:: ネットワークインターフェース名
+      # RETURN:: true: nameは取得対象である / false: nameは取得対象ではない
+      def check_network_interface?( name )
+        AgentParameters::SKIP_NETWORK_INTERFACES_ON_LINUX.each { |pattern|
+          if name =~ pattern
             return false
           end
         }

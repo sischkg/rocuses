@@ -43,6 +43,13 @@ module Rocuses
           filesystem_ds.update( manager_config, resource )
           @filesystems << filesystem_ds
         }
+
+        @network_interfaces = Array.new
+        resource.network_interfaces.each { |nic|
+          nic_ds = DataSource::NetworkInterface.new( @target.name, nic.name )
+          nic_ds.update( manager_config, resource )
+          @network_interfaces << nic_ds
+        }
       end
 
       def make_graph_templates
@@ -59,6 +66,10 @@ module Rocuses
         @filesystems.each { |filesystem|
           graph_templates << GraphTemplate::FilesystemSize.new( filesystem )
           graph_templates << GraphTemplate::FilesystemFiles.new( filesystem )
+        }
+
+        @network_interfaces.each { |nic|
+          graph_templates << GraphTemplate::Traffic.new( :network_interface_datasources => [ nic ] )
         }
 
         return graph_templates

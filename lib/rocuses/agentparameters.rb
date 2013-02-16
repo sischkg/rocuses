@@ -12,6 +12,10 @@ module Rocuses
                         %r{\A/sys/},
                        ]
 
+    SKIP_NETWORK_INTERFACES_ON_LINUX = [
+                                        %r{\Alo\z},
+                                       ]
+
   end
 end
 
