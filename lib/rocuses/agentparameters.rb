@@ -6,11 +6,13 @@ module Rocuses
     AGENT_CONFIG_FILENAME = '/etc/rocuses/agentconfig.xml'
 
     SKIP_FILESYSTEMS_ON_LINUX = [
-                        %r{\A/run/},
-                        %r{\A/dev/^(shm)},
-                        %r{\A/media/},
-                        %r{\A/sys/},
-                       ]
+                                 %r{\A/run/},
+                                 %r{\A/run\z},
+                                 %r{\A/dev/^(shm)},
+                                 %r{\A/dev\z},
+                                 %r{\A/media/},
+                                 %r{\A/sys/},
+                                ]
 
     SKIP_NETWORK_INTERFACES_ON_LINUX = [
                                         %r{\Alo\z},
