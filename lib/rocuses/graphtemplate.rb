@@ -9,4 +9,5 @@ require 'rocuses/graphtemplate/pageio'
 require 'rocuses/graphtemplate/filesystemsize'
 require 'rocuses/graphtemplate/filesystemfiles'
 require 'rocuses/graphtemplate/traffic'
+require 'rocuses/graphtemplate/nicerror'
 

@@ -70,6 +70,7 @@ module Rocuses
 
         @network_interfaces.each { |nic|
           graph_templates << GraphTemplate::Traffic.new( :network_interface_datasources => [ nic ] )
+          graph_templates << GraphTemplate::NICError.new( nic )
         }
 
         return graph_templates
