@@ -10,6 +10,8 @@ require 'rocuses/graphtemplate/filesystemsize'
 require 'rocuses/graphtemplate/filesystemfiles'
 require 'rocuses/graphtemplate/diskiocount'
 require 'rocuses/graphtemplate/diskiosize'
+require 'rocuses/graphtemplate/linuxdiskiowaittime'
+require 'rocuses/graphtemplate/linuxdiskioqueuelength'
 require 'rocuses/graphtemplate/traffic'
 require 'rocuses/graphtemplate/nicerror'
 

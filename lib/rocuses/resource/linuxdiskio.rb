@@ -17,7 +17,7 @@ module Rocuses
       # Queueが空でない時間(nanosecond)
       attr_reader :wait_time
 
-      # Queue内のIO Requestの数と経過時間の積の和
+      # Queue内のIO Requestの数と経過時間の積の和(n * nanosecond)
       attr_reader :queue_length_time
 
       # time:: データ取得時刻(epoch)

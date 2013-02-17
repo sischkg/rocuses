@@ -1,3 +1,7 @@
+2013-02-18  Toshifumi Sakaguchi  <toshi@devel>
+
+	* Linux DiskIOのQueue LengthとWait Timeのグラフを作成する機能を追加
+
 2013-02-17  Toshifumi Sakaguchi  <sischkg@gmail.com>
 
 	* トラフィックのグラフを作成する機能を追加

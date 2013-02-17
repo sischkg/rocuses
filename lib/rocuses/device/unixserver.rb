@@ -51,6 +51,13 @@ module Rocuses
           @disk_ios << disk_io_ds
         }
 
+        @linux_disk_ios = Array.new
+        resource.linux_disk_ios.each { |disk_io|
+          disk_io_ds = DataSource::LinuxDiskIO.new( @target.name, disk_io.name )
+          disk_io_ds.update( manager_config, resource )
+          @linux_disk_ios << disk_io_ds
+        }
+
         @network_interfaces = Array.new
         resource.network_interfaces.each { |nic|
           nic_ds = DataSource::NetworkInterface.new( @target.name, nic.name )
@@ -78,6 +85,11 @@ module Rocuses
         @disk_ios.each { |disk_io|
           graph_templates << GraphTemplate::DiskIOSize.new( disk_io )
           graph_templates << GraphTemplate::DiskIOCount.new( disk_io )
+        }
+
+        @linux_disk_ios.each { |disk_io|
+          graph_templates << GraphTemplate::LinuxDiskIOWaitTime.new( disk_io )
+          graph_templates << GraphTemplate::LinuxDiskIOQueueLength.new( disk_io )
         }
 
         @network_interfaces.each { |nic|
