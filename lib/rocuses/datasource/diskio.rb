@@ -55,7 +55,7 @@ module Rocuses
 
       def create_rrd( config, type )
         ds = RRDTool::DataSource.new( :name        => datasource_name( type ),
-                                      :type        => :GAUGE,
+                                      :type        => :COUNTER,
                                       :step        => config.step,
                                       :heartbeat   => config.heartbeat,
                                       :lower_limit => 0,

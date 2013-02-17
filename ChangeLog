@@ -1,6 +1,8 @@
-2013-02-18  Toshifumi Sakaguchi  <toshi@devel>
+2013-02-18  Toshifumi Sakaguchi  <sischkg@gmail.com>
 
 	* Linux DiskIOのQueue LengthとWait Timeのグラフを作成する機能を追加
+
+	* DiskIOのデータソースのタイプをCOUNTERへ修正
 
 2013-02-17  Toshifumi Sakaguchi  <sischkg@gmail.com>
 
