@@ -10,7 +10,7 @@ module Rocuses
     class DiskIOSize
       include Rocuses::GraphTemplate
 
-      GPRINT_FORMAT = '%5.3lf'
+      GPRINT_FORMAT = '%4.3lf %sbps'
 
       def initialize( disk_io_datasource )
         @disk_io_datasource = disk_io_datasource

@@ -33,11 +33,12 @@ module Rocuses
                                     :rigid          => true,
                                     :vertical_label => 'Wait Time' )
 
-        Utils::draw_area( graph,
+        Utils::draw_line( graph,
                           {
-                            :label  => 'wait:',
+                            :label  => 'wait:',                            
                             :value  => @disk_io_datasource.wait_time,
-                            :factor => 1000 * 1000 * 1000,
+                            :factor => 1.0 / ( 1000 * 1000 * 1000 ),
+                            :width  => 1,
                             :color  => '#0000ff',
                             :format => GPRINT_FORMAT,
                           } )

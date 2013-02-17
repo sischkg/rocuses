@@ -25,7 +25,7 @@ module Rocuses
       end
 
       def make_graph()
-        title = "Disk IO Wait Time - #{ @disk_io_datasource.name } of #{ @disk_io_datasource.nodename }"
+        title = "Disk IO Queue Length - #{ @disk_io_datasource.name } of #{ @disk_io_datasource.nodename }"
 
         graph = RRDTool::Graph.new( :title          => title,
                                     :lower_limit    => 0,
@@ -33,12 +33,13 @@ module Rocuses
                                     :rigid          => false,
                                     :vertical_label => 'Queue Length' )
 
-        Utils::draw_area( graph,
+        Utils::draw_line( graph,
                           {
                             :label  => 'queue length:',
                             :value  => @disk_io_datasource.queue_length_time,
-                            :factor => 1000 * 1000 * 1000,
+                            :factor => 1.0 / ( 1000 * 1000 * 1000 ),
                             :color  => '#0000ff',
+                            :width  => 1,
                             :format => GPRINT_FORMAT,
                           } )
         return graph
