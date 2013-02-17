@@ -79,10 +79,11 @@ module Rocuses
         @name        = args[:name]
         @type        = args[:type]
         @step        = args[:step]
-        @heartbeat    = args[:heartbeat]
+        @heartbeat   = args[:heartbeat]
         @lower_limit = args[:lower_limit]
         @upper_limit = args[:upper_limit]
         @predict     = args[:predict]
+
         if @predict
           @predict_alpha           = args[:predict_alpha].to_f
           @predict_beta            = args[:predict_beta].to_f

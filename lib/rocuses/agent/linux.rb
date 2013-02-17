@@ -402,17 +402,19 @@ module Rocuses
               write_data_size   = columns[10].to_i * sector_size
               wait_time         = columns[13].to_i * 1000 * 1000
               queue_length_time = columns[14].to_i * 1000 * 1000
-              
-              resource.disk_ios.push( Resource::DiskIO.new( :time            => Time.now,
-                                                            :name            => name,
-                                                            :read_count      => read_count,
-                                                            :read_data_size  => read_data_size,
-                                                            :write_count     => write_count,
-                                                            :write_data_size => write_data_size ) )
-              resource.linux_disk_ios.push( Resource::LinuxDiskIO.new( :time              => Time.now,
-                                                                       :name              => name,
-                                                                       :wait_time         => wait_time,
-                                                                       :queue_length_time => queue_length_time ) )
+
+              if check_disk_io_device?( name )              
+                resource.disk_ios.push( Resource::DiskIO.new( :time            => Time.now,
+                                                              :name            => name,
+                                                              :read_count      => read_count,
+                                                              :read_data_size  => read_data_size,
+                                                              :write_count     => write_count,
+                                                              :write_data_size => write_data_size ) )
+                resource.linux_disk_ios.push( Resource::LinuxDiskIO.new( :time              => Time.now,
+                                                                         :name              => name,
+                                                                         :wait_time         => wait_time,
+                                                                         :queue_length_time => queue_length_time ) )
+              end
             }
           }
         rescue => e
@@ -480,6 +482,18 @@ module Rocuses
       # RETURN:: true: nameは取得対象である / false: nameは取得対象ではない
       def check_network_interface?( name )
         AgentParameters::SKIP_NETWORK_INTERFACES_ON_LINUX.each { |pattern|
+          if name =~ pattern
+            return false
+          end
+        }
+        return true
+      end
+
+      # デバイスnameはDiskIO情報取得対象あるかを判定する
+      # name:: ディスク名
+      # RETURN:: true: nameは取得対象である / false: nameは取得対象ではない
+      def check_disk_io_device?( name )
+        AgentParameters::SKIP_DISK_IO_DEVICES_ON_LINUX.each { |pattern|
           if name =~ pattern
             return false
           end

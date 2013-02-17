@@ -44,6 +44,13 @@ module Rocuses
           @filesystems << filesystem_ds
         }
 
+        @disk_ios = Array.new
+        resource.disk_ios.each { |disk_io|
+          disk_io_ds = DataSource::DiskIO.new( @target.name, disk_io.name )
+          disk_io_ds.update( manager_config, resource )
+          @disk_ios << disk_io_ds
+        }
+
         @network_interfaces = Array.new
         resource.network_interfaces.each { |nic|
           nic_ds = DataSource::NetworkInterface.new( @target.name, nic.name )
@@ -66,6 +73,11 @@ module Rocuses
         @filesystems.each { |filesystem|
           graph_templates << GraphTemplate::FilesystemSize.new( filesystem )
           graph_templates << GraphTemplate::FilesystemFiles.new( filesystem )
+        }
+
+        @disk_ios.each { |disk_io|
+          graph_templates << GraphTemplate::DiskIOSize.new( disk_io )
+          graph_templates << GraphTemplate::DiskIOCount.new( disk_io )
         }
 
         @network_interfaces.each { |nic|

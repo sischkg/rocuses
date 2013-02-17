@@ -18,6 +18,12 @@ module Rocuses
                                         %r{\Alo\z},
                                        ]
 
+    SKIP_DISK_IO_DEVICES_ON_LINUX = [
+                                     %r{\Aram\d+\z},
+                                     %r{\Aloop\d+\z},
+                                     %r{\Asr\d+\z},
+                                    ]
+
   end
 end
 

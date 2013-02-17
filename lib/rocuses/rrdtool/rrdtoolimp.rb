@@ -36,14 +36,14 @@ module Rocuses
       def create( cmd )
         open()
         @stdin.print( "create #{ cmd }\n" )
-        parse_result( @stdin, @stdout )
+        parse_result( @stdin, @stdout, cmd, "create datasource" )
       end
 
       def update( cmd )
         open()
 
         @stdin.print( "update #{ cmd }\n" )
-        parse_result( @stdin, @stdout )
+        parse_result( @stdin, @stdout, cmd, "update datasource" )
       end
 
       def make_image( cmd )
@@ -76,12 +76,13 @@ module Rocuses
         end
       end
 
-      def parse_result( output, input )
+      def parse_result( output, input, command = %q{}, operation = "execute" )
         while line = input.readline
           if line =~ /\AOK/
             return
           elsif line =~ /\AERROR/
             output.print( "\n" )
+            raise %Q[cannot #{ operation }: "#{ command }" (#{line})]
           end
         end
       end
