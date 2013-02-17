@@ -5,6 +5,8 @@
 	* Linuxのファイルシステムの使用量・i-nodeの使用量を取得する対象に
 	/dev,/runを含んでいた件を修正
 
+	* rocusagentのupstart設定ファイルを追加
+
 2013-02-15  Toshifumi Sakaguchi  <sischkg@gmail.com>
 
 	* ファイルシステムの使用量のグラフを作成する機能を追加
