@@ -35,7 +35,7 @@ module Rocuses
                             :label  => 'total: ',
                             :value  => @vm_datasource.total_swap,
                             :factor => 1,
-                            :color  => '#0000ff',
+                            :color  => '#ff9977',
                             :format => GPRINT_FORMAT,
                           } )
         Utils::draw_area( graph,
@@ -44,7 +44,7 @@ module Rocuses
                             :value  => @vm_datasource.used_swap,
                             :factor => 1,
                             :stack  => false,
-                            :color  => '#ff0000',
+                            :color  => '#cc9900',
                             :format => GPRINT_FORMAT,
                           } )
 

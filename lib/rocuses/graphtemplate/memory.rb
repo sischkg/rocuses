@@ -35,7 +35,7 @@ module Rocuses
                             :label  => 'total: ',
                             :value  => @vm_datasource.total_memory,
                             :factor => 1,
-                            :color  => '#0000ff',
+                            :color  => '#ff9977',
                             :format => GPRINT_FORMAT,
                           } )
         Utils::draw_area( graph,
@@ -44,16 +44,7 @@ module Rocuses
                             :value  => @vm_datasource.used_memory,
                             :factor => 1,
                             :stack  => false,
-                            :color  => '#ff0000',
-                            :format => GPRINT_FORMAT,
-                          } )
-        Utils::draw_area( graph,
-                          {
-                            :label  => 'cache: ',
-                            :value  => @vm_datasource.cache_memory,
-                            :factor => 1,
-                            :stack  => true,
-                            :color  => '#00ff00',
+                            :color  => '#cc9900',
                             :format => GPRINT_FORMAT,
                           } )
         Utils::draw_area( graph,
@@ -62,7 +53,16 @@ module Rocuses
                             :value  => @vm_datasource.buffer_memory,
                             :factor => 1,
                             :stack  => true,
-                            :color  => '#ffff00',
+                            :color  => '#00ffff',
+                            :format => GPRINT_FORMAT,
+                          } )
+        Utils::draw_area( graph,
+                          {
+                            :label  => 'cache: ',
+                            :value  => @vm_datasource.cache_memory,
+                            :factor => 1,
+                            :stack  => true,
+                            :color  => '#ffdd4f',
                             :format => GPRINT_FORMAT,
                           } )
 
