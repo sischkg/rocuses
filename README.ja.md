@@ -7,6 +7,7 @@ monitoring servers tool.
 
 * ruby 1.9
 * log4r
+* rrdtool 1.4.x
 
 # インストール方法
 
