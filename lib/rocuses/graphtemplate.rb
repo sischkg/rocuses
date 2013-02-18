@@ -3,6 +3,8 @@
 require 'rocuses/utils'
 require 'rocuses/graphtemplate/cpu'
 require 'rocuses/graphtemplate/cpuaverage'
+require 'rocuses/graphtemplate/loadaverage'
+require 'rocuses/graphtemplate/loadaveragemax'
 require 'rocuses/graphtemplate/memory'
 require 'rocuses/graphtemplate/swap'
 require 'rocuses/graphtemplate/pageio'

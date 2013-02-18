@@ -6,6 +6,8 @@
 
 	* DiskIO/LinuxDiskIOのグラフを修正
 
+	* Load Averageのグラフを作成する機能を追加
+
 2013-02-17  Toshifumi Sakaguchi  <sischkg@gmail.com>
 
 	* トラフィックのグラフを作成する機能を追加

@@ -27,6 +27,11 @@ module Rocuses
         @cpu_average_usage = DataSource::CPUAverage.new( @target.name )
         @cpu_average_usage.update( manager_config, resource )          
 
+        if resource.load_average
+          @load_average = DataSource::LoadAverage.new( @target.name )
+          @load_average.update( manager_config, resource )
+        end
+
         @memory = DataSource::Memory.new( @target.name )
         @memory.update( manager_config, resource )
         @swap = DataSource::Swap.new( @target.name )
@@ -71,6 +76,12 @@ module Rocuses
 
         graph_templates << GraphTemplate::CPU.new( @cpu_usages )
         graph_templates << GraphTemplate::CPUAverage.new( @cpu_average_usage )
+
+        if @load_average
+          graph_templates << GraphTemplate::LoadAverage.new( @load_average )
+          graph_templates << GraphTemplate::LoadAverageMax.new( @load_average )
+        end
+
         graph_templates << GraphTemplate::Memory.new( @memory )
         graph_templates << GraphTemplate::Swap.new( @swap )
         if @page_io

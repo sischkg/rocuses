@@ -103,7 +103,7 @@ module Rocuses
         end
 
         if ! AVAILABLE_DATASOURCE_TYPES.include?( @type )
-          raise %Q["#{ @name }" is invalid data source type of #{ @name }]
+          raise %Q["#{ @type }" is invalid data source type of #{ @name }]
         end
       end
 
