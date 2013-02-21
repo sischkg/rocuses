@@ -32,14 +32,14 @@ module Rocuses
 
         Utils::draw_area( graph,
                           {
-                            :label  => '1 minute(average):  ',
+                            :label  => '1 minute(average): ',
                             :value  => @load_average_datasource.la1,
                             :factor => 1,
                             :color  => '#eacc00',
                             :format => GPRINT_FORMAT,
                           } )
 
-        graph.add_item( RRDTool::Line.new( :label  => '5 minutes: ',
+        graph.add_item( RRDTool::Line.new( :label  => '1 minute(maximum): ',
                                            :value  => RRDTool::RPN_DataSource.new( @load_average_datasource.la1, :MAX ),
                                            :width  => 1,
                                            :color  => '#ea8f00' ) )

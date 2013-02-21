@@ -27,9 +27,10 @@ module Rocuses
       def make_graph()
         title = "NetworkInterface Error - #{ @network_interface_datasource.name } of #{ @network_interface_datasource.nodename }"
 
-        graph = RRDTool::Graph.new( :title       => title,
-                                    :lower_limit => 0,
-                                    :rigid       => false )
+        graph = RRDTool::Graph.new( :title          => title,
+                                    :lower_limit    => 0,
+                                    :vertical_label => 'count per second',
+                                    :rigid          => false )
 
         Utils::draw_area( graph,
                           {

@@ -52,9 +52,10 @@ module Rocuses
       def make_graph()
         title = "Traffic - #{ @name } of #{ @nodename }"
 
-        graph = RRDTool::Graph.new( :title       => title,
-                                    :lower_limit => 0,
-                                    :rigid       => false )
+        graph = RRDTool::Graph.new( :title          => title,
+                                    :lower_limit    => 0,
+                                    :vertical_label => 'bits per second',
+                                    :rigid          => false )
 
         inbound_traffic       = RRDTool::RPN_Constant.new( 0 )
         inbound_traffic_avg   = RRDTool::RPN_Constant.new( 0 )
