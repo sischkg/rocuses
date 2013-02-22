@@ -29,7 +29,6 @@ module Rocuses
 
         graph = RRDTool::Graph.new( :title          => title,
                                     :lower_limit    => 0,
-                                    :upper_limit    => 10000,
                                     :rigid          => false,
                                     :vertical_label => 'Queue Length' )
 
