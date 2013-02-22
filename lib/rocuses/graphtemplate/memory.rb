@@ -26,9 +26,10 @@ module Rocuses
       def make_graph()
         title = "Memory - #{ @vm_datasource.nodename }"
 
-        graph = RRDTool::Graph.new( :title       => title,
-                                    :lower_limit => 0,
-                                    :rigid       => false )
+        graph = RRDTool::Graph.new( :title          => title,
+                                    :lower_limit    => 0,
+                                    :rigid          => false,
+                                    :vertical_label => "bytes" )
 
         Utils::draw_area( graph,
                           {

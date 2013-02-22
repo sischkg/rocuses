@@ -29,10 +29,11 @@ module Rocuses
         end
 
         title = "CPU - #{ @cpu_datasources[0].nodename }"
-        graph = RRDTool::Graph.new( :title       => title,
-                                    :upper_limit => 100,
-                                    :lower_limit => 0,
-                                    :rigid       => true )
+        graph = RRDTool::Graph.new( :title          => title,
+                                    :upper_limit    => 100,
+                                    :lower_limit    => 0,
+                                    :vertical_label => 'percent',
+                                    :rigid          => true )
 
         @cpu_datasources.each { |cpu|
           cpu_usage =

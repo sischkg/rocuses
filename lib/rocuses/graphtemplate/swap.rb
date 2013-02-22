@@ -26,9 +26,10 @@ module Rocuses
       def make_graph()
         title = "Swap - #{ @vm_datasource.nodename }"
 
-        graph = RRDTool::Graph.new( :title       => title,
-                                    :lower_limit => 0,
-                                    :rigid       => false )
+        graph = RRDTool::Graph.new( :title          => title,
+                                    :lower_limit    => 0,
+                                    :vertical_label => 'bytes',
+                                    :rigid          => false )
 
         Utils::draw_area( graph,
                           {

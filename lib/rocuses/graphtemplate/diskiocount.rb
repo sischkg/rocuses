@@ -27,10 +27,11 @@ module Rocuses
       def make_graph()
         title = "Disk IO Count - #{ @disk_io_datasource.name } of #{ @disk_io_datasource.nodename }"
 
-        graph = RRDTool::Graph.new( :title       => title,
-                                    :lower_limit => 0,
-                                    :upper_limit => 10 * 000 * 000 * 000,
-                                    :rigid       => false )
+        graph = RRDTool::Graph.new( :title          => title,
+                                    :lower_limit    => 0,
+                                    :upper_limit    => 10 * 000 * 000 * 000,
+                                    :vertical_label => 'count per second',
+                                    :rigid          => false )
 
         Utils::draw_area( graph,
                           {
