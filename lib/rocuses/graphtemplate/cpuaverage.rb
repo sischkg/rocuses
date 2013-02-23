@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
-require 'rocuses/rrdtool/rpn'
-require 'rocuses/rrdtool/graph'
 require 'rocuses/graphtemplate/utils'
 
 module Rocuses
   module GraphTemplate
     class CPUAverage
+      include Rocuses
       include Rocuses::GraphTemplate
 
       GPRINT_FORMAT = '%5.2lf %%'
@@ -15,12 +14,16 @@ module Rocuses
         @cpu_datasource = cpu_datasource
       end
 
-      def name
-        return 'CPU_Average'
+      def template_name()
+        return 'CPUAverage'
       end
 
-      def filename
-        return 'CPU_Average'
+      def id()
+        return template_name
+      end
+
+      def filename()
+        return template_name
       end
 
       def make_graph()

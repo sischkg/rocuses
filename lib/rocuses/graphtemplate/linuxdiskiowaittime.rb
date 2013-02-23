@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 
-require 'rocuses/rrdtool/rpn'
-require 'rocuses/rrdtool/graph'
-require 'rocuses/utils'
 require 'rocuses/graphtemplate/utils'
 
 module Rocuses
   module GraphTemplate
     class LinuxDiskIOWaitTime
+      include Rocuses
       include Rocuses::GraphTemplate
 
       GPRINT_FORMAT = '%5.3lf'
@@ -16,12 +14,16 @@ module Rocuses
         @disk_io_datasource = disk_io_datasource
       end
 
-      def name
+      def template_name()
         return 'linux_disk_io_wait_time'
       end
 
-      def filename
-        return sprintf( 'linux_disk_io_wait_time_%s', @disk_io_datasource.name.gsub( %r{[/ ]}, %q{_} ) )
+      def id()
+        return sprintf( '%s_%s', template_name, @disk_io_datasource.name )
+      end
+
+      def filename()
+        return sprintf( '%s_%s', template_name, Rocuses::Utils::escape_for_filename( @disk_io_datasource.name ) )
       end
 
       def make_graph()

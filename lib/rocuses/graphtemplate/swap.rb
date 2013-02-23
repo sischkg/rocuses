@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
-require 'rocuses/rrdtool/rpn'
-require 'rocuses/rrdtool/graph'
 require 'rocuses/graphtemplate/utils'
 
 module Rocuses
   module GraphTemplate
     class Swap
+      include Rocuses
       include Rocuses::GraphTemplate
 
       GPRINT_FORMAT = '%5.2lf %SB'
@@ -15,12 +14,16 @@ module Rocuses
         @vm_datasource = vm_datasource
       end
 
-      def name
+      def template_name()
         return 'Swap'
       end
 
-      def filename
-        return 'Swap'
+      def id()
+        return template_name
+      end
+
+      def filename()
+        return template_name
       end
 
       def make_graph()

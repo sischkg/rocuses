@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
-require 'rocuses/rrdtool/rpn'
-require 'rocuses/rrdtool/graph'
 require 'rocuses/graphtemplate/utils'
 
 module Rocuses
   module GraphTemplate
     class PageIO
+      include Rocuses
       include Rocuses::GraphTemplate
 
       GPRINT_FORMAT = '%5.0lf %%'
@@ -15,12 +14,16 @@ module Rocuses
         @page_io_datasource = page_io_datasource
       end
 
-      def name
+      def template_name()
         return 'Page_IO'
       end
 
-      def filename
-        return 'Page_IO'
+      def id()
+        return template_name
+      end
+
+      def filename()
+        return template_name
       end
 
       def make_graph()

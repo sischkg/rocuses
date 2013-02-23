@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
-require 'rocuses/rrdtool/rpn'
-require 'rocuses/rrdtool/graph'
 require 'rocuses/graphtemplate/utils'
 
 module Rocuses
   module GraphTemplate
     class FilesystemFiles
+      include Rocuses
       include Rocuses::GraphTemplate
 
       GPRINT_FORMAT = '%10.0lf'
@@ -15,12 +14,18 @@ module Rocuses
         @filesystem_datasource = filesystem_datasource
       end
 
-      def name
+      def template_name()
         return 'FilesystemFiles'
       end
 
-      def filename
-        return sprintf( 'FilesystemFiles_%s', @filesystem_datasource.mount_point.gsub( %r{[/ ]}, %q{_} ) )
+      def id()
+        return sprintf( '%s_%s', template_name,  @filesystem_datasource.mount_point )
+      end
+
+      def filename()
+        return sprintf( '%s_%s',
+                        template_name,
+                        Rocuses::Utils::escape_for_filename( @filesystem_datasource.mount_point ) )
       end
 
       def make_graph()
