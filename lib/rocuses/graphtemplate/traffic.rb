@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 
-require 'rocuses/rrdtool/rpn'
-require 'rocuses/rrdtool/graph'
-require 'rocuses/utils'
 require 'rocuses/graphtemplate/utils'
 
 module Rocuses
   module GraphTemplate
     class Traffic
+      include Rocuses
       include Rocuses::GraphTemplate
 
       GPRINT_FORMAT = '%5.3lf %Sbps'
@@ -36,17 +34,21 @@ module Rocuses
           if @network_interface_datasources.size > 0
             @nodename = @network_interface_datasources[0].nodename
           else
-            @nodenama = %q{}
+            @nodename = %q{}
           end
         end
       end
 
-      def name
-        return 'traffic'
+      def template_name()
+        return 'Traffic'
       end
 
-      def filename
-        return sprintf( 'traffic_%s', @name )
+      def id()
+        return sprintf( '%s_%s', template_name, @name )
+      end
+
+      def filename()
+        return sprintf( '%s_%s', template_name, Rocuses::Utils::escape_for_filename( @name ) )
       end
 
       def make_graph()

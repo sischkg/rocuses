@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-require 'rocuses/rrdtool/rpn'
-require 'rocuses/rrdtool/graph'
+require 'rocuses/graphtemplate/utils'
 
 module Rocuses
   module GraphTemplate
 
     class CPU
+      include Rocuses
       include Rocuses::GraphTemplate
 
       GRPINT_FORMAT = '%5.2lf %%'
@@ -15,12 +15,16 @@ module Rocuses
         @cpu_datasources = cpu_datasources
       end
 
-      def name
+      def template_name()
         return 'CPU'
       end
 
-      def filename
-        return 'CPU'
+      def id()
+        return template_name
+      end
+
+      def filename()
+        return template_name
       end
 
       def make_graph()

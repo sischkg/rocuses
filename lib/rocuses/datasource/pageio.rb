@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-require 'pp'
-require 'rocuses/rrdtool/datasource'
-
 module Rocuses
   module DataSource
 

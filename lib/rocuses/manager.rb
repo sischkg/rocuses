@@ -74,8 +74,8 @@ module Rocuses
 
                 graph_info = Graph.new( :image      => image,
                                         :name       => sprintf( "%s %s %s",
-                                                                device.name,
-                                                                graph_template.name,
+                                                                device.name(),
+                                                                graph_template.id,
                                                                 period_suffix ),
                                         :filename   => sprintf( "%s/%s_%s_%s.png",
                                                                 manager_config.graph_directory,

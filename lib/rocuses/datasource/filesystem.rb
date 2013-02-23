@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 
-require 'pp'
-require 'rocuses/rrdtool/datasource'
-
 module Rocuses
   module DataSource
-
     class Filesystem
+      include Rocuses
 
       # nodename
       attr_reader :nodename
@@ -71,7 +68,7 @@ module Rocuses
       def datasource_name( type )
         return sprintf( '%s_filesytem_%s_%s',
                         @nodename,
-                        @mount_point.gsub( %r{[/ ]}, %q{_} ),
+                        Utils::escape_for_filename( @mount_point ),
                         type ) 
       end
     end
