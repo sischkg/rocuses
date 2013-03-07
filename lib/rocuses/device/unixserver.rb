@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-require 'rocuses/device/unixserver'
 require 'rocuses/managerparameters'
 
 module Rocuses
@@ -111,7 +110,7 @@ module Rocuses
         return graph_templates
       end
 
-      def make_graph_template( type )
+      def make_graph_template( name )
 
       end
 

@@ -5,4 +5,5 @@ require 'rocuses/manager'
 
 manager = Rocuses::Manager.new
 manager.fetch_resource()
+manager.save()
 manager.draw_graph()
