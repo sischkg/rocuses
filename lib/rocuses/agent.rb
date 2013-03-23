@@ -21,8 +21,6 @@ module Log4r
 end
 
 module Rocuses
-  LOG_DIRECTORY      = '/var/log/rocuses'
-
   class Agent
     OS_AGENTS = [ Rocuses::Agent::Linux, Rocuses::Agent::NoOS ]
     LOG4R_CONFIG = '/etc/rocuses/log4r.xml'
@@ -33,7 +31,7 @@ module Rocuses
       @error_logger = Logger.new( 'rocuses::agent' )
       @error_logger.outputters  = DateFileOutputter.new( 'error_log',
                                                    {
-                                                     :dirname      => LOG_DIRECTORY,
+                                                     :dirname      => Rocuses::AgentParameters::LOG_DIRECTORY,
                                                      :date_pattern => 'error_log.%Y-%m-%d',
                                                      :level        => INFO,
                                                    } )
@@ -87,13 +85,13 @@ module Rocuses
 
       @access_logger.outputters = DateFileOutputter.new( 'httpd_access_log',
                                                          {
-                                                           :dirname      => LOG_DIRECTORY,
+                                                           :dirname      => Rocuses::AgentParameters::LOG_DIRECTORY,
                                                            :date_pattern => 'httpd_access_log',
                                                            :level        => INFO,
                                                          } )
       @error_logger.outputters = DateFileOutputter.new( 'httpd_error_log',
                                                          {
-                                                           :dirname      => LOG_DIRECTORY,
+                                                           :dirname      => Rocuses::AgentParameters::LOG_DIRECTORY,
                                                            :date_pattern => 'httpd_error_log',
                                                            :level        => INFO,
                                                          } )

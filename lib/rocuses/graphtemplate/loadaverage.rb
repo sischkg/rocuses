@@ -26,6 +26,10 @@ module Rocuses
         return template_name
       end
 
+      def nodenames
+        return [ @load_average_datasource.nodename ]
+      end
+
       def make_graph()
         title = "Load Average - #{ @load_average_datasource.nodename }"
 

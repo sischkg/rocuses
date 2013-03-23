@@ -28,6 +28,10 @@ module Rocuses
                         Rocuses::Utils::escape_for_filename( @network_interface_datasource.name ) )
       end
 
+      def nodenames
+        return [ @network_interface_datasource.nodename ]
+      end
+
       def make_graph()
         title = "NetworkInterface Error - #{ @network_interface_datasource.name } of #{ @network_interface_datasource.nodename }"
 

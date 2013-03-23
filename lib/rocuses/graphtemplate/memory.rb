@@ -26,6 +26,10 @@ module Rocuses
         return template_name
       end
 
+      def nodenames
+        return [ @vm_datasource.nodename ]
+      end
+
       def make_graph()
         title = "Memory - #{ @vm_datasource.nodename }"
 

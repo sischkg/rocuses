@@ -26,6 +26,10 @@ module Rocuses
         return template_name
       end
 
+      def nodenames
+        return [ @vm_datasource.nodename ]
+      end
+
       def make_graph()
         title = "Swap - #{ @vm_datasource.nodename }"
 

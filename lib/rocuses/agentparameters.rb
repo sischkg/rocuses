@@ -4,6 +4,7 @@ module Rocuses
   module AgentParameters
 
     AGENT_CONFIG_FILENAME = '/etc/rocuses/agentconfig.xml'
+    LOG_DIRECTORY         = '/var/log/rocus'
 
     SKIP_FILESYSTEMS_ON_LINUX = [
                                  %r{\A/run/},

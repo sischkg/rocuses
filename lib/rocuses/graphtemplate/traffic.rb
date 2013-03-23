@@ -20,7 +20,6 @@ module Rocuses
         
         @name                          = args[:name]
         @network_interface_datasources = args[:network_interface_datasources]
-        @nodename                      = args[:nodename]
 
         if @name.nil?
           nic_names = Array.new
@@ -28,14 +27,6 @@ module Rocuses
             nic_names << nic.name
           }
           @name = nic_names.join( %q{,} )
-        end
-
-        if @nodename.nil?
-          if @network_interface_datasources.size > 0
-            @nodename = @network_interface_datasources[0].nodename
-          else
-            @nodename = %q{}
-          end
         end
       end
 
@@ -51,8 +42,16 @@ module Rocuses
         return sprintf( '%s_%s', template_name, Rocuses::Utils::escape_for_filename( @name ) )
       end
 
+      def nodenames
+        nodes = Array.new
+        @network_interface_datasources.each { |ds|
+          nodes << ds.nodename
+        }
+        return nodes.uniq
+      end
+
       def make_graph()
-        title = "Traffic - #{ @name } of #{ @nodename }"
+        title = "Traffic - #{ @name } of #{ nodenames.join( %q{,} ) }"
 
         graph = RRDTool::Graph.new( :title          => title,
                                     :lower_limit    => 0,

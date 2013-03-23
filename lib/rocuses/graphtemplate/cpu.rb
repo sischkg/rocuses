@@ -27,12 +27,20 @@ module Rocuses
         return template_name
       end
 
+      def nodenames
+        nodes = Array.new
+        @cpu_datasources.each { |ds|
+          nodes << ds.nodename
+        }
+        return nodes.uniq
+      end
+
       def make_graph()
         if @cpu_datasources.size <= 0
           return nil
         end
 
-        title = "CPU - #{ @cpu_datasources[0].nodename }"
+        title = "CPU - #{ nodenames.join( %q{,} ) }"
         graph = RRDTool::Graph.new( :title          => title,
                                     :upper_limit    => 100,
                                     :lower_limit    => 0,

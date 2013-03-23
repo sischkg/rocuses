@@ -26,6 +26,10 @@ module Rocuses
         return sprintf( '%s_%s', template_name, Rocuses::Utils::escape_for_filename( @disk_io_datasource.name ) )
       end
 
+      def nodenames
+        return [ @disk_io_datasource.nodename ]
+      end
+
       def make_graph()
         title = "Disk IO Count - #{ @disk_io_datasource.name } of #{ @disk_io_datasource.nodename }"
 

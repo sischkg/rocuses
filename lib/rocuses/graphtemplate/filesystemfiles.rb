@@ -28,6 +28,10 @@ module Rocuses
                         Rocuses::Utils::escape_for_filename( @filesystem_datasource.mount_point ) )
       end
 
+      def nodenames
+        return [ @filesystem_datasource.nodename ]
+      end
+
       def make_graph()
         title = "Filesystem i-node - #{ @filesystem_datasource.mount_point } of #{ @filesystem_datasource.nodename }"
 

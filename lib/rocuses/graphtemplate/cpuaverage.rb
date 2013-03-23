@@ -26,6 +26,10 @@ module Rocuses
         return template_name
       end
 
+      def nodenames
+        return [ @cpu_datasource.nodename ]
+      end
+
       def make_graph()
         title = "CPU - #{ @cpu_datasource.nodename }"
 

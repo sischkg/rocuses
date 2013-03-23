@@ -26,6 +26,10 @@ module Rocuses
         return template_name
       end
 
+      def nodenames
+        return [ @page_io_datasource.nodename ]
+      end
+
       def make_graph()
         title = "Page IO - #{ @page_io_datasource.nodename }"
 
