@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-require 'rocuses/utils'
-require 'rocuses/rrdtool/datasource'
 require 'rocuses/datasource/cpu'
 require 'rocuses/datasource/cpuaverage'
 require 'rocuses/datasource/loadaverage'

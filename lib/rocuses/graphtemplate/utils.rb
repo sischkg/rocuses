@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 require 'rocuses/utils'
-require 'rocuses/rrdtool'
+require 'rocuses/rrdtool/rpn'
+require 'rocuses/rrdtool/graph'
 
 module Rocuses
   module GraphTemplate

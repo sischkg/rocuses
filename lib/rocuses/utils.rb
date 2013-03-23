@@ -2,7 +2,6 @@
 
 module Rocuses
   module Utils
-    module_function
 
     # メソッドの引数に使用するHashのキーの有無をチェックする
     # 必要なキーが存在しない場合、余分なキーが存在する場合は、例外を投げる。
@@ -110,10 +109,8 @@ module Rocuses
       return ( ( args[:day].to_i * 24 + args[:hour].to_i ) * 60 + args[:minute].to_i ) * 60  + args[:second].to_i
     end
 
-    def escape_for_filename( str )
-      return str.gsub( %r{[/ ]}, %q{_} )
-    end
-
+    module_function :check_args, :fill_default_value, :datetime_to_second
+    
   end
 end
 
