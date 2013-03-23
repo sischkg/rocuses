@@ -58,10 +58,13 @@ module Rocuses
           unix_server.update( @manager_config, resource )
 
           @devices << unix_server
+<<<<<<< HEAD
 
           unix_server.make_graph_templates().each { |graph_template|
             @graph_template_manager.add_graph_template( graph_template )
           }
+=======
+>>>>>>> 54342f6d120c009c4978c4b0cf381f3fdf93f3a0
         rescue => e
           @logger.error( e.to_s )
           @logger.error( e.backtrace )
@@ -69,8 +72,50 @@ module Rocuses
       }
     end
 
+<<<<<<< HEAD
     def draw_graph
       @manager_config = load_manager_config()
+=======
+      def draw_graph
+        manager_config = load_manager_config()
+
+        graphs = Array.new
+
+        @devices.each { |device|
+          begin 
+            device.make_graph_templates().each { |graph_template|
+              graph = graph_template.make_graph
+              ManagerParameters::GRAPH_TIME_PERIOD_OF.each { |period_suffix,period|
+                end_time   = Time.now
+                begin_time = end_time - period
+
+                image = graph.make_image( :begin_time => begin_time,
+                                          :end_time   => end_time,
+                                          :width      => manager_config.image_width,
+                                          :height     => manager_config.image_height )
+
+                graph_info = Graph.new( :image      => image,
+                                        :name       => sprintf( "%s %s %s",
+                                                                device.name,
+                                                                graph_template.name,
+                                                                period_suffix ),
+                                        :filename   => sprintf( "%s/%s_%s_%s.png",
+                                                                manager_config.graph_directory,
+                                                                device.name,
+                                                                graph_template.filename,
+                                                                period_suffix ),
+                                        :begin_time => begin_time,
+                                        :end_time   => end_time )
+                graphs << graph_info
+              }
+            }
+
+          rescue => e
+            @logger.error( e.to_s )
+            @logger.error( e.backtrace )
+          end
+        }
+>>>>>>> 54342f6d120c009c4978c4b0cf381f3fdf93f3a0
 
       graphs = Array.new
 
@@ -118,42 +163,6 @@ module Rocuses
         end
       }
 
-    end
-
-    def save
-      File.open( ManagerParameters::SERIALIZE_DEVICES_FILENAME, 
-                 IO::WRONLY | IO::CREAT | IO::TRUNC ) { |output|
-        output.flock( IO::LOCK_EX )
-        output.print( YAML.dump( @devices ) )
-      }
-      File.open( ManagerParameters::SERIALIZE_GRAPH_TEMPLATES_FILENAME, 
-                 IO::WRONLY | IO::CREAT | IO::TRUNC ) { |output|
-        output.flock( IO::LOCK_EX )
-        output.print( YAML.dump( @graph_template_manager ) )
-      }
-    end
-
-    def load
-      File.open( ManagerParameters::SERIALIZE_DEVICES_FILENAME,
-                 IO::RDONLY ) { |input|
-        input.flock( IO::LOCK_SH )
-        @devices = YAML.load( input )
-      }
-      File.open( ManagerParameters::SERIALIZE_GRAPH_TEMPLATES_FILENAME,
-                 IO::RDONLY ) { |input|
-        input.flock( IO::LOCK_SH )
-        @graph_template_manager = YAML.load( input )
-      }
-    end
-
-    def devices
-      if block_given?
-        @devices.each { |device|
-          yield( device )
-        }
-      else
-        @devices
-      end
     end
 
     private

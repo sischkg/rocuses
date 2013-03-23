@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
+require 'rocuses/rrdtool/rpn'
+require 'rocuses/rrdtool/graph'
+require 'rocuses/utils'
 require 'rocuses/graphtemplate/utils'
 
 module Rocuses
   module GraphTemplate
     class DiskIOSize
-      include Rocuses
       include Rocuses::GraphTemplate
 
       GPRINT_FORMAT = '%4.3lf %sbps'
@@ -14,16 +16,12 @@ module Rocuses
         @disk_io_datasource = disk_io_datasource
       end
 
-      def template_name()
-        return 'DiskIOSize'
-      end
-
-      def id()
-        return sprintf( '%s_%s', template_name, @disk_io_datasource.name )
+      def name
+        return 'disk_io_size'
       end
 
       def filename
-        return sprintf( '%s_%s', template_name, Rocuses::Utils::escape_for_filename( @disk_io_datasource.name ) )
+        return sprintf( 'disk_io_size_%s', @disk_io_datasource.name.gsub( %r{[/ ]}, %q{_} ) )
       end
 
       def nodenames

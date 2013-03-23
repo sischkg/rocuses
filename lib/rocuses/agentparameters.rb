@@ -12,7 +12,6 @@ module Rocuses
                                  %r{\A/dev/^(shm)},
                                  %r{\A/dev\z},
                                  %r{\A/media/},
-                                 %r{\A/media\z},
                                  %r{\A/sys/},
                                 ]
 
