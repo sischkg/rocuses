@@ -40,7 +40,6 @@ module Rocuses
       OS_AGENTS.each { |os_agent|
         if os_agent.match_environment?
           @os_agent = os_agent.new
-          @error_logger.info( "Agent #{ @os_agent.name } is selected" )
           return
         end
       }
@@ -78,15 +77,17 @@ module Rocuses
 
     def initialize( args )
       args = Utils::check_args( args, { :agentconfig => :req, :daemonize => :op, }, { :daemonize => false } )
-      @agent         = Rocuses::Agent.new
       @agentconfig   = args[:agentconfig]
       @daemonize     = args[:daemonize]
     end
 
     # エージェントのサービスを開始数する。
     def start()
+      setup_directory()
       set_eid()
       create_logger()
+
+      @agent         = Rocuses::Agent.new
 
       @http_server = WEBrick::HTTPServer.new( :DocumentRoot => HTTP_DOCUMENT_ROOT,
                                               :Port         => @agentconfig.bind_port,
@@ -219,6 +220,22 @@ module Rocuses
         raise "cannot find user #{ @agentconfig.user }"
       rescue => e
         raise "cannot set euid( #{ e.to_s } )"
+      end
+    end
+
+    # エージェントの動作に必要なディレクトリを作成する。
+    def setup_directory
+      begin
+        if ! File.directory?( Rocuses::AgentParameters::LOG_DIRECTORY )
+          FileUtils.mkdir( Rocuses::AgentParameters::LOG_DIRECTORY )
+        end
+        FileUtils.chown( @agentconfig.user,
+                         @agentconfig.group,
+                         [
+                          Rocuses::AgentParameters::LOG_DIRECTORY,
+                         ] )
+      rescue => e
+        raise "cannot setup a directory for rocusagent( #{ e.to_s } )."
       end
     end
 
