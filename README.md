@@ -17,6 +17,20 @@ If configration file is installed to /usr/local/etc
 
     # ln -s /usr/local/etc/rocuses /etc/
 
+Create a user and group for rocusagent.
+
+    # groupadd rocus
+    # useradd -g rocus rocus
+
+Create a directory of rocusagent.
+
+    # mkdir /var/log/rocus
+    # chown rocus:rocus /var/log/rocus
+
+Create a directory of rocusesmanager.
+
+    # mkdir /var/log/rocuses
+
 # configration
 ## agent configration
 Edit agent configration file `/etc/rocuses/agentconfig.xml` from sample.xml. 

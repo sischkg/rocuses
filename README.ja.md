@@ -18,6 +18,20 @@ monitoring servers tool.
 
     # ln -s /usr/local/etc/rocuses /etc/
 
+エージェント用ユーザ・グループを作成する。
+
+    # groupadd rocus
+    # useradd -g rocus rocus
+
+エージェントのログ保存ディレクトリを作成する。
+
+    # mkdir /var/log/rocus
+    # chown rocus:rocus /var/log/rocus
+
+マネージャのログ保存ディレクトリを作成する。
+
+    # mkdir /var/log/rocuses
+
 # 設定
 ## エージェントの設定
 エージェントの設定は、`/etc/rocuses/agentconfig.xml`を作成する。
@@ -58,6 +72,7 @@ RRDToolのデータベースファイルの保存先ディレクトリを指定�
 
     # mkdir -p /var/rocuses/rra
     # mkdir -p /var/rocuses/graph
+    # mkdir -p /var/rocuses/data
 
 ## リソース情報取得対象の登録
 
