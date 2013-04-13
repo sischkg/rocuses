@@ -59,6 +59,10 @@ module Rocuses
 
           @devices << unix_server
 
+          unix_server.make_graph_templates.each { |graph_template|
+            @graph_template_manager.add_graph_template( target.name, graph_template )
+          }
+
         rescue => e
           @logger.error( e.to_s )
           @logger.error( e.backtrace )
@@ -87,7 +91,7 @@ module Rocuses
             graph_info = Graph.new( :image      => image,
                                     :name       => sprintf( "%s %s %s",
                                                             graph_template.nodenames.join( %q{,} ),
-                                                            graph_template.id,
+                                                            graph_template.name,
                                                             period_suffix ),
                                     :filename   => sprintf( "%s/%s_%s_%s.png",
                                                             @manager_config.graph_directory,
@@ -117,6 +121,13 @@ module Rocuses
 
     end
 
+    def load_graph_templates
+      File.open( ManagerParameters::GRAPH_TEMPLATES_FILENAME, File::RDONLY ) { |input|
+        input.flock( File::LOCK_SH )
+        @graph_template_manager = YAML.load( @input )
+      }
+    end
+
     private
 
     def load_config( config_class, filename )
@@ -136,7 +147,14 @@ module Rocuses
       return load_config( Config::TargetsConfig,
                           ManagerParameters::TARGETS_CONFIG_FILENAME )
 
-    end      
+    end
+
+    def save_graph_templates
+      File.open( ManagerParameters::GRAPH_TEMPLATES_FILENAME, File::WRONLY | File::TRUNC ) { |output|
+        output.flock( File::LOCK_EX )
+        YAML.dump( @graph_template_manager, output )
+      }
+    end
   end
 end
 
