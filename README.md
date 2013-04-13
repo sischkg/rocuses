@@ -10,6 +10,7 @@ Monitoring servers tool.
 * rrdtool 1.4.x
  
 # install
+## install agent
 
     # ruby setup.rb
 
@@ -27,9 +28,23 @@ Create a directory of rocusagent.
     # mkdir /var/log/rocus
     # chown rocus:rocus /var/log/rocus
 
+## install manager
+
+    # ruby setup.rb
+
+If configration file is installed to /usr/local/etc
+
+    # ln -s /usr/local/etc/rocuses /etc/
+
+Create a user and group for rocusesmanager
+
+    # groupadd rocuses
+    # useradd -g rocuses rocuses
+
 Create a directory of rocusesmanager.
 
     # mkdir /var/log/rocuses
+    # chown rocuses /var/log/rocuses
 
 # configration
 ## agent configration
@@ -70,6 +85,8 @@ Make directories of Databases and graph images.
 
     # mkdir -p /var/rocuses/rra
     # mkdir -p /var/rocuses/graph
+    # mkdir -p /var/rocuses/data
+    # chown -R rocuses:rocuses /var/rocuses
 
 create `/etc/rocuses/targetsconfig.xml`.
 
@@ -93,5 +110,6 @@ create `/etc/rocuses/targetsconfig.xml`.
 
 add to crontab
 
-    # crontab -e
+    # su - rocuses
+    rocuses> crontab -e
     */5 * * * * /usr/bin/rocusesmanager
