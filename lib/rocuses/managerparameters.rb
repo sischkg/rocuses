@@ -6,6 +6,8 @@ module Rocuses
     MANAGER_CONFIG_FILENAME = '/etc/rocuses/managerconfig.xml'
     TARGETS_CONFIG_FILENAME = '/etc/rocuses/targetsconfig.xml'
 
+    GRAPH_TEMPLATES_FILENAME = '/var/rocuses/data/graphtemplates.yaml'
+
     GRAPH_TIME_PERIOD_OF = {
       :hourly  => 60 * 60,
       :daily   => 60 * 60 * 24,

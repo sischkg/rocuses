@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-require 'rocuses/graphtemplate/utils'
+require 'rocuses/rrdtool/rpn'
+require 'rocuses/rrdtool/graph'
 
 module Rocuses
   module GraphTemplate
 
     class CPU
-      include Rocuses
       include Rocuses::GraphTemplate
 
       GRPINT_FORMAT = '%5.2lf %%'
@@ -15,16 +15,20 @@ module Rocuses
         @cpu_datasources = cpu_datasources
       end
 
-      def template_name()
+      def name
         return 'CPU'
       end
 
-      def id()
-        return template_name
+      def filename
+        return 'CPU'
       end
 
-      def filename()
-        return template_name
+      def nodenames
+        nodes = Array.new
+        @cpu_datasources.each { |ds|
+          nodes << ds.nodename
+        }
+        return nodes.uniq
       end
 
       def make_graph()
@@ -32,7 +36,7 @@ module Rocuses
           return nil
         end
 
-        title = "CPU - #{ @cpu_datasources[0].nodename }"
+        title = "CPU - #{ nodenames.join( %q{,} ) }"
         graph = RRDTool::Graph.new( :title          => title,
                                     :upper_limit    => 100,
                                     :lower_limit    => 0,

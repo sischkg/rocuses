@@ -10,6 +10,7 @@ monitoring servers tool.
 * rrdtool 1.4.x
 
 # インストール方法
+## エージェントのインストール
 
     # ruby setup.rb
 
@@ -17,6 +18,36 @@ monitoring servers tool.
 `/usr/local/etc/rocuses`へ設定ファイルのサンプルをインストールした場合は、以下コマンドを実行する。
 
     # ln -s /usr/local/etc/rocuses /etc/
+
+エージェント用ユーザ・グループを作成する。
+
+    # groupadd rocus
+    # useradd -g rocus rocus
+
+エージェントのログ保存ディレクトリを作成する。
+
+    # mkdir /var/log/rocus
+    # chown rocus:rocus /var/log/rocus
+
+## マネージャのインストール方法
+
+    # ruby setup.rb
+
+`/etc/rocuses`以外へ設定ファイルのサンプルをインストールした場合は、シンボリックリンクを作成する。
+`/usr/local/etc/rocuses`へ設定ファイルのサンプルをインストールした場合は、以下コマンドを実行する。
+
+    # ln -s /usr/local/etc/rocuses /etc/
+
+マネージャ用ユーザ・グループを作成する。
+
+    # groupadd rocuses
+    # useradd -g rocuses rocuses
+
+マネージャのログ保存ディレクトリを作成する。
+
+    # mkdir /var/log/rocuses
+	# chown rocuses:rocuses /var/log/rocuses
+    # chmod 775 /var/log/rocuses
 
 # 設定
 ## エージェントの設定
@@ -58,6 +89,8 @@ RRDToolのデータベースファイルの保存先ディレクトリを指定�
 
     # mkdir -p /var/rocuses/rra
     # mkdir -p /var/rocuses/graph
+    # mkdir -p /var/rocuses/data
+    # chown -R rocuses:rocuses /var/rocuses
 
 ## リソース情報取得対象の登録
 
@@ -80,6 +113,8 @@ RRDToolのデータベースファイルの保存先ディレクトリを指定�
 
 ## マネージャの実行（データ取得・グラフ作成）
 
-    # crontab -e
+    # su - rocuses
+    rocuses$ crontab -e
+    
     */5 * * * * /usr/bin/rocusesmanager
 

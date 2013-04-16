@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 
+require 'rocuses/rrdtool/rpn'
+require 'rocuses/rrdtool/graph'
+require 'rocuses/utils'
 require 'rocuses/graphtemplate/utils'
 
 module Rocuses
   module GraphTemplate
     class Traffic
-      include Rocuses
       include Rocuses::GraphTemplate
+      include Rocuses::Utils
 
       GPRINT_FORMAT = '%5.3lf %Sbps'
 
@@ -20,7 +23,6 @@ module Rocuses
         
         @name                          = args[:name]
         @network_interface_datasources = args[:network_interface_datasources]
-        @nodename                      = args[:nodename]
 
         if @name.nil?
           nic_names = Array.new
@@ -29,30 +31,26 @@ module Rocuses
           }
           @name = nic_names.join( %q{,} )
         end
-
-        if @nodename.nil?
-          if @network_interface_datasources.size > 0
-            @nodename = @network_interface_datasources[0].nodename
-          else
-            @nodename = %q{}
-          end
-        end
       end
 
-      def template_name()
-        return 'Traffic'
+      def name
+        return sprintf( 'traffic_%s', escape_name( @name ) )
       end
 
-      def id()
-        return sprintf( '%s_%s', template_name, @name )
+      def filename
+        return sprintf( 'traffic_%s', escape_name( @name ) )
       end
 
-      def filename()
-        return sprintf( '%s_%s', template_name, Rocuses::Utils::escape_for_filename( @name ) )
+      def nodenames
+        nodes = Array.new
+        @network_interface_datasources.each { |ds|
+          nodes << ds.nodename
+        }
+        return nodes.uniq
       end
 
       def make_graph()
-        title = "Traffic - #{ @name } of #{ @nodename }"
+        title = "Traffic - #{ @name } of #{ nodenames.join( %q{,} ) }"
 
         graph = RRDTool::Graph.new( :title          => title,
                                     :lower_limit    => 0,

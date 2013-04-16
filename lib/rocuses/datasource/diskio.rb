@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+require 'pp'
+require 'rocuses/rrdtool/datasource'
+
 module Rocuses
   module DataSource
 
@@ -64,7 +67,7 @@ module Rocuses
       def datasource_name( type )
         return sprintf( '%s_disk_io_%s_%s',
                         @nodename,
-                        Utils::escape_for_filename( @name ),
+                        @name.gsub( %r{[/ ]}, %q{_} ),
                         type ) 
       end
     end

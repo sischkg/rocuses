@@ -2,6 +2,7 @@
 
 require 'open3'
 require 'singleton'
+require 'sync'
 require 'rocuses/utils'
 require 'pp'
 
@@ -10,6 +11,7 @@ module Rocuses
     class RRDToolImp
       include Rocuses
       include Singleton
+      include Synchronizer_m
 
       attr_accessor :rrdtool_path
 
@@ -17,49 +19,62 @@ module Rocuses
         @name_index     = 0
         @rrdtool_path   = 'rrdtool'
         @rrd_store_path = '/var/rrd'
+        super()
       end
 
       def set_parameters( args )
-        if args.key?( :rrdtoo_path )
-          @rrdtool_path = args[:rrdtool_path]
-        end
-        if args.key?( :rrd_store_path )
-          @rrd_store_path = args[:rrd_store_path]
-        end
+        synchronize( Synchronizer_m::EX ) {
+          if args.key?( :rrdtoo_path )
+            @rrdtool_path = args[:rrdtool_path]
+          end
+          if args.key?( :rrd_store_path )
+            @rrd_store_path = args[:rrd_store_path]
+          end
+        }
       end
 
       def assign_name
-        @name_index += 1
-        return sprintf( 'rpn_%05d', @name_index )
+        synchronize( Synchronizer_m::EX ) {
+          @name_index += 1
+          return sprintf( 'rpn_%05d', @name_index )
+        }
       end
 
       def create( cmd )
-        open()
-        @stdin.print( "create #{ cmd }\n" )
-        parse_result( @stdin, @stdout, cmd, "create datasource" )
+        synchronize( Synchronizer_m::EX ) {
+          open()
+          @stdin.print( "create #{ cmd }\n" )
+          parse_result( @stdin, @stdout, cmd, "create datasource" )
+        }
       end
 
       def update( cmd )
-        open()
+        synchronize( Synchronizer_m::EX ) {
+          open()
 
-        @stdin.print( "update #{ cmd }\n" )
-        parse_result( @stdin, @stdout, cmd, "update datasource" )
+          @stdin.print( "update #{ cmd }\n" )
+          parse_result( @stdin, @stdout, cmd, "update datasource" )
+        }
       end
 
       def make_image( cmd )
-        open()
+        synchronize( Synchronizer_m::EX ) {
+          open()
 
-        @stdin.print( "graphv -  --imgformat PNG #{ cmd }\n" )
-        return parse_draw_result( cmd, @stdin, @stdout )
+          @stdin.print( "graphv -  --imgformat PNG #{ cmd }\n" )
+          return parse_draw_result( cmd, @stdin, @stdout )
+        }
       end
 
       def close
-        if ! @stdin.nil?
-          @stdin.print( "quit\n" )
-          @stdin.close
-          @stdout.close
-          @stderr.close
-        end
+        synchronize( Synchronizer_m::EX ) {
+          if ! @stdin.nil?
+            @stdin.print( "quit\n" )
+            @stdin.close
+            @stdout.close
+            @stderr.close
+          end
+        }
       end
 
       def rrd_filename( datasource )
@@ -121,3 +136,4 @@ module Rocuses
     end
   end
 end
+

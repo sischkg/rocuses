@@ -11,9 +11,16 @@ module Rocuses
     #
     #  config = Rocuses::Config::AgentConfig.new
     #  config.load( File.new( "agentconfig.xml" ) )
-    #  rndc = config.rndc_path    # "/usr/local/bind/sbin/rndc"
-    #  mailq = config.mailq_path  # "/usr/local/postfix/bin/mailq"
-    #  mta_tyoe = config.mta_type # "postfix"
+    #
+    #  bind_address = config.bind_address
+    #  bind_port    = config.bind_port
+    #  user         = config.user
+    #  group        = config.group
+    #  managers     = config.managers
+    #
+    #  rndc        = config.rndc_path        # "/usr/local/bind/sbin/rndc"
+    #  mailq       = config.mailq_path       # "/usr/local/postfix/bin/mailq"
+    #  mta_tyoe    = config.mta_type         # "postfix"
     #  named_stats = config.named_stats_path # "/var/named/named.stats"
     #
     # 設定XMLサンプル
@@ -22,6 +29,8 @@ module Rocuses
     #     <manager hostname="manager1.in.example.com"/>
     #     <manager hostname="192.168.0.1"/>
     #     <bind address="192.168.0.100" port="20080"/>
+    #     <user name="rocus"/>
+    #     <group name="rocus"/>
     #     <options>
     #       <rndc path="/usr/local/bind/sbin/rndc"/>
     #       <named_stats path="/var/named/named.stats"/>
@@ -40,6 +49,12 @@ module Rocuses
 
       # bindするport
       attr_reader :bind_port
+
+      # username of agent euid
+      attr_reader :user
+
+      # group of agent egid
+      attr_reader :group
 
       # BINDのrndcのパス
       attr_reader :rndc_path
@@ -62,6 +77,8 @@ module Rocuses
         @mailq_path       = '/usr/bin/mailq'
         @bind_address     = Rocuses::Config::Default::BIND_ADDRESS
         @bind_port        = Rocuses::Config::Default::BIND_PORT
+        @user             = Rocuses::Config::Default::AGENT_USER
+        @group            = Rocuses::Config::Default::AGENT_GROUP
         @managers         = Array.new
       end
 
@@ -73,6 +90,9 @@ module Rocuses
 
         load_manager_hostname( doc )
         load_bind_address( doc )
+        @user  = load_id( doc, 'user',  @user )
+        @group = load_id( doc, 'group', @group )
+
         @rndc_path   = load_option( doc, 'rndc',        'path', @rndc_path )
         @named_stats = load_option( doc, 'named_stats', 'path', @named_stats )
         @mta_type    = load_option( doc, 'mta',         'type', @mta_type )
@@ -88,7 +108,7 @@ module Rocuses
       # attr:: 属性の名前
       # default_value:: Elementまたは、attributeが存在しない場合の既定値
       def load_option( doc, name, attr, default_value )
-        element = doc.elements["//rocuses/agent/options/#{ name }"]
+        element = doc.elements["/rocuses/agent/options/#{ name }"]
         if element.nil? || ! element.attributes.key?( attr )
           return default_value
         end
@@ -122,6 +142,21 @@ module Rocuses
             @bind_port = DEFAULT_BIND_PORT
           end
         }
+      end
+
+      # <rocuses><agent><(user|group) name="Agent E(U|G)ID"/></agent></rocuses>
+      # Agentのeuid/guidを取得する
+      # doc:: REXML::Document
+      # path:: "user" or "group"
+      # default_id:: defaut値
+      def load_id( doc, path, default_id )
+        doc.elements.each( "/rocuses/agent/#{ path }" ) { |element|
+          id = element.attributes[ "name" ]
+          if id
+            return id
+          end
+        }
+        return default_id
       end
 
     end

@@ -16,6 +16,8 @@ class LoadXMLTest < Test::Unit::TestCase
     assert_equal( '/usr/bin/mailq',         config.mailq_path )       
     assert_equal( '0.0.0.0',                config.bind_address )     
     assert_equal( 20080,                    config.bind_port )
+    assert_equal( 'rocus',                  config.user )
+    assert_equal( 'rocus',                  config.group )
   end
 
   must "parse empty xml file" do
@@ -30,6 +32,8 @@ class LoadXMLTest < Test::Unit::TestCase
     assert_equal( '/usr/bin/mailq',         config.mailq_path )
     assert_equal( '0.0.0.0',                config.bind_address )     
     assert_equal( 20080,                    config.bind_port )
+    assert_equal( 'rocus',                  config.user )
+    assert_equal( 'rocus',                  config.group )
   end
 
   must "parse xml file" do
@@ -39,6 +43,8 @@ class LoadXMLTest < Test::Unit::TestCase
     <manager hostname="127.0.0.1"/>
     <manager hostname="192.168.0.1"/>
     <bind address="192.168.0.100" port="10080"/>
+    <user name="rocususer"/>
+    <group name="rocusgroup"/>
     <options>
       <rndc path="/usr/local/bind/sbin/rndc"/>
       <named_stats path="/var/named/named.stats"/>
@@ -62,6 +68,8 @@ END_XML
     assert_equal( '/usr/local/postfix/bin/mailq', config.mailq_path )
     assert_equal( '192.168.0.100',                config.bind_address )
     assert_equal( '10080',                        config.bind_port )
+    assert_equal( 'rocususer',                    config.user )
+    assert_equal( 'rocusgroup',                   config.group )
   end
 
 end
