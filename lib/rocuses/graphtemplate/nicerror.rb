@@ -9,6 +9,7 @@ module Rocuses
   module GraphTemplate
     class NICError
       include Rocuses::GraphTemplate
+      include Rocuses::Utils
 
       GPRINT_FORMAT = '%5.0lf'
 
@@ -17,11 +18,11 @@ module Rocuses
       end
 
       def name
-        return 'nic_error'
+        return sprintf( 'nic_error_%s', escape_name( @network_interface_datasource.name ) )
       end
 
       def filename
-        return sprintf( 'nic_error_%s', @network_interface_datasource.name )
+        return sprintf( 'nic_error_%s', escape_name( @network_interface_datasource.name ) )
       end
 
       def nodenames

@@ -9,6 +9,7 @@ module Rocuses
   module GraphTemplate
     class Traffic
       include Rocuses::GraphTemplate
+      include Rocuses::Utils
 
       GPRINT_FORMAT = '%5.3lf %Sbps'
 
@@ -33,11 +34,11 @@ module Rocuses
       end
 
       def name
-        return 'traffic'
+        return sprintf( 'traffic_%s', escape_name( @name ) )
       end
 
       def filename
-        return sprintf( 'traffic_%s', @name )
+        return sprintf( 'traffic_%s', escape_name( @name ) )
       end
 
       def nodenames

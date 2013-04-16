@@ -9,6 +9,7 @@ module Rocuses
   module GraphTemplate
     class DiskIOSize
       include Rocuses::GraphTemplate
+      include Rocuses::Utils
 
       GPRINT_FORMAT = '%4.3lf %sbps'
 
@@ -17,11 +18,11 @@ module Rocuses
       end
 
       def name
-        return 'disk_io_size'
+        return sprintf( 'disk_io_size_%s', escape_name( @disk_io_datasource.name ) )
       end
 
       def filename
-        return sprintf( 'disk_io_size_%s', @disk_io_datasource.name.gsub( %r{[/ ]}, %q{_} ) )
+        return sprintf( 'disk_io_size_%s', escape_name( @disk_io_datasource.name ) )
       end
 
       def nodenames

@@ -109,7 +109,11 @@ module Rocuses
       return ( ( args[:day].to_i * 24 + args[:hour].to_i ) * 60 + args[:minute].to_i ) * 60  + args[:second].to_i
     end
 
-    module_function :check_args, :fill_default_value, :datetime_to_second
+    def escape_name( name )
+      return name.gsub( %r{[/ ]}, %q{_} )
+    end
+
+    module_function :check_args, :fill_default_value, :datetime_to_second, :escape_name
     
   end
 end

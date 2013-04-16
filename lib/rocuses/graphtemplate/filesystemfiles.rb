@@ -8,6 +8,7 @@ module Rocuses
   module GraphTemplate
     class FilesystemFiles
       include Rocuses::GraphTemplate
+      include Rocuses::Utils
 
       GPRINT_FORMAT = '%10.0lf'
 
@@ -16,11 +17,11 @@ module Rocuses
       end
 
       def name
-        return 'FilesystemFiles'
+        return sprintf( 'FilesystemFiles_%s', escape_name( @filesystem_datasource.mount_point ) )
       end
 
       def filename
-        return sprintf( 'FilesystemFiles_%s', @filesystem_datasource.mount_point.gsub( %r{[/ ]}, %q{_} ) )
+        return sprintf( 'FilesystemFiles_%s', escape_name( @filesystem_datasource.mount_point ) )
       end
 
       def nodenames

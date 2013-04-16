@@ -9,6 +9,7 @@ module Rocuses
   module GraphTemplate
     class LinuxDiskIOQueueLength
       include Rocuses::GraphTemplate
+      include Rocuses::Utils
 
       GPRINT_FORMAT = '%5.3lf'
 
@@ -17,11 +18,11 @@ module Rocuses
       end
 
       def name
-        return 'linux_disk_io_queue_length'
+        return sprintf( 'linux_disk_io_queue_length_%s', escape_name( @disk_io_datasource.name ) )
       end
 
       def filename
-        return sprintf( 'linux_disk_io_queue_length_%s', @disk_io_datasource.name.gsub( %r{[/ ]}, %q{_} ) )
+        return sprintf( 'linux_disk_io_queue_length_%s', escape_name( @disk_io_datasource.name ) )
       end
 
       def nodenames

@@ -16,13 +16,13 @@ module Rocuses
         end
 
         def get_graph_template( id, nodename = nil )
-          if nodename.nil?
+          if ! nodename.nil?
             if @graph_templates_of.key?( nodename ) && @graph_templates_of[nodename].key?( id )
               return @graph_templates_of[nodename][id]
             end
             raise ArgumentError.new( "#{ id } of #{ nodename } dose not exist." ) 
           else
-            @graph_templatess_of.each { |node, graph_template_of|
+            @graph_templates_of.each { |node, graph_template_of|
               if graph_template_of.key?( id )
                 return graph_template_of[id]
               end

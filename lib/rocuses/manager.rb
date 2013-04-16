@@ -102,6 +102,8 @@ module Rocuses
                                     :end_time   => end_time )
             graphs << graph_info
           }
+
+          save_graph_templates()
         rescue => e
           @logger.error( e.to_s )
           @logger.error( e.backtrace )
@@ -124,7 +126,7 @@ module Rocuses
     def load_graph_templates
       File.open( ManagerParameters::GRAPH_TEMPLATES_FILENAME, File::RDONLY ) { |input|
         input.flock( File::LOCK_SH )
-        @graph_template_manager = YAML.load( @input )
+        @graph_template_manager = YAML.load( input )
       }
     end
 
@@ -150,7 +152,7 @@ module Rocuses
     end
 
     def save_graph_templates
-      File.open( ManagerParameters::GRAPH_TEMPLATES_FILENAME, File::WRONLY | File::TRUNC ) { |output|
+      File.open( ManagerParameters::GRAPH_TEMPLATES_FILENAME, File::WRONLY | File::CREAT | File::TRUNC ) { |output|
         output.flock( File::LOCK_EX )
         YAML.dump( @graph_template_manager, output )
       }
