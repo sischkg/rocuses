@@ -33,13 +33,6 @@ module Rocuses
         }
       end
 
-      def assign_name
-        synchronize( Synchronizer_m::EX ) {
-          @name_index += 1
-          return sprintf( 'rpn_%05d', @name_index )
-        }
-      end
-
       def create( cmd )
         synchronize( Synchronizer_m::EX ) {
           open()
