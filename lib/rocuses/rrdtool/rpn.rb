@@ -49,13 +49,11 @@ module Rocuses
         self
       end
 
-      attr_reader :name, :is_vdef
+      attr_reader :is_vdef
 
       def initialize( arg, op, is_vdef  )
         @arg            = arg.to_rpn
         @operator       = op
-        @name           = RRDTool.assign_name()
-        @tmp_value_name = RRDTool.assign_name()
         @is_vdef        = is_vdef
 
         if ! AVAILABLE_OPERATORS.include?( @operator )
@@ -67,25 +65,25 @@ module Rocuses
         return @arg.depend_on + [ self ]
       end
 
-      def definition
-        return sprintf( "CDEF:%s=%s VDEF:%s=%s,%s",
-                        @tmp_value_name,
-                        @arg.rpn_expression(),
-                        @name, 
-                        @tmp_value_name,
-                        @operator )
-#        return sprintf( "%sDEF:%s=%s %sDEF:%s=%s,%s",
-#                        @arg.is_vdef() ? 'V' : 'C',
-#                        @tmp_value_name,
-#                        @arg.rpn_expression(),
-#                        @is_vdef ? 'V' : 'C',
-#                        @name, 
-#                        @tmp_value_name,
-#                        @operator )
+      def definition( index_generator )
+          value_name = rpn_expression( index_generator )
+          tmp_value_name = sprintf( "%s_tmp_1", value_name )
+          return sprintf( "%sDEF:%s=%s %sDEF:%s=%s,%s",
+                          @arg.is_vdef() ? 'V' : 'C',
+                          tmp_value_name,
+                          @arg.rpn_expression( index_generator ),
+                          @is_vdef ? 'V' : 'C',
+                          value_name, 
+                          tmp_value_name,
+                          @operator )
       end
 
-      def rpn_expression
-        return @name
+      def rpn_expression( index_generator )
+        return index_generator.get( self )
+      end
+
+      def name( index_generator )
+        return index_generator.get( self )
       end
     end
 
@@ -94,14 +92,11 @@ module Rocuses
 
       include RPN_Base
 
-      attr_reader :name
-
       def to_rpn
         self
       end
 
       def initialize( lhs, rhs, op )
-        @name      = RRDTool.assign_name()
         @lhs       = lhs.to_rpn
         @rhs       = rhs.to_rpn
         @operator  = op
@@ -114,17 +109,21 @@ module Rocuses
         return @lhs.depend_on() + @rhs.depend_on() + [ self ]
       end
 
-      def definition
-        return sprintf( "CDEF:%s=%s,%s,%s",
-#                        is_vdef() ? 'V' : 'C',
-                        @name,
-                        @lhs.rpn_expression(),
-                        @rhs.rpn_expression(),
-                        @operator )
+      def definition( index_generator )
+          return sprintf( "%sDEF:%s=%s,%s,%s",
+                          is_vdef() ? 'V' : 'C',
+                          rpn_expression( index_generator ),
+                          @lhs.rpn_expression( index_generator ),
+                          @rhs.rpn_expression( index_generator ),
+                          @operator )
       end
 
-      def rpn_expression
-        return @name
+      def rpn_expression( index_generator )
+        return index_generator.get( self )
+      end
+
+      def name( index_generator )
+        return index_generator.get( self )
       end
 
       def is_vdef
@@ -141,34 +140,35 @@ module Rocuses
         self
       end
 
-      attr_reader :name
-
       attr_reader :is_vdef
 
       def initialize( arg, type = false )
         @arg     = arg.to_rpn
         @is_vdef = type
-        @name    = RRDTool.assign_name()
       end
 
       def depend_on
         return @arg.depend_on() + [ self ]
       end
 
-      def definition
+      def definition( index_generator )
         if @is_vdef
           return sprintf( 'VDEF:%s=%s,AVERAGE',
-                          @name,
-                          @arg.rpn_expression() )
+                          name( index_generator ),
+                          @arg.rpn_expression( index_generator ) )
         else
           return sprintf( 'CDEF:%s=%s',
-                          @name,
-                          @arg.rpn_expression() )
+                          name( index_generator ),
+                          @arg.rpn_expression( index_generator ) )
         end
       end
 
-      def rpn_expression
-        return @name
+      def rpn_expression( index_generator )
+        return index_generator.get( self )
+      end
+
+      def name( index_generator )
+        return index_generator.get( self )
       end
     end
 
@@ -182,7 +182,7 @@ module Rocuses
         self
       end
 
-      attr_reader :datasrouce, :type, :name
+      attr_reader :datasrouce
 
       def initialize( datasource, type )
         @datasource = datasource
@@ -190,19 +190,22 @@ module Rocuses
         if ! AVAILABLE_CF.include?( @type )
           raise ArgumentError.new( %Q[invalid CF type "#{@type}"] )
         end
-        @name = RRDTool.assign_name()
       end
 
       def depend_on
         return [ self ]
       end
 
-      def definition
-        return sprintf( "DEF:%s=%s:value:%s", @name, @datasource.filename, @type )
+      def definition( index_generator )
+        return sprintf( "DEF:%s=%s:value:%s", rpn_expression( index_generator ), @datasource.filename, @type )
       end
 
-      def rpn_expression()
-        return @name
+      def rpn_expression( index_generator )
+        return index_generator.get( self )
+      end
+
+      def name( index_generator )
+        return index_generator.get( self )
       end
 
       def is_vdef
@@ -225,11 +228,11 @@ module Rocuses
         return []
       end
 
-      def definition
+      def definition( index_generator )
         return %q{}
       end
 
-      def rpn_expression()
+      def rpn_expression( index_generator )
         return @value.to_s
       end
 

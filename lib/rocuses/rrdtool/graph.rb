@@ -54,14 +54,14 @@ module Rocuses
         return @value.depend_on()
       end
 
-      def definitions()
+      def definitions( index_generator = nil )
         return %q{}
       end
 
-      def rpn_expression()
+      def rpn_expression( index_generator = nil )
         e = sprintf( %q{LINE%d:%s%s:"%s"},
                      @width,
-                     @value.name,
+                     @value.name( index_generator ),
                      @color,
                      Rocuses::RRDTool::escape_colon( @label ) )
         if @stack
@@ -111,13 +111,13 @@ module Rocuses
         return @value.depend_on()
       end
 
-      def definition()
+      def definition( index_generator )
         return %q{}
       end
 
-      def rpn_expression()
+      def rpn_expression( index_generator )
         e = sprintf( %q{AREA:%s%s:"%s"},
-                     @value.name,
+                     @value.name( index_generator ),
                      @color,
                      Rocuses::RRDTool::escape_colon( @label ) )
         if @stack
@@ -155,13 +155,13 @@ module Rocuses
         return @value.depend_on()
       end
 
-      def definition()
+      def definition( index_generator )
         return %q{}
       end
 
-      def rpn_expression()
+      def rpn_expression( index_generator )
         return sprintf( %q{GPRINT:%s:"%s"},
-                        @value.name,
+                        @value.name( index_generator ),
                         Rocuses::RRDTool::escape_colon( @format ) )
       end
     end
@@ -185,11 +185,11 @@ module Rocuses
         return []
       end
 
-      def definition
+      def definition( index_generator )
         return %q{}
       end
 
-      def rpm_expression()
+      def rpm_expression( index_generator )
         return sprintf( %q{COMMENT:"%s"}, Rocuses::RRDTool::escape_colon( @comment ) )
       end
     end
@@ -215,16 +215,32 @@ module Rocuses
         return []
       end
 
-      def definition
+      def definition( index_generator )
         return %q{}
       end
 
-      def rpn_expression()
+      def rpn_expression( index_generator )
         return %Q["COMMENT:#{@align}"]
       end
 
     end
 
+
+    class IndexGenerator
+
+      def initialize
+        @index = 0
+        @index_of = Hash.new
+      end
+
+      def get( value )
+        if ! @index_of.key?( value )
+          @index_of[value] = @index
+          @index += 1
+        end
+        return sprintf( "rpn_%d", @index_of[value] )
+      end
+    end
 
     #
     # RRDToolのグラフを作成するクラス
@@ -364,12 +380,14 @@ module Rocuses
           depend_values += item.depend_on()
         }
 
+        index_generator = IndexGenerator.new
+
         depend_values.uniq.each { |value|
-          cmd += sprintf( " %s ", value.definition() )
+          cmd += sprintf( " %s ", value.definition( index_generator ) )
         }
 
         @items.each { |item|
-          cmd += sprintf( " %s ", item.rpn_expression )
+          cmd += sprintf( " %s ", item.rpn_expression( index_generator ) )
         }
 
         return RRDTool.make_image( cmd )
