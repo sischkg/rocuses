@@ -11,14 +11,26 @@ module Rocuses
         end
 
         def add_graph_template( graph_template )
-          @graph_templates_of[graph_template.name] = graph_template
+          @graph_template_of[graph_template.name] = graph_template
         end
 
         def get_graph_template( name )
-          if @graph_template_of.key?( name )
-            return @graph_template_of[name]
-          end
-          raise ArgumentError.new( "#{ id } of #{ nodename } dose not exist." )               
+          return @graph_template_of[name]
+        end
+
+        def list_nodes
+          nodes = Array.new
+          @graph_template_of.values.each { |graph_template|
+            nodes += graph_template.nodenames
+          }
+          return nodes.sort!.uniq!
+        end
+
+        def find_graph_template_by_nodename( nodename )
+          nodes =  @graph_template_of.values.find_all { |graph_template|
+            graph_template.nodenames.include?( nodename )
+          }
+          return nodes
         end
 
         def each()

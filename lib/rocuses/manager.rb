@@ -68,6 +68,8 @@ module Rocuses
           @logger.error( e.backtrace )
         end
       }
+
+      save_graph_templates()
     end
 
     def draw_graph
