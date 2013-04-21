@@ -27,10 +27,9 @@ module Rocuses
         end
 
         def find_graph_template_by_nodename( nodename )
-          nodes =  @graph_template_of.values.find_all { |graph_template|
-            graph_template.nodenames.include?( nodename )
+          return @graph_template_of.find_all { |graph_template|
+            graph_template.include?( nodename )
           }
-          return nodes
         end
 
         def each()
