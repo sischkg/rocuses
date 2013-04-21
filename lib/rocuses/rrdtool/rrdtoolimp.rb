@@ -121,7 +121,7 @@ module Rocuses
           raise %Q[cannot draw graph: "#{ cmd }"( #{error_lines} )]
         end    
         if image.nil?
-          raise "cannot recieve image data from rrdtool graphv."
+          raise "cannot receive image data from rrdtool graphv."
         end
 
         return image
