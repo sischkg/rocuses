@@ -103,8 +103,11 @@ create `/etc/rocuses/targetsconfig.xml`.
     </rocuses>
 
 ## start agent
+### On Ubuntu ( upstart )
 
-    # rocusagent
+    # cp /usr/share/rocuses/upstart/rocusagent.conf /etc/init/
+    # initctl reload-configuration
+    # initctl start rocusagent
 
 ## execute manager
 

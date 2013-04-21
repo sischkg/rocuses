@@ -108,8 +108,16 @@ RRDToolのデータベースファイルの保存先ディレクトリを指定�
 
 
 ## エージェントの実行
+### Ubuntuの場合
 
-    # rocusagent
+upstartへ登録する。
+
+    # cp /usr/share/rocuses/upstart/rocusagent.conf /etc/init/
+    # initctl reload-configuration
+
+エージェントを起動する。
+
+    # initctl start rocusagent
 
 ## マネージャの実行（データ取得・グラフ作成）
 
