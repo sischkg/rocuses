@@ -60,7 +60,7 @@ module Rocuses
           @devices << unix_server
 
           unix_server.make_graph_templates.each { |graph_template|
-            @graph_template_manager.add_graph_template( target.name, graph_template )
+            @graph_template_manager.add_graph_template( graph_template )
           }
 
         rescue => e
