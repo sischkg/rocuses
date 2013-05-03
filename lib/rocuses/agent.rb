@@ -77,17 +77,16 @@ module Rocuses
 
     def initialize( args )
       args = Utils::check_args( args, { :agentconfig => :req, :daemonize => :op, }, { :daemonize => false } )
-      @agentconfig   = args[:agentconfig]
-      @daemonize     = args[:daemonize]
+      @agentconfig = args[:agentconfig]
+      @daemonize   = args[:daemonize]
     end
 
     # エージェントのサービスを開始数する。
     def start()
       setup_directory()
-      set_eid()
       create_logger()
 
-      @agent         = Rocuses::Agent.new
+      @agent = Rocuses::Agent.new
 
       @http_server = WEBrick::HTTPServer.new( :DocumentRoot => HTTP_DOCUMENT_ROOT,
                                               :Port         => @agentconfig.bind_port,
@@ -127,6 +126,8 @@ module Rocuses
       if @daemonize
         daemonize_agent()
       end
+
+      set_eid()
       @http_server.start()
     end
 
