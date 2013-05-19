@@ -11,6 +11,8 @@ require 'rocuses/utils'
 require 'rocuses/agentparameters'
 require 'rocuses/agent/linux'
 require 'rocuses/agent/noos'
+require 'rocuses/agent/bind'
+require 'rocuses/agent/nobind'
 require 'rocuses/config/agentconfig'
 
 module Log4r
@@ -24,6 +26,7 @@ end
 module Rocuses
   class Agent
     OS_AGENTS = [ Rocuses::Agent::Linux, Rocuses::Agent::NoOS ]
+    BIND_AGENTS = [ Rocuses::Agent::Bind, Rocuses::Agent::NoBind ]
     LOG4R_CONFIG = '/etc/rocuses/log4r.xml'
 
     include Log4r
@@ -40,7 +43,13 @@ module Rocuses
       OS_AGENTS.each { |os_agent|
         if os_agent.match_environment?
           @os_agent = os_agent.new
-          return
+          break
+        end
+      }
+
+      BIND_AGENTS.each { |bind_agent|
+        if bind_info = bind_agent.match_environment?
+          @bind_agent = bind_agent.new( bind_info )
         end
       }
     end
@@ -55,11 +64,14 @@ module Rocuses
       @os_agent.get_filesystem_status( resource )
       @os_agent.get_load_average( resource )
       @os_agent.get_disk_ios( resource )
+      @bind_agent.get_name_server_statistics( resource )
+      @bind_agent.get_named_cache_statistics( resource )
     end
 
     def get_resource_status( type, resource )
       begin
         @os_agent.get_resource( type, resource )
+        @bind_agent.get_resource( type, resource )
       rescue ArgumentError => e
         @error_logger.info( "resource type #{ type } is not supported" )
       end

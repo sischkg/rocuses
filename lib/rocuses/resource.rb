@@ -10,6 +10,9 @@ require 'rocuses/resource/networkinterface'
 require 'rocuses/resource/diskio'
 require 'rocuses/resource/linuxdiskio'
 
+require 'rocuses/resource/bind'
+require 'rocuses/resource/bindcache'
+
 
 module Rocuses
   # リソースを表すクラス
@@ -45,6 +48,12 @@ module Rocuses
     # 各ディスクのIO(Linux)
     attr_accessor :linux_disk_ios
 
+    # Bindの統計情報
+    attr_accessor :bind
+
+    # Bindキャッシュの統計情報
+    attr_accessor :bindcaches
+
     def initialize
       @cpus               = Array.new
       @filesystems        = Array.new
@@ -52,6 +61,7 @@ module Rocuses
       @network_interfaces = Array.new
       @disk_ios           = Array.new
       @linux_disk_ios     = Array.new
+      @bindcaches         = Array.new
     end
 
     def serialize
