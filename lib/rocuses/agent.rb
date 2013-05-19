@@ -50,6 +50,7 @@ module Rocuses
       BIND_AGENTS.each { |bind_agent|
         if bind_info = bind_agent.match_environment?
           @bind_agent = bind_agent.new( bind_info )
+          break
         end
       }
     end

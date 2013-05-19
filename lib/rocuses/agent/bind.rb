@@ -118,7 +118,7 @@ module Rocuses
           if line =~/\A\+\+ Name Server Statistics \+\+\z/
             name_server_statistics = true
             next
-          elsif line =~/\A\+\+ .* \+\+\z/
+          elsif line =~/\A\+\+ .* \+\+\z/ && name_server_statistics
             break
           elsif name_server_statistics
             if line =~ /\s+(\d+) (\w.*)\z/
@@ -127,29 +127,31 @@ module Rocuses
 
               case statistics_name
               when 'IPv4 requests received'
-                statistics[:requests_ipv4] = count
+                statistics[:request_ipv4] = count
               when 'requests with EDNS(0) received'
-                statistics[:requests_edns0] = count
+                statistics[:request_edns0] = count
               when 'TCP requests received'
-                statistics[:requests_tcp] = count
+                statistics[:request_tcp] = count
               when 'recursive queries rejected'
                 statistics[:reject_recursive_requests_] = count
               when 'responses sent'
                 statistics[:response] = count
               when 'responses with EDNS(0) sent'
                 statistics[:response_edns0] = count
-              when 'resulted in successful answer'
+              when 'queries resulted in successful answer'
                 statistics[:success] = count
-              when 'resulted in authoritative answer'
+              when 'queries resulted in authoritative answer'
                 statistics[:authorative_answer] = count
-              when 'resulted in non authoritative answer'
+              when 'queries resulted in non authoritative answer'
                 statistics[:non_authorative_answer] = count
-              when 'resulted in nxrrset'
+              when 'queries resulted in nxrrset'
                 statistics[:nxrrset] = count
-              when 'resulted in NXDOMAIN'
-                statistics[:recursion] = count
-              when 'caused recursion'
+              when 'queries resulted in SERVFAIL'
+                statistics[:servfail] = count
+              when 'queries resulted in NXDOMAIN'
                 statistics[:nxdomain] = count
+              when 'queries caused recursion'
+                statistics[:recursion] = count
               end
             end
           end
@@ -179,7 +181,7 @@ module Rocuses
           }
         end
 
-        resource.bindcache = cache_statisticses
+        resource.bindcaches = cache_statisticses
       end
 
       private

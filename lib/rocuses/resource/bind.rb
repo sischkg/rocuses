@@ -86,7 +86,7 @@ module Rocuses
                                   },
                                   {
                                     :request_ipv4               => 0,
-                                    :request_edns               => 0,
+                                    :request_edns0              => 0,
                                     :request_tcp                => 0,
                                     :rejected_resursive_request => 0,
                                     :response                   => 0,
@@ -102,18 +102,18 @@ module Rocuses
 
         @time                       = args[:time]
         @request_ipv4               = args[:request_ipv4]
-        @request_edns0              = args[:request_edns]
+        @request_edns0              = args[:request_edns0]
         @request_tcp                = args[:request_tcp]
         @rejected_recursive_request = args[:rejected_recursive_request]
         @response                   = args[:response]
-        @response_edns0             = args[:response_edns]
+        @response_edns0             = args[:response_edns0]
         @success                    = args[:success]
         @authorative_answer         = args[:authorative_answer]
         @non_authorative_answer     = args[:non_authorative_answer]
         @nxrrset                    = args[:nxrrset]
         @servfail                   = args[:servfail]
         @nxdomain                   = args[:nxdomain]
-        @recursion                  = args[:reciursion]
+        @recursion                  = args[:recursion]
       end
 
     end
