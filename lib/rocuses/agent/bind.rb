@@ -160,7 +160,7 @@ module Rocuses
       end
 
 
-      def get_named_cache_statistics( resources )
+      def get_named_cache_statistics( resource )
         statistics_file = load_statistics_file()
         if statistics_file.nil?
           @logger.warn( "cannot load statistics file" )          
@@ -186,12 +186,19 @@ module Rocuses
 
       # 
       def load_statistics_file
+        rndc_stats = "#{ @bind_info.rndc_path } stats"
+        system( rndc_stats )
+        sleep( 1 )
+
+        statistics = %q{}
         STATISTICS_FILES.each { |statistics_file|
           begin
           if File.readable?( statistics_file )
             File.open( statistics_file ) { |input|
-              return input.gets( nil )
+              statistics = input.gets( nil )
             }
+            File.unlink( statistics_file )
+            return statistics
           end
           rescue => e
             @logger.warn( "cannot load #{ statistics_file }( #{ e.to_s } )" )

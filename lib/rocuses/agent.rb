@@ -139,7 +139,7 @@ module Rocuses
         daemonize_agent()
       end
 
-      set_eid()
+      # set_eid()
       @http_server.start()
     end
 

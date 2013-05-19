@@ -6,7 +6,7 @@ module Rocuses
   class Resource
 
     # BIND統計情報を保持するクラス
-    class BindCache 
+    class Bind
       include Rocuses
       include Comparable
 
