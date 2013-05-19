@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rocuses>
   <targets>
-    <target node="node01" hostname="192.168.0.1">
+    <target name="node01" hostname="192.168.0.1">
     </target>
-    <target node="node02" hostname="192.168.0.2" port="10080">
+    <target name="node02" hostname="192.168.0.2" port="10080">
     </target>
-    <target node="node03" hostname="192.168.0.3">
+    <target name="node03" hostname="192.168.0.3">
       <process name="sendmail" pattern="/usr/lib/sendmail -bd"/>
       <process name="httpd"    pattern="/usr/local/apache2/bin/httpd"/>
       <disk_io device="/dev/hda"/>
