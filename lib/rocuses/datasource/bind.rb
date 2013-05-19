@@ -6,7 +6,7 @@ require 'rocuses/rrdtool/datasource'
 module Rocuses
   module DataSource
 
-    class Binf
+    class Bind
 
       # nodename
       attr_reader :nodename
@@ -71,19 +71,19 @@ module Rocuses
           @nxdomain                   = create_rrd( config, 'nxdomain' )
           @recursion                  = create_rrd( config, 'reciursion' )
 
-          @request_ipv4.              update( resource.time, resource.bind.request_ipv4 )
-          @request_edns0.             update( resource.time, resource.bind.request_edns0 )
-          @request_tcp.               update( resource.time, resource.bind.request_tcp )
-          @rejected_recursive_request.update( resource.time, resource.bind.rejected_recursive_request )
-          @response.                  update( resource.time, resource.bind.response )
-          @response_edns0.            update( resource.time, resource.bind.response_edns0 )
-          @success.                   update( resource.time, resource.bind.success )
-          @authorative_answer.        update( resource.time, resource.bind.authorative_answer )
-          @non_authorative_answer.    update( resource.time, resource.bind.non_authorative_answer )
-          @nxrrset.                   update( resource.time, resource.bind.nxrrset )
-          @servfail.                  update( resource.time, resource.bind.servfail )
-          @nxdomain.                  update( resource.time, resource.bind.nxdomain )
-          @recursion.                 update( resource.time, resource.bind.recursion )
+          @request_ipv4.              update( resource.bind.time, resource.bind.request_ipv4 )
+          @request_edns0.             update( resource.bind.time, resource.bind.request_edns0 )
+          @request_tcp.               update( resource.bind.time, resource.bind.request_tcp )
+          @rejected_recursive_request.update( resource.bind.time, resource.bind.rejected_recursive_request )
+          @response.                  update( resource.bind.time, resource.bind.response )
+          @response_edns0.            update( resource.bind.time, resource.bind.response_edns0 )
+          @success.                   update( resource.bind.time, resource.bind.success )
+          @authorative_answer.        update( resource.bind.time, resource.bind.authorative_answer )
+          @non_authorative_answer.    update( resource.bind.time, resource.bind.non_authorative_answer )
+          @nxrrset.                   update( resource.bind.time, resource.bind.nxrrset )
+          @servfail.                  update( resource.bind.time, resource.bind.servfail )
+          @nxdomain.                  update( resource.bind.time, resource.bind.nxdomain )
+          @recursion.                 update( resource.bind.time, resource.bind.recursion )
         end
       end
 
