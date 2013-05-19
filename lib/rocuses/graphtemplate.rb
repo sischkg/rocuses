@@ -16,5 +16,6 @@ require 'rocuses/graphtemplate/linuxdiskiowaittime'
 require 'rocuses/graphtemplate/linuxdiskioqueuelength'
 require 'rocuses/graphtemplate/traffic'
 require 'rocuses/graphtemplate/nicerror'
+require 'rocuses/graphtemplate/bind'
 require 'rocuses/graphtemplate/manager'
 

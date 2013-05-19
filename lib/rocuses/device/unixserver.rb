@@ -24,18 +24,27 @@ module Rocuses
           @cpu_usages << cpu_usage
         }
 
-        @cpu_average_usage = DataSource::CPUAverage.new( @target.name )
-        @cpu_average_usage.update( manager_config, resource )          
+        if resource.cpu_average
+          @cpu_average_usage = DataSource::CPUAverage.new( @target.name )
+          @cpu_average_usage.update( manager_config, resource )          
+        end
 
         if resource.load_average
           @load_average = DataSource::LoadAverage.new( @target.name )
           @load_average.update( manager_config, resource )
         end
 
-        @memory = DataSource::Memory.new( @target.name )
-        @memory.update( manager_config, resource )
-        @swap = DataSource::Swap.new( @target.name )
-        @swap.update( manager_config, resource )
+        if resource.virtual_memory
+          @memory = DataSource::Memory.new( @target.name )
+          @memory.update( manager_config, resource )
+          @swap = DataSource::Swap.new( @target.name )
+          @swap.update( manager_config, resource )
+        end
+
+        if resource.bind
+          @bind = DataSource::Bind.new( @target.name )
+          @bind.update( manager_config, resource )
+        end
 
         if resource.page_io
           @page_io = DataSource::PageIO.new( @target.name )
@@ -74,18 +83,31 @@ module Rocuses
       def make_graph_templates
         graph_templates = Array.new
 
-        graph_templates << GraphTemplate::CPU.new( @cpu_usages )
-        graph_templates << GraphTemplate::CPUAverage.new( @cpu_average_usage )
+        if @cpu_usage
+          graph_templates << GraphTemplate::CPU.new( @cpu_usages )
+        end
+
+        if @cpu_average_usage
+          graph_templates << GraphTemplate::CPUAverage.new( @cpu_average_usage )
+        end
 
         if @load_average
           graph_templates << GraphTemplate::LoadAverage.new( @load_average )
           graph_templates << GraphTemplate::LoadAverageMax.new( @load_average )
         end
 
-        graph_templates << GraphTemplate::Memory.new( @memory )
-        graph_templates << GraphTemplate::Swap.new( @swap )
+        if @memory
+          graph_templates << GraphTemplate::Memory.new( @memory )
+        end
+        if @swap
+          graph_templates << GraphTemplate::Swap.new( @swap )
+        end
         if @page_io
           graph_templates << GraphTemplate::PageIO.new( @page_io )
+        end
+
+        if @bind
+          graph_templates << GraphTemplate::Bind.new( @bind )
         end
 
         @filesystems.each { |filesystem|

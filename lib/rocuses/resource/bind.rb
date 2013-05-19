@@ -22,20 +22,22 @@ module Rocuses
       # 受信したTCP requestの数
       attr_reader :request_tcp
 
-      # 
+      # 再起問い合わせを拒否した数
       attr_reader :rejected_recursive_request
 
-      #
+      # 応答した数
       attr_reader :response
 
-      #
+      # EDNSで応答した数
       attr_reader :response_edns0
 
       # success を応答した数
       attr_reader :success
 
+      # authorative_answerで応答した数
       attr_reader :authorative_answer
 
+      # non_authorative_answerで応答した数
       attr_reader :non_authorative_answer
 
       # nxrrsetを応答した数
@@ -58,8 +60,8 @@ module Rocuses
       # ::response 応答した数
       # ::response_ends0 EDNS0で応答した数
       # ::sucess success を応答した数
-      # ::authorative_answerを応答した数
-      # ::non_authorative_answerを応答した数
+      # ::authorative_answer Authorative Answerで応答した数
+      # ::non_authorative_answer Non Authorative Answerで応答した数
       # ::nxrrset nxrrsetを応答した数
       # ::servfail servfailを応答した数
       # ::nxdomain nxdomainを応答した数
