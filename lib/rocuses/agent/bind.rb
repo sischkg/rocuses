@@ -172,12 +172,14 @@ module Rocuses
 
       def get_named_cache_statistics( resource, statistics_file )
         cache_statisticses = Array.new
+        pp statistics_file
         if statistics_file =~ %r{
-            ^\+\+ Cache DB RRsets \+\+$
+            \+\+\sCache\sDB\sRRsets\s\+\+
             (.*)
-            ^\+\+ Socket I/O Statistics \+\+$
-          }xs
+            \+\+\sSocket\sI/O\sStatistics\s\+\+
+          }xm
           cache_db_section = $1
+          pp cache_db_section 
           cache_db_section.scan( %r{\[View: .*\][^\[]+} ) { |view|
             cache_statisticses << parse_cache_db_statistics( view )
           }
@@ -189,7 +191,7 @@ module Rocuses
       # rndc statsを実行し、statistics fileを読む
       # ::return statistics file
       def load_statistics_file
-        File.open( STATS_FILE_LOCK, File::WRONLY ) { |lock|
+        File.open( STATS_FILE_LOCK, File::WRONLY|File::CREAT ) { |lock|
           lock.flock( File::LOCK_EX )
           rndc_stats = "#{ @bind_info.rndc_path } stats"
           system( rndc_stats )
@@ -220,13 +222,13 @@ module Rocuses
           if line =~ /\A\[View:\s(.+)\]/
             view = $1
           elsif line =~ /\s*(\d+) (\S+)\z/
-            cache_statistics[$1] = $2.to_i
+            cache_statistics[$2] = $1.to_i
           end
         }
 
-        return BindCache.new( :time  => Time.now,
-                              :view  => view,
-                              :cache => cache_statistics )
+        return Resource::BindCache.new( :time  => Time.now,
+                                        :view  => view,
+                                        :cache => cache_statistics )
       end
     end
   end
