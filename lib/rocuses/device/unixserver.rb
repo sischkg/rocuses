@@ -46,6 +46,13 @@ module Rocuses
           @bind.update( manager_config, resource )
         end
 
+        @bindcaches = Array.new
+        resource.bindcaches.each { |cache|
+          cache_ds = DataSource::BindCache.new( @target.name, cache.view )
+          cache_ds.update( manager_config, resource )
+          @bindcaches << cache_ds
+        }
+
         if resource.page_io
           @page_io = DataSource::PageIO.new( @target.name )
           @page_io.update( manager_config, resource )
@@ -109,6 +116,9 @@ module Rocuses
         if @bind
           graph_templates << GraphTemplate::Bind.new( @bind )
         end
+        @bindcaches.each { |cache|
+          graph_templates << GraphTemplate::BindCache.new( cache )
+        }
 
         @filesystems.each { |filesystem|
           graph_templates << GraphTemplate::FilesystemSize.new( filesystem )

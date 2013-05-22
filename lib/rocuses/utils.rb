@@ -110,7 +110,7 @@ module Rocuses
     end
 
     def escape_name( name )
-      return name.gsub( %r{[/ ]}, %q{_} )
+      return name.gsub( %r{[/ !]}, %q{_} )
     end
 
     module_function :check_args, :fill_default_value, :datetime_to_second, :escape_name
