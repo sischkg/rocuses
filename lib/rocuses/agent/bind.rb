@@ -172,14 +172,12 @@ module Rocuses
 
       def get_named_cache_statistics( resource, statistics_file )
         cache_statisticses = Array.new
-        pp statistics_file
         if statistics_file =~ %r{
             \+\+\sCache\sDB\sRRsets\s\+\+
             (.*)
             \+\+\sSocket\sI/O\sStatistics\s\+\+
           }xm
           cache_db_section = $1
-          pp cache_db_section 
           cache_db_section.scan( %r{\[View: .*\][^\[]+} ) { |view|
             cache_statisticses << parse_cache_db_statistics( view )
           }

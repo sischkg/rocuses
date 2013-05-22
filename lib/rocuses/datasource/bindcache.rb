@@ -28,9 +28,9 @@ module Rocuses
           resource.bindcaches.each { |cache|
             if cache.view == @view
               @cache = Hash.new
-              cache.each { |type, count|
-                rrd_of[type] = create_rrd( config, type )
-                rrd_of[type].update( config, cache.time, count )
+              cache.cache.each { |type, count|
+                @cache[type] = create_rrd( config, type )
+                @cache[type].update( cache.time, count )
               }
             end
           }

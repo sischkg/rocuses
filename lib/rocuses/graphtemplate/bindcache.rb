@@ -18,11 +18,11 @@ module Rocuses
       end
 
       def name
-        return sprintf( 'bindcache_%s', escape_name( @bindcache.view ) )
+        return sprintf( 'bindcache_%s', escape_name( @bindcache_datasource.view ) )
       end
 
       def filename
-        return sprintf( 'bindcache_%s', escape_name( @bindcache.view ) )
+        return sprintf( 'bindcache_%s', escape_name( @bindcache_datasource.view ) )
       end
 
       def nodenames
@@ -38,7 +38,7 @@ module Rocuses
                                     :vertical_label => 'count per second',
                                     :rigid          => false )
 
-        @bindcache.cache.each { |type,count|
+        @bindcache_datasource.cache.each { |type,count|
           Utils::draw_line( graph,
                             {
                               :label  => 'type:',
