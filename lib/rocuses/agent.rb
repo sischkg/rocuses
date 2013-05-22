@@ -65,8 +65,7 @@ module Rocuses
       @os_agent.get_filesystem_status( resource )
       @os_agent.get_load_average( resource )
       @os_agent.get_disk_ios( resource )
-      @bind_agent.get_name_server_statistics( resource )
-      @bind_agent.get_named_cache_statistics( resource )
+      @bind_agent.get_bind_statistics( resource )
     end
 
     def get_resource_status( type, resource )

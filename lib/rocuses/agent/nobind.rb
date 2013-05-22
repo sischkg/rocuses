@@ -41,10 +41,7 @@ module Rocuses
       end
 
       # Name Server Statisticsを取得する
-      def get_name_server_statistics( resource )
-      end
-
-      def get_named_cache_statistics( resources )
+      def get_bind_statistics( resource )
       end
 
     end

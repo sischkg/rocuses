@@ -38,8 +38,7 @@ module Rocuses
       end
 
       GET_RESOURCE_METHOD_OF = {
-        :Bind      => :get_name_server_statistics,
-        :BindCache => :get_named_cache_statistics,
+        :Bind      => :get_bind_statistics,
       }
 
       RNDC_PATHS = [ '/usr/local/bind/sbin/rndc',
@@ -49,6 +48,8 @@ module Rocuses
       STATISTICS_FILES = [ '/var/named/chroot/var/named/data/named_stats.txt',
                            '/var/named/data/named_stats.txt',
                            '/var/named/named.stats' ]
+
+      STATS_FILE_LOCK = '/tmp/rocusagent.named_stats.lock'
 
       def enable_resource?( type )
         return GET_RESOURCE_METHOD_OF.key?( type.to_sym )
@@ -104,14 +105,21 @@ module Rocuses
         return nil
       end
 
-      # Name Server Statisticsを取得する
-      def get_name_server_statistics( resource )
+
+      def get_bind_statistics( resource )
         statistics_file = load_statistics_file()
         if statistics_file.nil?
-          @logger.warn( "cannot load statistics file" )          
           return
         end
 
+        get_name_server_statistics( resource, statistics_file )
+        get_named_cache_statistics( resource, statistics_file )
+      end
+
+      private
+
+      # Name Server Statisticsを取得する
+      def get_name_server_statistics( resource, statistics_file )
         statistics = Hash.new
         name_server_statistics = false
         statistics_file.split( "\n" ).each { |line|
@@ -162,13 +170,7 @@ module Rocuses
       end
 
 
-      def get_named_cache_statistics( resource )
-        statistics_file = load_statistics_file()
-        if statistics_file.nil?
-          @logger.warn( "cannot load statistics file" )          
-          return
-        end
-
+      def get_named_cache_statistics( resource, statistics_file )
         cache_statisticses = Array.new
         if statistics_file =~ %r{
             ^\+\+ Cache DB RRsets \+\+$
@@ -184,31 +186,32 @@ module Rocuses
         resource.bindcaches = cache_statisticses
       end
 
-      private
-
-      # 
+      # rndc statsを実行し、statistics fileを読む
+      # ::return statistics file
       def load_statistics_file
-        rndc_stats = "#{ @bind_info.rndc_path } stats"
-        system( rndc_stats )
-        sleep( 1 )
+        File.open( STATS_FILE_LOCK, File::WRONLY ) { |lock|
+          lock.flock( File::LOCK_EX )
+          rndc_stats = "#{ @bind_info.rndc_path } stats"
+          system( rndc_stats )
+          sleep( 1 )
 
-        statistics = %q{}
-        STATISTICS_FILES.each { |statistics_file|
-          begin
-          if File.readable?( statistics_file )
-            File.open( statistics_file ) { |input|
-              statistics = input.gets( nil )
-            }
-            File.unlink( statistics_file )
-            return statistics
-          end
-          rescue => e
-            @logger.warn( "cannot load #{ statistics_file }( #{ e.to_s } )" )
-          end
+          statistics = %q{}
+          STATISTICS_FILES.each { |statistics_file|
+            begin
+              if File.readable?( statistics_file )
+                File.open( statistics_file ) { |input|
+                  statistics = input.gets( nil )
+                }
+                File.unlink( statistics_file )
+                return statistics
+              end
+            rescue => e
+              @logger.warn( "cannot load #{ statistics_file }( #{ e.to_s } )" )
+            end
+          }
+          return nil
         }
-        return nil
       end
-
 
       def parse_cache_db_statistics( cache )
         cache_statistics = Hash.new
