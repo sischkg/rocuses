@@ -19,15 +19,9 @@ monitoring servers tool.
 
     # ln -s /usr/local/etc/rocuses /etc/
 
-エージェント用ユーザ・グループを作成する。
-
-    # groupadd rocus
-    # useradd -g rocus rocus
-
 エージェントのログ保存ディレクトリを作成する。
 
     # mkdir /var/log/rocus
-    # chown rocus:rocus /var/log/rocus
 
 ## マネージャのインストール方法
 
@@ -99,9 +93,9 @@ RRDToolのデータベースファイルの保存先ディレクトリを指定�
     <?xml version="1.0" encoding="UTF-8"?>
     <rocuses>
       <targets>
-        <target node="node01" hostname="192.168.0.1">
+        <target name="node01" hostname="192.168.0.1">
         </target>
-        <target node="node02" hostname="192.168.0.2">
+        <target name="node02" hostname="192.168.0.2">
         </target>
       </targets>
     </rocuses>

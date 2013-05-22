@@ -10,3 +10,6 @@ require 'rocuses/datasource/filesystem'
 require 'rocuses/datasource/diskio'
 require 'rocuses/datasource/linuxdiskio'
 require 'rocuses/datasource/networkinterface'
+require 'rocuses/datasource/bind'
+require 'rocuses/datasource/bindcache'
+

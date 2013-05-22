@@ -44,10 +44,9 @@ module Rocuses
       # type:: リソースのタイプ GET_RESOURCE_METHOD_OFのkeyのいずれか
       # resource:: 取得したリソースの統計情報の保存先
       def get_resource( type, resource )
-        if ! enable_resource?( type )
-          raise ArgumentError.new( "not support type #{type}" )
+        if enable_resource?( type )
+          send( GET_RESOURCE_METHOD_OF[ type.to_sym ], resource )
         end
-        send( GET_RESOURCE_METHOD_OF[ type.to_sym ], resource )
       end
 
       # RETURN:: true: RedHat,CentOS Linux 6.x false, Debian wheezy/sidである場合

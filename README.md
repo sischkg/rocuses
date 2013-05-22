@@ -18,21 +18,15 @@ If configration file is installed to /usr/local/etc
 
     # ln -s /usr/local/etc/rocuses /etc/
 
-Create a user and group for rocusagent.
-
-    # groupadd rocus
-    # useradd -g rocus rocus
-
 Create a directory of rocusagent.
 
     # mkdir /var/log/rocus
-    # chown rocus:rocus /var/log/rocus
 
 ## install manager
 
     # ruby setup.rb
 
-If configration file is installed to /usr/local/etc
+If configration files is installed to /usr/local/etc,
 
     # ln -s /usr/local/etc/rocuses /etc/
 
@@ -95,9 +89,9 @@ create `/etc/rocuses/targetsconfig.xml`.
     <?xml version="1.0" encoding="UTF-8"?>
     <rocuses>
       <targets>
-        <target node="node01" hostname="192.168.0.1">
+        <target name="node01" hostname="192.168.0.1">
         </target>
-        <target node="node02" hostname="192.168.0.2">
+        <target name="node02" hostname="192.168.0.2">
         </target>
       </targets>
     </rocuses>
