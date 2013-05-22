@@ -11,7 +11,7 @@ module Rocuses
       include Rocuses::GraphTemplate
       include Rocuses::Utils
 
-      GPRINT_FORMAT = '%7lf'
+      GPRINT_FORMAT = '%7.0lf'
 
       def initialize( bindcache_datasource )
         @bindcache_datasource = bindcache_datasource
@@ -41,7 +41,7 @@ module Rocuses
         @bindcache_datasource.cache.each { |type,count|
           Utils::draw_line( graph,
                             {
-                              :label  => 'type:',
+                              :label  => sprintf( '%10s', type ),
                               :value  => count,
                               :factor => 1,
                               :width  => 1,
