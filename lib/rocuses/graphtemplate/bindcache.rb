@@ -39,7 +39,7 @@ module Rocuses
       }
 
       DEFAULT_LINE_STYLE = {
-        :color => '#ff0000', :daches => false, :priority => 999999,
+        :color => '#cccccc', :daches => false, :priority => 999999,
       }
 
       LINE_STYLE_OF.default = DEFAULT_LINE_STYLE
