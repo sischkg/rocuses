@@ -27,10 +27,12 @@ module Rocuses
         return [ @cpu_datasource.nodename ]
       end
 
-      def make_graph()
-        title = "CPU - #{ @cpu_datasource.nodename }"
+      def description
+        return "CPU - #{ @cpu_datasource.nodename }"
+      end
 
-        graph = RRDTool::Graph.new( :title          => title,
+      def make_graph()
+        graph = RRDTool::Graph.new( :title          => description(),
                                     :upper_limit    => 100 * @cpu_datasource.cpu_count,
                                     :lower_limit    => 0,
                                     :vertical_label => 'percent',

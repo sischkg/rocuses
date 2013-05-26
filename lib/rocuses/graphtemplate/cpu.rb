@@ -31,13 +31,12 @@ module Rocuses
         return nodes.uniq
       end
 
-      def make_graph()
-        if @cpu_datasources.size <= 0
-          return nil
-        end
+      def description
+        return "CPU - #{ nodenames.join( %q{,} ) }"
+      end
 
-        title = "CPU - #{ nodenames.join( %q{,} ) }"
-        graph = RRDTool::Graph.new( :title          => title,
+      def make_graph()
+        graph = RRDTool::Graph.new( :title          => description(),
                                     :upper_limit    => 100,
                                     :lower_limit    => 0,
                                     :vertical_label => 'percent',

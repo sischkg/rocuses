@@ -60,10 +60,14 @@ module Rocuses
         return [ @bindcache_datasource.nodename ]
       end
 
-      def make_graph()
-        title = "Bind Cache  - #{ @bindcache_datasource.view } of #{ @bindcache_datasource.nodename }"
+      def description
+        return "Bind Cache  - #{ @bindcache_datasource.view } of #{ @bindcache_datasource.nodename }"
+      end
 
-        graph = RRDTool::Graph.new( :title          => title,
+      def make_graph()
+        title = description()
+
+        graph = RRDTool::Graph.new( :title          => description(),
                                     :lower_limit    => 0,
                                     :upper_limit    => 10 * 000 * 000 * 000,
                                     :vertical_label => 'count per second',

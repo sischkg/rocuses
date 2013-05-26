@@ -27,10 +27,12 @@ module Rocuses
         return [ @vm_datasource.nodename ]
       end
 
-      def make_graph()
-        title = "Swap - #{ @vm_datasource.nodename }"
+      def description
+        return "Swap - #{ @vm_datasource.nodename }"
+      end
 
-        graph = RRDTool::Graph.new( :title          => title,
+      def make_graph()
+        graph = RRDTool::Graph.new( :title          => description(),
                                     :lower_limit    => 0,
                                     :vertical_label => 'bytes',
                                     :rigid          => false )

@@ -28,10 +28,12 @@ module Rocuses
         return [ @filesystem_datasource.nodename ]
       end
 
-      def make_graph()
-        title = "Filesystem i-node - #{ @filesystem_datasource.mount_point } of #{ @filesystem_datasource.nodename }"
+      def description
+        return "Filesystem i-node - #{ @filesystem_datasource.mount_point } of #{ @filesystem_datasource.nodename }"
+      end
 
-        graph = RRDTool::Graph.new( :title       => title,
+      def make_graph()
+        graph = RRDTool::Graph.new( :title       => description(),
                                     :lower_limit => 0,
                                     :rigid       => false )
 

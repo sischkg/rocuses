@@ -27,10 +27,12 @@ module Rocuses
         return [ @vm_datasource.nodename ]
       end
 
-      def make_graph()
-        title = "Memory - #{ @vm_datasource.nodename }"
+      def description
+        return "Memory - #{ @vm_datasource.nodename }"
+      end
 
-        graph = RRDTool::Graph.new( :title          => title,
+      def make_graph()
+        graph = RRDTool::Graph.new( :title          => description(),
                                     :lower_limit    => 0,
                                     :rigid          => false,
                                     :vertical_label => "bytes" )

@@ -49,10 +49,12 @@ module Rocuses
         return nodes.uniq
       end
 
-      def make_graph()
+      def description
         title = "Traffic - #{ @name } of #{ nodenames.join( %q{,} ) }"
+      end
 
-        graph = RRDTool::Graph.new( :title          => title,
+      def make_graph()
+        graph = RRDTool::Graph.new( :title          => description(),
                                     :lower_limit    => 0,
                                     :vertical_label => 'bits per second',
                                     :rigid          => false )
