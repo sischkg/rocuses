@@ -50,6 +50,9 @@ module Rocuses
                                :rrd_store_path => @manager_config.rra_directory )
 
       @targets_config.targets.each { |target|
+        if target.disable
+          next
+        end
         begin
           unix_server = Device::UnixServer.new( target )
 
