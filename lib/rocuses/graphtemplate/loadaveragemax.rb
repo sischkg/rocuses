@@ -27,9 +27,11 @@ module Rocuses
         return [ @load_average_datasource.nodename ]
       end
 
-      def make_graph()
-        title = "Load Average(Max) - #{ @load_average_datasource.nodename }"
+      def descrption
+        return "Load Average(Max) - #{ @load_average_datasource.nodename }"
+      end
 
+      def make_graph()
         graph = RRDTool::Graph.new( :title       => title,
                                     :lower_limit => 0,
                                     :rigid       => false )

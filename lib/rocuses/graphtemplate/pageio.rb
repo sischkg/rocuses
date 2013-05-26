@@ -27,10 +27,12 @@ module Rocuses
         return [ @page_io_datasource.nodename ]
       end
 
-      def make_graph()
-        title = "Page IO - #{ @page_io_datasource.nodename }"
+      def description
+        return "Page IO - #{ @page_io_datasource.nodename }"
+      end
 
-        graph = RRDTool::Graph.new( :title          => title,
+      def make_graph()
+        graph = RRDTool::Graph.new( :title          => description(),
                                     :lower_limit    => 0,
                                     :vertical_label => 'pages per second',
                                     :rigid          => false )

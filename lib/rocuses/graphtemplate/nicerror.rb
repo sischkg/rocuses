@@ -29,10 +29,12 @@ module Rocuses
         return [ @network_interface_datasource.nodename ]
       end
 
-      def make_graph()
-        title = "NetworkInterface Error - #{ @network_interface_datasource.name } of #{ @network_interface_datasource.nodename }"
+      def description
+        return "NetworkInterface Error - #{ @network_interface_datasource.name } of #{ @network_interface_datasource.nodename }"
+      end
 
-        graph = RRDTool::Graph.new( :title          => title,
+      def make_graph()
+        graph = RRDTool::Graph.new( :title          => description(),
                                     :lower_limit    => 0,
                                     :vertical_label => 'count per second',
                                     :rigid          => false )

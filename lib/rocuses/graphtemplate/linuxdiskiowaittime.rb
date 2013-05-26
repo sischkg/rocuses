@@ -29,10 +29,12 @@ module Rocuses
         return [ @disk_io_datasource.nodename ]
       end
 
-      def make_graph()
-        title = "Disk IO Wait Time - #{ @disk_io_datasource.name } of #{ @disk_io_datasource.nodename }"
+      def description
+        return "Disk IO Wait Time - #{ @disk_io_datasource.name } of #{ @disk_io_datasource.nodename }"
+      end
 
-        graph = RRDTool::Graph.new( :title          => title,
+      def make_graph()
+        graph = RRDTool::Graph.new( :title          => description(),
                                     :lower_limit    => 0,
                                     :upper_limit    => 1,
                                     :rigid          => true,
