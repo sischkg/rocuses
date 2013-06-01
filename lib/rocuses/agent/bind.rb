@@ -120,55 +120,26 @@ module Rocuses
 
       # Name Server Statisticsを取得する
       def get_name_server_statistics( resource, statistics_file )
-        statistics = Hash.new
-        name_server_statistics = false
-        statistics_file.split( "\n" ).each { |line|
-          if line =~/\A\+\+ Name Server Statistics \+\+\z/
-            name_server_statistics = true
-            next
-          elsif line =~/\A\+\+ .* \+\+\z/ && name_server_statistics
-            break
-          elsif name_server_statistics
-            if line =~ /\s+(\d+) (\w.*)\z/
-              count = $1.to_i
-              statistics_name = $2
+        if statistics_file =~ %r{
+            \+\+\sIncoming\sQueries\s\+\+
+            (.*)
+            \+\+\sOutgoing\sQueries\s\+\+
+            (.*)
+            \+\+\sName\sServer\sStatistics\s\+\+
+            (.*)            
+            \+\+\sZone\sMaintenance\sStatistics\s\+\+
+          }xm
+          incoming_queries_of = parse_queries( $1 )
+          outgoing_queries_of = parse_queries( $2 )
 
-              case statistics_name
-              when 'IPv4 requests received'
-                statistics[:request_ipv4] = count
-              when 'requests with EDNS(0) received'
-                statistics[:request_edns0] = count
-              when 'TCP requests received'
-                statistics[:request_tcp] = count
-              when 'recursive queries rejected'
-                statistics[:reject_recursive_requests_] = count
-              when 'responses sent'
-                statistics[:response] = count
-              when 'responses with EDNS(0) sent'
-                statistics[:response_edns0] = count
-              when 'queries resulted in successful answer'
-                statistics[:success] = count
-              when 'queries resulted in authoritative answer'
-                statistics[:authorative_answer] = count
-              when 'queries resulted in non authoritative answer'
-                statistics[:non_authorative_answer] = count
-              when 'queries resulted in nxrrset'
-                statistics[:nxrrset] = count
-              when 'queries resulted in SERVFAIL'
-                statistics[:servfail] = count
-              when 'queries resulted in NXDOMAIN'
-                statistics[:nxdomain] = count
-              when 'queries caused recursion'
-                statistics[:recursion] = count
-              end
-            end
-          end
-        }
-
-        statistics[:time] = Time.now
-        resource.bind = Resource::Bind.new( statistics )
+          stats = parse_name_server_statistics( $3 )
+          
+          stats[:time] = Time.now
+          stats[:incoming_queries_of] = incoming_queries_of
+          stats[:outgoing_queries_of] = outgoing_queries_of
+          resource.bind = Resource::Bind.new( stats )
+        end
       end
-
 
       def get_named_cache_statistics( resource, statistics_file )
         cache_statisticses = Array.new
@@ -211,6 +182,60 @@ module Rocuses
           }
           return nil
         }
+      end
+
+      # Name Server Statisticsを取得する
+      def parse_name_server_statistics( statistics )
+        statistics = Hash.new
+        statistics.split( "\n" ).each { |line|
+          if line =~ /\s+(\d+) (\w.*)\z/
+            count = $1.to_i
+            statistics_name = $2
+
+            case statistics_name
+            when 'IPv4 requests received'
+              statistics[:request_ipv4] = count
+            when 'requests with EDNS(0) received'
+              statistics[:request_edns0] = count
+            when 'TCP requests received'
+              statistics[:request_tcp] = count
+            when 'recursive queries rejected'
+              statistics[:reject_recursive_requests_] = count
+            when 'responses sent'
+              statistics[:response] = count
+            when 'responses with EDNS(0) sent'
+              statistics[:response_edns0] = count
+            when 'queries resulted in successful answer'
+              statistics[:success] = count
+            when 'queries resulted in authoritative answer'
+              statistics[:authorative_answer] = count
+            when 'queries resulted in non authoritative answer'
+              statistics[:non_authorative_answer] = count
+            when 'queries resulted in nxrrset'
+              statistics[:nxrrset] = count
+            when 'queries resulted in SERVFAIL'
+              statistics[:servfail] = count
+            when 'queries resulted in NXDOMAIN'
+              statistics[:nxdomain] = count
+            when 'queries caused recursion'
+              statistics[:recursion] = count
+            end
+          end
+        }
+
+        return statistics
+      end
+
+
+      def parse_queries( queries_str )
+        queries_of = Hash.new
+        queries_str.split( "\n" ).each { |line|
+          if line =~ /\s*(\d+) (\S+)\z/
+            queries_of[$2] = $1.to_i
+          end
+        }
+        queries_of.default = 0
+        return queries_of
       end
 
       def parse_cache_db_statistics( cache )
