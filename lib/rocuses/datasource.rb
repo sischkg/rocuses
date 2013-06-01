@@ -12,4 +12,5 @@ require 'rocuses/datasource/linuxdiskio'
 require 'rocuses/datasource/networkinterface'
 require 'rocuses/datasource/bind'
 require 'rocuses/datasource/bindcache'
+require 'rocuses/datasource/bindquery'
 

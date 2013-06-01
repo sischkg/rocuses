@@ -50,6 +50,9 @@ module Rocuses
       # 取得対称nodeへ接続するためのport
       attr_reader :port
 
+      # データを取得しないか？ true:データを取得しない/false: データを取得する
+      attr_reader :disable
+
       # 取得対象プロセス
       attr_reader :processes
 
@@ -63,15 +66,23 @@ module Rocuses
       attr_reader :disk_ios
 
       def initialize( args )
-        Utils::check_args( args, {
-                            :name        => :req,
-                            :hostname    => :req,
-                            :port        => :req,
-                            :processes   => :op,
-                            :filesystems => :op,
-                            :traffics    => :op,
-                            :disk_ios    => :op,
-                          } )
+        args = Utils::check_args( args, {
+                                    :name        => :req,
+                                    :hostname    => :req,
+                                    :port        => :req,
+                                    :disable     => :op,
+                                    :processes   => :op,
+                                    :filesystems => :op,
+                                    :traffics    => :op,
+                                    :disk_ios    => :op,
+                                  },
+                                  {
+                                    :disable     => false,
+                                    :processes   => [],
+                                    :fulesystems => [],
+                                    :traffics    => [],
+                                    :disk_ios    => [],
+                                  })
 
         @name        = args[:name]
         @hostname    = args[:hostname]
@@ -108,6 +119,8 @@ module Rocuses
     #         <interface name="eth1"/>
     #       </traffic>
     #     </target>
+    #     <target node="node04" hostname="192.168.0.4" disable="false">
+    #     </target>
     #   </targets>
     # </rocuses>
     #
@@ -138,6 +151,7 @@ module Rocuses
           name     = element.attributes['name']
           hostname = element.attributes['hostname']
           port     = element.attributes['port']
+          disable  = element.attributes['disable']
 
           if name.nil? || hostname.nil?
             raise ArgumentError.new( %q{please set name,hostname( <target name="..." hostname="..." ></targets> )} )
@@ -149,6 +163,7 @@ module Rocuses
           @targets.push( Target.new( :name        => name,
                                      :hostname    => hostname,
                                      :port        => port.to_i,
+                                     :disable     => disable == 'true',
                                      :processes   => load_processes( element ),
                                      :filesystems => load_filesystems( element ),
                                      :disk_ios    => load_disk_ios( element ),

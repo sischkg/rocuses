@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-require 'rocuses/device/unixserver'
+require 'rocuses/datasource'
+require 'rocuses/graphtemplate'
 require 'rocuses/managerparameters'
 
 module Rocuses
@@ -44,6 +45,10 @@ module Rocuses
         if resource.bind
           @bind = DataSource::Bind.new( @target.name )
           @bind.update( manager_config, resource )
+          @bind_incoming_queries = DataSource::BindQuery.new( @target.name, :in )
+          @bind_incoming_queries.update( manager_config, resource )
+          @bind_outgoing_queries = DataSource::BindQuery.new( @target.name, :out )
+          @bind_outgoing_queries.update( manager_config, resource )
         end
 
         @bindcaches = Array.new
@@ -115,6 +120,8 @@ module Rocuses
 
         if @bind
           graph_templates << GraphTemplate::Bind.new( @bind )
+          graph_templates << GraphTemplate::BindQuery.new( @bind_incoming_queries, :in )
+          graph_templates << GraphTemplate::BindQuery.new( @bind_outgoing_queries, :out )
         end
         @bindcaches.each { |cache|
           graph_templates << GraphTemplate::BindCache.new( cache )

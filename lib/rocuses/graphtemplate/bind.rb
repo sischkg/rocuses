@@ -29,10 +29,12 @@ module Rocuses
         return [ @bind_datasource.nodename ]
       end
 
-      def make_graph()
-        title = "Bind Name Server Statistics - #{ @bind_datasource.nodename }"
+      def description
+        return "Bind Name Server Statistics - #{ @bind_datasource.nodename }"
+      end
 
-        graph = RRDTool::Graph.new( :title          => title,
+      def make_graph()
+        graph = RRDTool::Graph.new( :title          => description(),
                                     :lower_limit    => 0,
                                     :vertical_label => 'count per second',
                                     :rigid          => false )

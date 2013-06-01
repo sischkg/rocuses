@@ -7,7 +7,7 @@ require 'rocuses/graphtemplate/utils'
 
 module Rocuses
   module GraphTemplate
-    class BindCache
+    class BindQuery
       include Rocuses::GraphTemplate
       include Rocuses::Utils
 
@@ -15,27 +15,17 @@ module Rocuses
 
       LINE_STYLE_OF = {
         'A'        => { :color => '#ff0000', :daches => false, :priority => 100, },
-        '!A'       => { :color => '#ff0000', :daches => true,  :priority => 101, },
         'PTR'      => { :color => '#00ff00', :daches => false, :priority => 110, },
-        '!PTR'     => { :color => '#00ff00', :daches => true,  :priority => 111, },
         'MX'       => { :color => '#0000ff', :daches => false, :priority => 120, },
-        '!MX'      => { :color => '#0000ff', :daches => true,  :priority => 121, },
         'NS'       => { :color => '#ff00ff', :daches => false, :priority => 130, },
-        '!NS'      => { :color => '#ff00ff', :daches => true,  :priority => 131, },
         'AAAA'     => { :color => '#990000', :daches => false, :priority => 140, },
-        '!AAAA'    => { :color => '#990000', :daches => true,  :priority => 141, },
         'CNAME'    => { :color => '#000000', :daches => false, :priority => 200, },
         'NXDOMAIN' => { :color => '#000000', :daches => true,  :priority => 211, },
         'DS'       => { :color => '#000099', :daches => false, :priority => 300, },
-        '!DS'      => { :color => '#000099', :daches => true,  :priority => 301, },
         'NSEC'     => { :color => '#009900', :daches => false, :priority => 310, },
-        '!NSEC'    => { :color => '#009900', :daches => true,  :priority => 311, },
         'DNSKEY'   => { :color => '#009999', :daches => false, :priority => 320, },
-        '!DNSKEY'  => { :color => '#999900', :daches => true,  :priority => 321, },
         'RRSIG'    => { :color => '#990099', :daches => false, :priority => 330, },
-        '!RRSIG'   => { :color => '#990099', :daches => true,  :priority => 331, },
         'DLV'      => { :color => '#999999', :daches => false, :priority => 340, },
-        '!DLV'     => { :color => '#999999', :daches => true,  :priority => 341, },
       }
 
       DEFAULT_LINE_STYLE = {
@@ -44,24 +34,25 @@ module Rocuses
 
       LINE_STYLE_OF.default = DEFAULT_LINE_STYLE
 
-      def initialize( bindcache_datasource )
-        @bindcache_datasource = bindcache_datasource
+      def initialize( bindquery_datasource, direction )
+        @bindquery_datasource = bindquery_datasource
+        @direction = direction
       end
 
       def name
-        return sprintf( 'bindcache_%s', escape_name( @bindcache_datasource.view ) )
+        return sprintf( 'bindquery_%s', @direction )
       end
 
       def filename
-        return sprintf( 'bindcache_%s', escape_name( @bindcache_datasource.view ) )
+        return sprintf( 'bindquery_%s', @direction )
       end
 
       def nodenames
-        return [ @bindcache_datasource.nodename ]
+        return [ @bindquery_datasource.nodename ]
       end
 
       def description
-        return "Bind Cache  - #{ @bindcache_datasource.view } of #{ @bindcache_datasource.nodename }"
+        return "Bind #{ @direction == :in ? "Incoming" : "Outgoing" } Query - # of #{ @bindquery_datasource.nodename }"
       end
 
       def make_graph()
@@ -70,10 +61,10 @@ module Rocuses
         graph = RRDTool::Graph.new( :title          => description(),
                                     :lower_limit    => 0,
                                     :upper_limit    => 10 * 000 * 000 * 000,
-                                    :vertical_label => 'count',
+                                    :vertical_label => 'count per second',
                                     :rigid          => false )
 
-        @bindcache_datasource.cache.sort { |a,b|
+        @bindquery_datasource.queries_of.sort { |a,b|
           LINE_STYLE_OF[a[0]][:priority] <=> LINE_STYLE_OF[b[0]][:priority]
         }.each { |record|
           type       = record[0]
