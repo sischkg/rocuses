@@ -7,7 +7,7 @@ require 'rocuses/graphtemplate/utils'
 
 module Rocuses
   module GraphTemplate
-    class BindQueries
+    class BindQuery
       include Rocuses::GraphTemplate
       include Rocuses::Utils
 
@@ -36,7 +36,7 @@ module Rocuses
 
       def initialize( bindquery_datasource, direction )
         @bindquery_datasource = bindquery_datasource
-        @direction = direcstion
+        @direction = direction
       end
 
       def name
@@ -64,7 +64,7 @@ module Rocuses
                                     :vertical_label => 'count per second',
                                     :rigid          => false )
 
-        @bindquery_datasource.query.sort { |a,b|
+        @bindquery_datasource.queries_of.sort { |a,b|
           LINE_STYLE_OF[a[0]][:priority] <=> LINE_STYLE_OF[b[0]][:priority]
         }.each { |record|
           type       = record[0]

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-require 'rocuses/device/unixserver'
+require 'rocuses/datasource'
+require 'rocuses/graphtemplate'
 require 'rocuses/managerparameters'
 
 module Rocuses
@@ -44,9 +45,9 @@ module Rocuses
         if resource.bind
           @bind = DataSource::Bind.new( @target.name )
           @bind.update( manager_config, resource )
-          @bind_incoming_queries = DataSource::BindQuery( @target.name, :in )
+          @bind_incoming_queries = DataSource::BindQuery.new( @target.name, :in )
           @bind_incoming_queries.update( manager_config, resource )
-          @bind_outgoing_queries = DataSource::BindQuery( @target.name, :out )
+          @bind_outgoing_queries = DataSource::BindQuery.new( @target.name, :out )
           @bind_outgoing_queries.update( manager_config, resource )
         end
 

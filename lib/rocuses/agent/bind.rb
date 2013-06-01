@@ -185,9 +185,9 @@ module Rocuses
       end
 
       # Name Server Statisticsを取得する
-      def parse_name_server_statistics( statistics )
+      def parse_name_server_statistics( statistics_str )
         statistics = Hash.new
-        statistics.split( "\n" ).each { |line|
+        statistics_str.split( "\n" ).each { |line|
           if line =~ /\s+(\d+) (\w.*)\z/
             count = $1.to_i
             statistics_name = $2

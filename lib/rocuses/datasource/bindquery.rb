@@ -6,7 +6,7 @@ require 'rocuses/rrdtool/datasource'
 module Rocuses
   module DataSource
 
-    class BindCache
+    class BindQuery
       include Rocuses
 
       # nodename
@@ -27,14 +27,14 @@ module Rocuses
       def update( config, resource )
         @queries_of = Hash.new
         if resource.bind
-          queries_of = resource.bind.outing_queries_of
+          queries_of = resource.bind.outgoing_queries_of
           if @direction == :in
             queries_of = resource.bind.incoming_queries_of
           end
 
           queries_of.each { |type,count|
             @queries_of[type] = create_rrd( config, type )
-            @queries_of[type].update( bind.time, count )
+            @queries_of[type].update( resource.bind.time, count )
           }
         end
       end

@@ -52,11 +52,11 @@ module Rocuses
       # 再起問い合わせを実行した回数
       attr_reader :recursion
 
-      # incoming requestsの内訳
-      attr_reader :incoming_requests_of
+      # incoming queriesの内訳
+      attr_reader :incoming_queries_of
 
-      # outgoing requestsの内訳
-      attr_reader :outgoing_requests_of
+      # outgoing queriesの内訳
+      attr_reader :outgoing_queries_of
 
       # ::time データ取得時刻
       # ::request 受信したrequestの数
@@ -72,8 +72,8 @@ module Rocuses
       # ::servfail servfailを応答した数
       # ::nxdomain nxdomainを応答した数
       # ::recursion 再起問い合わせを実行した回数
-      # ::incoming_requests_of 受信したRequestの内訳
-      # ::outgoing_requests_of 送信したRequestの内訳
+      # ::incoming_queries_of 受信したQueryの内訳
+      # ::outgoing_queries_of 送信したQueryの内訳
       def initialize( args )
         args = Utils::check_args( args,
                                   {
@@ -91,8 +91,8 @@ module Rocuses
                                     :servfail                   => :op,
                                     :nxdomain                   => :op,
                                     :recursion                  => :op,
-                                    :incoming_requests_of       => :op,
-                                    :outgoing_requests_of       => :op,
+                                    :incoming_queries_of        => :op,
+                                    :outgoing_queries_of        => :op,
                                   },
                                   {
                                     :request_ipv4               => 0,
@@ -108,8 +108,8 @@ module Rocuses
                                     :servfail                   => 0,
                                     :nxdomain                   => 0,
                                     :recursion                  => 0,
-                                    :incoming_requests_of       => [],
-                                    :outgoing_requests_of       => [],
+                                    :incoming_queries_of       => [],
+                                    :outgoing_queries_of       => [],
                                   })
 
         @time                       = args[:time]
@@ -126,8 +126,8 @@ module Rocuses
         @servfail                   = args[:servfail]
         @nxdomain                   = args[:nxdomain]
         @recursion                  = args[:recursion]
-        @incoming_request_of        = args[:incoming_request_of]
-        @outgoing_request_of        = args[:outgoing_request_of]
+        @incoming_queries_of        = args[:incoming_queries_of]
+        @outgoing_queries_of        = args[:outgoing_queries_of]
       end
 
     end
