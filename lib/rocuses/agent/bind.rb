@@ -73,7 +73,7 @@ module Rocuses
         send( GET_RESOURCE_METHOD_OF[ type.to_sym ], resource )
       end
 
-      def self.bind_version
+      def self.bind_version( agentconfig )
         RNDC_PATHS.each { |rndc|
           if File.executable?( rndc )
             rndc_command = "#{ rndc } status 2> /dev/null"
@@ -92,7 +92,7 @@ module Rocuses
           end
 
           if named_status == :up
-            return BindInfo.new( rndc, version )
+            return BindInfo.new( agentconfig, rndc, version )
           end
         }
         return nil
@@ -100,7 +100,7 @@ module Rocuses
 
       # RETURN:: true: Bind 9.8, 9.7, 9.6 
       def self.match_environment?( agentconfig )
-        bind_info = bind_version()
+        bind_info = bind_version( agentconfig )
         if bind_info && bind_info.version =~ /\A9\.(6|7|8)/
           return bind_info
         end
