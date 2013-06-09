@@ -18,6 +18,10 @@ module Rocuses
         @vm_datasource = vm_datasource
       end
 
+      def category
+        return "Virtual Memory"
+      end
+
       def name
         return 'Memory'
       end

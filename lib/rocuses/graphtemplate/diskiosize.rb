@@ -19,6 +19,10 @@ module Rocuses
         @disk_io_datasource = disk_io_datasource
       end
 
+      def category
+        return "Disk I/O"
+      end
+
       def name
         return sprintf( 'disk_io_size_%s', @disk_io_datasource.name )
       end

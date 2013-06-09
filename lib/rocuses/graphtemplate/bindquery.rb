@@ -45,6 +45,10 @@ module Rocuses
         return sprintf( 'bindquery_%s', @direction )
       end
 
+      def category
+        return "Bind"
+      end
+
       def nodenames
         return [ @bindquery_datasource.nodename ]
       end

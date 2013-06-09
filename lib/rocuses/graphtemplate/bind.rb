@@ -19,6 +19,10 @@ module Rocuses
         @bind_datasource = bind_datasource
       end
 
+      def category
+        return "Bind"
+      end
+
       def name
         return 'bind' 
       end

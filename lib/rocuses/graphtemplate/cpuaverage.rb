@@ -18,6 +18,10 @@ module Rocuses
         @cpu_datasource = cpu_datasource
       end
 
+      def category
+        return "CPU"
+      end
+
       def name
         return 'CPU_Average'
       end

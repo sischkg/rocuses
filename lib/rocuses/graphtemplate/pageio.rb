@@ -19,6 +19,10 @@ module Rocuses
         @page_io_datasource = page_io_datasource
       end
 
+      def category
+        return "Virtual Memory"
+      end
+
       def name
         return 'Page_IO'
       end

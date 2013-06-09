@@ -19,6 +19,10 @@ module Rocuses
         @network_interface_datasource = network_interface_datasource
       end
 
+      def category
+        return "Network Interface"
+      end
+
       def name
         return sprintf( 'nic_error_%s', @network_interface_datasource.name )
       end

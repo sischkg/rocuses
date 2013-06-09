@@ -18,6 +18,10 @@ module Rocuses
         @cpu_datasources = cpu_datasources
       end
 
+      def category
+        return "CPU"
+      end
+
       def name
         return 'CPU'
       end

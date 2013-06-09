@@ -18,6 +18,10 @@ module Rocuses
         @filesystem_datasource = filesystem_datasource
       end
 
+      def category
+        return "Filesystem"
+      end
+
       def name
         return sprintf( 'FilesystemFiles_%s', @filesystem_datasource.mount_point )
       end

@@ -35,6 +35,10 @@ module Rocuses
         end
       end
 
+      def category
+        return "Network Interface"
+      end
+
       def name
         return sprintf( 'traffic_%s', @name )
       end

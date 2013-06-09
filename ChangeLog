@@ -1,3 +1,7 @@
+2013-06-10  Toshifumi Sakaguchi  <toshi@mobile02>
+
+	* GraphTemplateをカテゴリに分類し、カテゴリ名を返すメソッド#categoryを追加
+
 2013-06-09  Toshifumi Sakaguchi  <toshi@mobile02>
 
 	* GraphTemplateを識別するためのメソッドgraph_idを追加

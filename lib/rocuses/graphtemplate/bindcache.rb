@@ -54,6 +54,10 @@ module Rocuses
         return sprintf( 'bindcache_%s', @bindcache_datasource.view )
       end
 
+      def category
+        return "Bind"
+      end
+
       def nodenames
         return [ @bindcache_datasource.nodename ]
       end

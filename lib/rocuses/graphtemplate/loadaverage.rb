@@ -18,6 +18,10 @@ module Rocuses
         @load_average_datasource = load_average_datasource
       end
 
+      def category
+        return "LoadAverage"
+      end
+
       def name
         return 'LoadAverage'
       end
