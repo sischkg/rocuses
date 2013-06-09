@@ -15,11 +15,13 @@ module Rocuses
       # bindのバージョン
       attr_reader :version
 
-      # ::rndc_path rndcのPATH
-      # ::version bindのバージョン
-      def initialize( rndc_path, version )
-        @rndc_path = rndc_path
-        @version   = version
+      # agentconfig:: AgentConfig
+      # rndc_path:: rndcのPATH
+      # version:: bindのバージョン
+      def initialize( agentconfig, rndc_path, version )
+        @agentconfig = agentconfig
+        @rndc_path   = rndc_path
+        @version     = version
       end
 
     end
@@ -28,9 +30,10 @@ module Rocuses
       include Rocuses
       include Log4r
 
-      def initialize( bind_info )
-        @bind_info = bind_info
-        @logger = Logger.new( 'rocuses::agent::bind' )
+      def initialize( agentconfig, bind_info )
+        @agentconfig = agentconfig
+        @bind_info   = bind_info
+        @logger      = Logger.new( 'rocuses::agent::bind' )
       end
 
       def name
@@ -96,7 +99,7 @@ module Rocuses
       end
 
       # RETURN:: true: Bind 9.8, 9.7, 9.6 
-      def self.match_environment?
+      def self.match_environment?( agentconfig )
         bind_info = bind_version()
         if bind_info && bind_info.version =~ /\A9\.(6|7|8)/
           return bind_info

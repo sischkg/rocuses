@@ -11,7 +11,7 @@ module Rocuses
       end
 
       # RETURN:: true
-      def self.match_environment?
+      def self.match_environment?( agentconfig )
         return true
       end
 

@@ -31,7 +31,9 @@ module Rocuses
 
     include Log4r
 
-    def initialize
+    def initialize( agentconfig )
+      @agentconfig = agentconfig
+
       @error_logger = Logger.new( 'rocuses::agent' )
       @error_logger.outputters  = DateFileOutputter.new( 'error_log',
                                                          {
@@ -41,15 +43,15 @@ module Rocuses
                                                          } )
 
       OS_AGENTS.each { |os_agent|
-        if os_agent.match_environment?
-          @os_agent = os_agent.new
+        if os_agent.match_environment?( @agentconfig )
+          @os_agent = os_agent.new( @agentconfig )
           break
         end
       }
 
       BIND_AGENTS.each { |bind_agent|
-        if bind_info = bind_agent.match_environment?
-          @bind_agent = bind_agent.new( bind_info )
+        if bind_info = bind_agent.match_environment?( @agentconfig )
+          @bind_agent = bind_agent.new( @agentconfig, bind_info )
           break
         end
       }
@@ -98,7 +100,7 @@ module Rocuses
       setup_directory()
       create_logger()
 
-      @agent = Rocuses::Agent.new
+      @agent = Rocuses::Agent.new( @agentconfig )
 
       @http_server = WEBrick::HTTPServer.new( :DocumentRoot => HTTP_DOCUMENT_ROOT,
                                               :Port         => @agentconfig.bind_port,

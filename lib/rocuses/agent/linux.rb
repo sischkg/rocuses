@@ -11,7 +11,8 @@ module Rocuses
       include Rocuses
       include Log4r
 
-      def initialize
+      def initialize( agentconfig )
+        @agentconfig = agentconfig
         @logger = Logger.new( 'rocuses::agent::linux' )
       end
 
@@ -50,7 +51,7 @@ module Rocuses
       end
 
       # RETURN:: true: RedHat,CentOS Linux 6.x false, Debian wheezy/sidである場合
-      def self.match_environment?
+      def self.match_environment?( agentconfig )
         begin
           if File.readable?( '/etc/redhat-release' )
             File.open( '/etc/redhat-release' ) { |input|

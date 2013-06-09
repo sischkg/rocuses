@@ -36,6 +36,7 @@ module Rocuses
     #       <named_stats path="/var/named/named.stats"/>
     #       <mta type="postfix"/>
     #       <mailq path="/usr/local/postfix/bin/mailq"/>
+    #       <openldap port="389" bind_dn="cn=admin,cn=monitor" bind_password="pass"/>
     #     </options>
     #   </agent>
     # </rocuses>
@@ -68,6 +69,15 @@ module Rocuses
       # mailqのパス
       attr_reader :mailq_path
 
+      # OpenLDAPのポート
+      attr_reader :openldap_port
+
+      # OpenLDAPのmonitorデータベースの値を取得するためのBind DN
+      attr_reader :openldap_bind_dn
+
+      # OpenLDAPのmonitorデータベースの値を取得するためのBindパスワード
+      attr_reader :openldap_bind_password
+
       #
       def initialize
         # default values.
@@ -75,6 +85,9 @@ module Rocuses
         @named_stats_path = '/var/named/named.stats'
         @mta_type         = 'sendmail'
         @mailq_path       = '/usr/bin/mailq'
+        @openldap_port    = 389
+        @openldap_bind_dn = 'cn=admin,cn=monitor'
+        @openldap_bind_password = 'password'
         @bind_address     = Rocuses::Config::Default::BIND_ADDRESS
         @bind_port        = Rocuses::Config::Default::BIND_PORT
         @user             = Rocuses::Config::Default::AGENT_USER
@@ -97,6 +110,9 @@ module Rocuses
         @named_stats = load_option( doc, 'named_stats', 'path', @named_stats )
         @mta_type    = load_option( doc, 'mta',         'type', @mta_type )
         @mailq_path  = load_option( doc, 'mailq',       'path', @mailq_path )
+        @openldap_port          = load_option( doc, 'openldap', 'port',          @openldap_port ).to_i
+        @openldap_bind_dn       = load_option( doc, 'openldap', 'bind_dn',       @openldap_bind_dn )
+        @openldap_bind_password = load_option( doc, 'openldap', 'bind_password', @openldap_bind_password )
       end
 
       private

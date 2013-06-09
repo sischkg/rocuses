@@ -6,5 +6,6 @@
     <manager hostname="192.168.0.1"/>
     -->
     <bind address="0.0.0.0" port="20080"/>
+    <openldap port="389" bind_dn="cn=admin,cn=monitor" bind_password="password"/>
   </agent>
 </rocuses>
