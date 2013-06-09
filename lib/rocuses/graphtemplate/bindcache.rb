@@ -4,11 +4,13 @@ require 'rocuses/rrdtool/rpn'
 require 'rocuses/rrdtool/graph'
 require 'rocuses/utils'
 require 'rocuses/graphtemplate/utils'
+require 'rocuses/graphtemplate/drawable'
 
 module Rocuses
   module GraphTemplate
     class BindCache
       include Rocuses::GraphTemplate
+      include Rocuses::GraphTemplate::Drawable
       include Rocuses::Utils
 
       GPRINT_FORMAT = '%7.0lf'
@@ -49,11 +51,7 @@ module Rocuses
       end
 
       def name
-        return sprintf( 'bindcache_%s', escape_name( @bindcache_datasource.view ) )
-      end
-
-      def filename
-        return sprintf( 'bindcache_%s', escape_name( @bindcache_datasource.view ) )
+        return sprintf( 'bindcache_%s', @bindcache_datasource.view )
       end
 
       def nodenames

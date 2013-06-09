@@ -4,11 +4,13 @@ require 'rocuses/rrdtool/rpn'
 require 'rocuses/rrdtool/graph'
 require 'rocuses/utils'
 require 'rocuses/graphtemplate/utils'
+require 'rocuses/graphtemplate/drawable'
 
 module Rocuses
   module GraphTemplate
     class LinuxDiskIOQueueLength
       include Rocuses::GraphTemplate
+      include Rocuses::GraphTemplate::Drawable
       include Rocuses::Utils
 
       GPRINT_FORMAT = '%5.3lf'
@@ -18,11 +20,7 @@ module Rocuses
       end
 
       def name
-        return sprintf( 'linux_disk_io_queue_length_%s', escape_name( @disk_io_datasource.name ) )
-      end
-
-      def filename
-        return sprintf( 'linux_disk_io_queue_length_%s', escape_name( @disk_io_datasource.name ) )
+        return sprintf( 'linux_disk_io_queue_length_%s', @disk_io_datasource.name )
       end
 
       def nodenames

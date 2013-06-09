@@ -11,11 +11,11 @@ module Rocuses
         end
 
         def add_graph_template( graph_template )
-          @graph_template_of[graph_template.name] = graph_template
+          @graph_template_of[graph_template.graph_id] = graph_template
         end
 
-        def get_graph_template( name )
-          return @graph_template_of[name]
+        def get_graph_template( id )
+          return @graph_template_of[id]
         end
 
         def list_nodes
@@ -27,7 +27,7 @@ module Rocuses
         end
 
         def find_graph_template_by_nodename( nodename )
-          return @graph_template_of.find_all { |name, graph_template|
+          return @graph_template_of.find_all { |id, graph_template|
             graph_template.nodenames.include?( nodename )
           }
         end

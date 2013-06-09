@@ -4,11 +4,13 @@ require 'rocuses/rrdtool/rpn'
 require 'rocuses/rrdtool/graph'
 require 'rocuses/utils'
 require 'rocuses/graphtemplate/utils'
+require 'rocuses/graphtemplate/drawable'
 
 module Rocuses
   module GraphTemplate
     class Traffic
       include Rocuses::GraphTemplate
+      include Rocuses::GraphTemplate::Drawable
       include Rocuses::Utils
 
       GPRINT_FORMAT = '%5.3lf %Sbps'
@@ -34,11 +36,7 @@ module Rocuses
       end
 
       def name
-        return sprintf( 'traffic_%s', escape_name( @name ) )
-      end
-
-      def filename
-        return sprintf( 'traffic_%s', escape_name( @name ) )
+        return sprintf( 'traffic_%s', @name )
       end
 
       def nodenames

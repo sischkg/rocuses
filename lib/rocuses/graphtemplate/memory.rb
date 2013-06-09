@@ -3,11 +3,14 @@
 require 'rocuses/rrdtool/rpn'
 require 'rocuses/rrdtool/graph'
 require 'rocuses/graphtemplate/utils'
+require 'rocuses/graphtemplate/drawable'
 
 module Rocuses
   module GraphTemplate
     class Memory
       include Rocuses::GraphTemplate
+      include Rocuses::GraphTemplate::Drawable
+      include Rocuses::Utils
 
       GPRINT_FORMAT = '%5.2lf %SB'
 
@@ -16,10 +19,6 @@ module Rocuses
       end
 
       def name
-        return 'Memory'
-      end
-
-      def filename
         return 'Memory'
       end
 
