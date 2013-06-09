@@ -4,11 +4,13 @@ require 'rocuses/rrdtool/rpn'
 require 'rocuses/rrdtool/graph'
 require 'rocuses/utils'
 require 'rocuses/graphtemplate/utils'
+require 'rocuses/graphtemplate/drawable'
 
 module Rocuses
   module GraphTemplate
     class BindQuery
       include Rocuses::GraphTemplate
+      include Rocuses::GraphTemplate::Drawable
       include Rocuses::Utils
 
       GPRINT_FORMAT = '%7.0lf'
@@ -43,8 +45,8 @@ module Rocuses
         return sprintf( 'bindquery_%s', @direction )
       end
 
-      def filename
-        return sprintf( 'bindquery_%s', @direction )
+      def category
+        return "Bind"
       end
 
       def nodenames

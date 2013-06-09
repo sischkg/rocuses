@@ -12,7 +12,7 @@ require 'rocuses/resource/linuxdiskio'
 
 require 'rocuses/resource/bind'
 require 'rocuses/resource/bindcache'
-
+require 'rocuses/resource/openldap'
 
 module Rocuses
   # リソースを表すクラス
@@ -53,6 +53,9 @@ module Rocuses
 
     # Bindキャッシュの統計情報
     attr_accessor :bindcaches
+
+    # OpenLDAP統計情報
+    attr_accessor :openldap
 
     def initialize
       @cpus               = Array.new

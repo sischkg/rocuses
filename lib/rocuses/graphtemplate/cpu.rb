@@ -2,12 +2,15 @@
 
 require 'rocuses/rrdtool/rpn'
 require 'rocuses/rrdtool/graph'
+require 'rocuses/graphtemplate/drawable'
 
 module Rocuses
   module GraphTemplate
 
     class CPU
       include Rocuses::GraphTemplate
+      include Rocuses::GraphTemplate::Drawable
+      include Rocuses::Utils
 
       GRPINT_FORMAT = '%5.2lf %%'
 
@@ -15,11 +18,11 @@ module Rocuses
         @cpu_datasources = cpu_datasources
       end
 
-      def name
-        return 'CPU'
+      def category
+        return "CPU"
       end
 
-      def filename
+      def name
         return 'CPU'
       end
 

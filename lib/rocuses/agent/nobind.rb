@@ -11,7 +11,7 @@ module Rocuses
       include Rocuses
       include Log4r
 
-      def initialize( bind_info )
+      def initialize( agentconfig, bind_info )
         @logger = Logger.new( 'rocuses::agent::nobind' )
       end
 
@@ -35,8 +35,8 @@ module Rocuses
         return
       end
 
-      # RETURN:: true: Bind 9.8, 9.7, 9.6 
-      def self.match_environment?
+      # RETURN:: true
+      def self.match_environment?( agentconfig )
         return true
       end
 

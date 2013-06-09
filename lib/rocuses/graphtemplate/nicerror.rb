@@ -4,11 +4,13 @@ require 'rocuses/rrdtool/rpn'
 require 'rocuses/rrdtool/graph'
 require 'rocuses/utils'
 require 'rocuses/graphtemplate/utils'
+require 'rocuses/graphtemplate/drawable'
 
 module Rocuses
   module GraphTemplate
     class NICError
       include Rocuses::GraphTemplate
+      include Rocuses::GraphTemplate::Drawable
       include Rocuses::Utils
 
       GPRINT_FORMAT = '%5.0lf'
@@ -17,12 +19,12 @@ module Rocuses
         @network_interface_datasource = network_interface_datasource
       end
 
-      def name
-        return sprintf( 'nic_error_%s', escape_name( @network_interface_datasource.name ) )
+      def category
+        return "Network Interface"
       end
 
-      def filename
-        return sprintf( 'nic_error_%s', escape_name( @network_interface_datasource.name ) )
+      def name
+        return sprintf( 'nic_error_%s', @network_interface_datasource.name )
       end
 
       def nodenames

@@ -3,11 +3,14 @@
 require 'rocuses/rrdtool/rpn'
 require 'rocuses/rrdtool/graph'
 require 'rocuses/graphtemplate/utils'
+require 'rocuses/graphtemplate/drawable'
 
 module Rocuses
   module GraphTemplate
     class LoadAverage
       include Rocuses::GraphTemplate
+      include Rocuses::GraphTemplate::Drawable
+      include Rocuses::Utils
 
       GPRINT_FORMAT = '%5.2lf'
 
@@ -15,11 +18,11 @@ module Rocuses
         @load_average_datasource = load_average_datasource
       end
 
-      def name
-        return 'LoadAverage'
+      def category
+        return "LoadAverage"
       end
 
-      def filename
+      def name
         return 'LoadAverage'
       end
 

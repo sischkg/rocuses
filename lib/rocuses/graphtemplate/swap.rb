@@ -3,11 +3,14 @@
 require 'rocuses/rrdtool/rpn'
 require 'rocuses/rrdtool/graph'
 require 'rocuses/graphtemplate/utils'
+require 'rocuses/graphtemplate/drawable'
 
 module Rocuses
   module GraphTemplate
     class Swap
       include Rocuses::GraphTemplate
+      include Rocuses::GraphTemplate::Drawable
+      include Rocuses::Utils
 
       GPRINT_FORMAT = '%5.2lf %SB'
 
@@ -15,11 +18,11 @@ module Rocuses
         @vm_datasource = vm_datasource
       end
 
-      def name
-        return 'Swap'
+      def category
+        return "Virtual Memory"
       end
 
-      def filename
+      def name
         return 'Swap'
       end
 

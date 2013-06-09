@@ -10,18 +10,22 @@ require 'rocuses/agent/linux'
 class AgentLinuxTest < Test::Unit::TestCase
   CHECKED_TIME = Time.local( 2012, 11, 12, 00, 12, 34 )
 
+  def create_agent( agentconfig = nil )
+    return Rocuses::Agent::Linux.new( agentconfig )
+  end
+
   must "matched Red Hat Enterprise Linux Server release 6" do
     generate_readable_mock( '/etc/redhat-release' => true )
     generate_read_mock( '/etc/redhat-release' =>
                         [ 'Red Hat Enterprise Linux Server release 6' ] )
-    assert( Rocuses::Agent::Linux.match_environment?, "matched RedHat Enterprise Linux Server 6" )
+    assert( Rocuses::Agent::Linux.match_environment?( nil ), "matched RedHat Enterprise Linux Server 6" )
   end
 
   must "unmatched Red Hat Enterprise Linux Server release 5" do
     generate_readable_mock( '/etc/redhat-release' => true )
     generate_read_mock( '/etc/redhat-release' =>
                         [ 'Red Hat Enterprise Linux Server release 5' ] )
-    assert( ! Rocuses::Agent::Linux.match_environment?, "unmatched RedHat Enterprise Linux Server 5" )
+    assert( ! Rocuses::Agent::Linux.match_environment?( nil ), "unmatched RedHat Enterprise Linux Server 5" )
   end
 
   must "return load average" do
@@ -29,10 +33,10 @@ class AgentLinuxTest < Test::Unit::TestCase
     generate_readable_mock( '/proc/loadavg' => true )
     generate_read_mock( '/proc/loadavg' =>
                         [ '1.11 2.22 3.33 2/300 10001' ] )
-    assert( ! Rocuses::Agent::Linux.match_environment?, "unmatched RedHat Enterprise Linux Server 5" )
+    assert( ! Rocuses::Agent::Linux.match_environment?( nil ), "unmatched RedHat Enterprise Linux Server 5" )
 
     resource = Rocuses::Resource.new
-    Rocuses::Agent::Linux.new.get_load_average( resource )
+    create_agent().get_load_average( resource )
     assert_in_delta( 1.11, resource.load_average.la1,  0.1, "get 1 minute load average" ) 
     assert_in_delta( 2.22, resource.load_average.la5,  0.1, "get 5 minute load average" ) 
     assert_in_delta( 3.33, resource.load_average.la15, 0.1, "get 15 minute load average" ) 
@@ -50,7 +54,7 @@ class AgentLinuxTest < Test::Unit::TestCase
     generate_time_mock( CHECKED_TIME )
     
     resource = Rocuses::Resource.new
-    Rocuses::Agent::Linux.new.get_virtual_memory_status( resource )
+    create_agent().get_virtual_memory_status( resource )
 
     assert_equal( 1020580, resource.virtual_memory.total_memory,  "get total memory" )
     assert_equal(  947604 - 150100 - 351424,
@@ -113,7 +117,7 @@ class AgentLinuxTest < Test::Unit::TestCase
                          "/bin/df -i -l" => df_i_results )
 
     resource = Rocuses::Resource.new
-    Rocuses::Agent::Linux.new.get_filesystem_status( resource )
+    create_agent().get_filesystem_status( resource )
 
     filesystem_of = Hash.new
     resource.filesystems.each { |fs|
@@ -199,7 +203,7 @@ class AgentLinuxTest < Test::Unit::TestCase
     generate_time_mock( CHECKED_TIME )
 
     resource = Rocuses::Resource.new
-    Rocuses::Agent::Linux.new.get_processes( resource )
+    create_agent().get_processes( resource )
     process_of = Hash.new
     resource.processes.each { |process|
       process_of[process.argument] = process
@@ -282,7 +286,7 @@ class AgentLinuxTest < Test::Unit::TestCase
                                                "  8       0 sda1 31200 23500 1969000 143680 60300 55329 3358500 233720 0 64600 377400\n", ],
                         '/sys/block/sda/queue/physical_block_size' => [ "512\n" ] )
     resource = Rocuses::Resource.new
-    Rocuses::Agent::Linux.new.get_disk_ios( resource )
+    create_agent().get_disk_ios( resource )
     assert_equal( "sda",         resource.disk_ios[0].name,             "device" )
     assert_equal( 31292,         resource.disk_ios[0].read_count,       "read count" )
     assert_equal( 1969110 * 512, resource.disk_ios[0].read_data_size,   "read size" )
@@ -327,10 +331,10 @@ class AgentLinuxTest < Test::Unit::TestCase
                                                 :system => 1000 / CLK_TCK,
                                                 :wait   =>  200 / CLK_TCK )
 
-    Rocuses::Agent::Linux.new.get_cpu_average( resource )
+    create_agent().get_cpu_average( resource )
     assert_equal( expected_cpu_average, resource.cpu_average,  'CPU Average' )
 
-    Rocuses::Agent::Linux.new.get_cpus( resource )
+    create_agent().get_cpus( resource )
     assert_equal( expected_cpu0, resource.cpus[0],   'CPU 0' )
     assert_equal( expected_cpu1, resource.cpus[1],   'CPU 1' )
     assert_equal( 2,             resource.cpus.size, 'count of CPU' )
@@ -341,7 +345,7 @@ class AgentLinuxTest < Test::Unit::TestCase
     generate_time_mock( Time.at( 100 ) )
     
     resource = Rocuses::Resource.new
-    Rocuses::Agent::Linux.new.get_page_io_status( resource )
+    create_agent().get_page_io_status( resource )
     assert_equal( 10, resource.page_io.page_in,  'page in' )
     assert_equal( 20, resource.page_io.page_out, 'page out' )
   end

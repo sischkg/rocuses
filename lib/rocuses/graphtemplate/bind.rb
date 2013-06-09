@@ -4,11 +4,13 @@ require 'rocuses/rrdtool/rpn'
 require 'rocuses/rrdtool/graph'
 require 'rocuses/utils'
 require 'rocuses/graphtemplate/utils'
+require 'rocuses/graphtemplate/drawable'
 
 module Rocuses
   module GraphTemplate
     class Bind
       include Rocuses::GraphTemplate
+      include Rocuses::GraphTemplate::Drawable
       include Rocuses::Utils
 
       GPRINT_FORMAT = '%5.0lf'
@@ -17,12 +19,12 @@ module Rocuses
         @bind_datasource = bind_datasource
       end
 
-      def name
-        return 'bind' 
+      def category
+        return "Bind"
       end
 
-      def filename
-        return 'bind'
+      def name
+        return 'bind' 
       end
 
       def nodenames

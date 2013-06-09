@@ -1,3 +1,133 @@
+2013-06-10  Toshifumi Sakaguchi  <toshi@mobile02>
+
+	* GraphTemplateをカテゴリに分類し、カテゴリ名を返すメソッド#categoryを追加
+
+2013-06-09  Toshifumi Sakaguchi  <toshi@mobile02>
+
+	* GraphTemplateを識別するためのメソッドgraph_idを追加
+
+	* Agentの設定ファイルへOpenLDAPの統計情報を取得するための設定項目を追加
+
+	* ResourceへOpenLDAPの統計情報を追加
+
+2013-05-26  Toshifumi Sakaguchi  <toshi@gmail.com>
+
+	* BIND cacheのグラフにて、レコードごとに線のスタイルを設定した。
+
+2013-05-23  Toshifumi Sakaguchi  <toshi@gmail.com>
+
+	* Bind CacheのグラフにResource Typeを表示できなかった点を修正
+
+	* Bind CahceのDataSourceをGAUGEへ修正
+
+	* Bind cachのグラフを表示出来内点を修正
+
+	* Bind Cacheのグラフを作成する機能を追加
+
+2013-05-22  Toshifumi Sakaguchi  <toshi@gmail.com>
+
+	* Bind Cache情報を取得できない点を修正
+
+	* BIND Cache の統計情報を取得する機能を追加
+
+2013-05-20  Toshifumi Sakaguchi  <toshi@gmail.com>
+
+	* Bindの統計情報をRRDファイルへ保存できない件を修正
+
+	* BINDの統計情報を取得するために、rocusagentがrootで動作するように変更した。
+	* targetsconfig.sample.xmlの間違いを修正
+
+	* BINDの統計情報を取得できない件を修正
+
+	* init用の起動スクリプトを追加
+
+2013-05-19  Toshifumi Sakaguchi  <toshi@gmail.com>
+
+	* BINDのName Sever Statisticsのグラフを表示する機能を追加
+
+	* BINDの統計情報を取得する機能をエージェントへ追加
+
+2013-05-03  Toshifumi Sakaguchi  <toshi@gmail.com>
+
+	* PIDファイル/var/run/rocusagent.pidをrootの権限で作成するために、
+
+	* daemon化しPIDファイルを作成した後に、seteuid/setegidするように変更
+
+2013-04-22  Toshifumi Sakaguchi  <toshi@gmail.com>
+
+	* rocuesmanagerからグラフ画像作成機能を削除
+
+	* leanup GraphTemplate::Manager.
+
+2013-04-21  Toshifumi Sakaguchi  <toshi@gmail.com>
+
+	* Ubuntuでrocusagentのサービスを登録する手順を追加
+
+2013-04-20  Toshifumi Sakaguchi  <toshi@gmail.com>
+
+	* RRDToolをマルチスレッドに対応
+
+2013-04-16  Toshifumi Sakaguchi  <toshi@gmail.com>
+
+	* GraphTemplateのname()生成方法を変更
+
+2013-04-14  Toshifumi Sakaguchi  <toshi@gmail.com>
+
+	* マネージャをroot以外で実行するようにインストール手順を修正
+
+2013-04-07  Toshifumi Sakaguchi  <toshi@gmail.com>
+
+	* エージェント起動時に、ログ保存ディレクトリを作成する機能を追加
+
+	* インストールマニュアルへ、エージェント用ユーザ・グループを作成する手順を追加
+	* エージェントを専用ユーザ(rocus)で動作するように変更
+
+2013-03-31  Toshifumi Sakaguchi  <toshi@gmail.com>
+
+	* エージェントの実行UID/GIDを設定ファイルに記述できるように変更
+
+2013-03-23  Toshifumi Sakaguchi  <toshi@gmail.com>
+
+	* GraphTemplateManagerを別のファイルへ移動
+
+	* ファイル名を生成するときのエスケープ方法を統一
+
+2013-03-07  Toshifumi Sakaguchi  <toshi@gmail.com>
+
+	* GraphTemplateを保存するように変更
+
+2013-03-07  Toshifumi Sakaguchi  <toshi@gmail.com>
+
+	* targetsconfig設定サンプルのファイル名を修正
+
+	* DataSource関連をcleanup.
+
+2013-03-24  Toshifumi Sakaguchi  <toshi@gmail.com>
+
+	* GraphTemplateのcleanup.
+
+2013-03-23  Toshifumi Sakaguchi  <toshi@gmail.com>
+
+	* LinuxDiskIOQueueLengthのグラフの上限値を削除
+
+2013-02-22  Toshifumi Sakaguchi  <toshi@gmail.com>
+
+	* グラフのフォーマットなどを修正
+
+2013-02-19  Toshifumi Sakaguchi  <toshi@gmail.com>
+
+	* Raspbian “wheezy”対応を追加
+
+	* メモリとswapのグラフの色を変更
+
+	* Load Averageのグラフを作成する機能を追加
+
+2013-02-19  Toshifumi Sakaguchi  <toshi@gmail.com>
+
+	* 前提条件へrrdtool 1.4.xを追加
+
+	* added rrdtool to requirements.
+
 2013-02-18  Toshifumi Sakaguchi  <sischkg@gmail.com>
 
 	* Linux DiskIOのQueue LengthとWait Timeのグラフを作成する機能を追加
@@ -56,6 +186,3 @@
 	* リソース情報を保持するクラスRPerf::Resourceを追加
 
 	* Webrickを使用した簡易エージェントを追加
-
-
-

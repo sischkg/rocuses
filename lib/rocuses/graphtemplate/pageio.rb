@@ -3,11 +3,15 @@
 require 'rocuses/rrdtool/rpn'
 require 'rocuses/rrdtool/graph'
 require 'rocuses/graphtemplate/utils'
+require 'rocuses/graphtemplate/drawable'
+
 
 module Rocuses
   module GraphTemplate
     class PageIO
       include Rocuses::GraphTemplate
+      include Rocuses::GraphTemplate::Drawable
+      include Rocuses::Utils
 
       GPRINT_FORMAT = '%5.0lf %%'
 
@@ -15,11 +19,11 @@ module Rocuses
         @page_io_datasource = page_io_datasource
       end
 
-      def name
-        return 'Page_IO'
+      def category
+        return "Virtual Memory"
       end
 
-      def filename
+      def name
         return 'Page_IO'
       end
 
