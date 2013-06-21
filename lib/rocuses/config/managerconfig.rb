@@ -16,6 +16,7 @@ module Rocuses
     # <rocuses>
     #   <manager>
     #     <options>
+    #       <title string="Performance Reports"/>
     #       <rrdtool path="/usr/local/bin/rrdtool"/>
     #       <step time="300"/>
     #       <heartbeat step="600"/>
@@ -27,6 +28,9 @@ module Rocuses
     # </rocuses>
     #
     class ManagerConfig
+
+      # Webページのタイトル
+      attr_reader :title
 
       # rrdtoolコマンドのPATH
       attr_reader :rrdtool_path
@@ -52,6 +56,7 @@ module Rocuses
       #
       def initialize
         # default values.
+        @title           = 'Performance Reports'
         @rrdtool_path    = 'rrdtool'
         @step            = 300
         @heartbeat       = 600
@@ -66,6 +71,7 @@ module Rocuses
       def load( input )
         doc = REXML::Document.new( input )
 
+        @title           = load_option( doc, 'title',     'string',    @title )
         @rrdtool_path    = load_option( doc, 'rrdtool',   'path',      @rrdtool_path )
         @step            = load_option( doc, 'step',      'time',      @step ).to_i
         @heartbeat       = load_option( doc, 'heartbeat', 'step',      @heartbeat ).to_i

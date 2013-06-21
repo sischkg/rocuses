@@ -60,7 +60,7 @@ module Rocuses
                 return true
               elsif line =~ /CentOS release 6/
                 return true
-              elsif line =~ /Fedora release 17/
+              elsif line =~ /Fedora release 1(7|8)/
                 return true
               end
             }

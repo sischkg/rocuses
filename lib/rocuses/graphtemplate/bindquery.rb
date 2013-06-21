@@ -54,7 +54,7 @@ module Rocuses
       end
 
       def description
-        return "Bind #{ @direction == :in ? "Incoming" : "Outgoing" } Query - # of #{ @bindquery_datasource.nodename }"
+        return "Bind #{ @direction == :in ? "Incoming" : "Outgoing" } Query of #{ @bindquery_datasource.nodename } -"
       end
 
       def make_graph()

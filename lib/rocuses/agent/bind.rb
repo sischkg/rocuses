@@ -153,7 +153,10 @@ module Rocuses
           }xm
           cache_db_section = $1
           cache_db_section.scan( %r{\[View: .*\][^\[]+} ) { |view|
-            cache_statisticses << parse_cache_db_statistics( view )
+            cache_statistics = parse_cache_db_statistics( view )
+            if cache_statistics.view != '_bind'
+              cache_statisticses << cache_statistics
+            end
           }
         end
 
