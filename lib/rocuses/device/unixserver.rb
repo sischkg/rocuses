@@ -58,6 +58,18 @@ module Rocuses
           @bindcaches << cache_ds
         }
 
+        if resource.openldap
+          @openldap = DataSource::OpenLDAP.new( @target.name )
+          @openldap.update( manager_config, resource )
+        end
+
+        @openldap_caches = Array.new
+        resource.openldap_caches.each { |cache|
+          cache_ds = DataSource::OpenLDAPCache.new( @target.name, cache.directory )
+          cache_ds.update( manager_config, resource )
+          @openldap_caches << cache_ds
+        }
+
         if resource.page_io
           @page_io = DataSource::PageIO.new( @target.name )
           @page_io.update( manager_config, resource )
@@ -125,6 +137,15 @@ module Rocuses
         end
         @bindcaches.each { |cache|
           graph_templates << GraphTemplate::BindCache.new( cache )
+        }
+
+        if @openldap
+          graph_templates << GraphTemplate::OpenLDAPConnection.new( @openldap )
+          graph_templates << GraphTemplate::OpenLDAPConcurrentConnection.new( @openldap )
+          graph_templates << GraphTemplate::OpenLDAPOperation.new( @openldap )
+        end
+        @openldap_caches.each { |cache|
+          graph_templates << GraphTemplate::OpenLDAPCache.new( cache )
         }
 
         @filesystems.each { |filesystem|

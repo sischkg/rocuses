@@ -13,4 +13,6 @@ require 'rocuses/datasource/networkinterface'
 require 'rocuses/datasource/bind'
 require 'rocuses/datasource/bindcache'
 require 'rocuses/datasource/bindquery'
+require 'rocuses/datasource/openldap'
+require 'rocuses/datasource/openldapcache'
 

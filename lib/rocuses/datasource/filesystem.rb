@@ -71,7 +71,7 @@ module Rocuses
       def datasource_name( type )
         return sprintf( '%s_filesytem_%s_%s',
                         @nodename,
-                        @mount_point.gsub( %r{[/ ]}, %q{_} ),
+                        Utils::escape_name( @mount_point ),
                         type ) 
       end
     end

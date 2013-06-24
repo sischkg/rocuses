@@ -101,6 +101,47 @@ module Rocuses
         @extended_operation    = args[:extended_operation]
       end
     end
+
+    class OpenLDAPCache
+
+      # データ取得時刻
+      attr_reader :time
+
+      # IDL Cache
+      attr_reader :idl_cache
+
+      # Entry Cache
+      attr_reader :entry_cache
+
+      # DN Cache :dn_cache
+      attr_reader :dn_cache
+
+      # Database Directory
+      attr_reader :directory
+
+      # :time:: データ取得時刻
+      # :idl_cache:: IDL Cache
+      # :entry_cache:: Entry Cache
+      # :dn_cache:: DN Cache
+      # :diretory:: Database Directory
+      #
+      def initialize( args )
+        Utils::check_args( args,
+                           {
+                             :time        => :req,
+                             :idl_cache   => :req,
+                             :entry_cache => :req,
+                             :dn_cache    => :req,
+                             :directory   => :req,
+                           } )
+        @time        = args[:time]
+        @idl_cache   = args[:idl_cache]
+        @entry_cache = args[:entry_cache]
+        @dn_cache    = args[:dn_cache]
+        @directory   = args[:directory]
+      end
+    end
+
   end
 end
 

@@ -29,7 +29,9 @@ module Rocuses
         :Processe         => :get_processes,
         :DiskIO           => :get_disk_ios,
         :LoadAverage      => :get_load_average,
-        :NetworkInterface => :get_network_interfaces,        
+        :NetworkInterface => :get_network_interfaces,
+        :OpenLDAP         => :get_openldap,
+        :OpenLDAPCache    => :get_openldap_caches,
       }
 
       def enable_resource?( type )
@@ -423,6 +425,35 @@ module Rocuses
           @logger.error( "cannot read /proc/diskstats( #{ e.to_s } )" )          
         end
       end
+
+        # hostnameのOpenLDAP(slapd)へ接続し、Monitorデータベースの情報を取得する。
+        # hostname:: 情報を取得するサーバのhostname
+        # port:: LDAP接続するPORT
+        # RETURN:: リソース情報 MJS::Perf::Resource::Data
+        def fetch_openldap( hostname, port, bind_dn, bind_password )
+          openldap_args =  Hash.new
+          OPENLDAP_MONITOR_ENTRY_OF.each { |key, entry_info|
+            begin
+              Net::LDAP.open( :host => hostname,
+                              :port => port,
+                              :auth => {
+                                :method   => :simple,
+                                :username => bind_dn,
+                                :password => bind_password
+                              } ) { |ldap|
+                openldap_args[:time] = Time.now
+                openldap_args[key] = get_openldap_monitor_value( ldap, entry_info[:dn], entry_info[:attribute] )
+              }
+              
+            rescue => e
+              raise FetchError.new( e.to_s )
+            end
+          }
+          return MJS::Perf::Resource::Data.new( :openldap => MJS::Perf::Resource::OpenLDAP.new( openldap_args ) )
+        end
+
+        private
+
 
       private
 

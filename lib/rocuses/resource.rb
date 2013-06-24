@@ -57,6 +57,9 @@ module Rocuses
     # OpenLDAP統計情報
     attr_accessor :openldap
 
+    # OpenLDAP Cache
+    attr_accessor :openldap_caches
+
     def initialize
       @cpus               = Array.new
       @filesystems        = Array.new
@@ -65,6 +68,7 @@ module Rocuses
       @disk_ios           = Array.new
       @linux_disk_ios     = Array.new
       @bindcaches         = Array.new
+      @openldap_caches    = Array.new
     end
 
     def serialize
