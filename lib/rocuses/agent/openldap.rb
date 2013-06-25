@@ -63,8 +63,11 @@ module Rocuses
           :bind_password => @agentconfig.openldap_bind_password,
         }
 
-        resource.openldap = get_openldap_monitor_values( args )
-        resource.openldap_caches = get_openldap_caches( args )
+        begin
+          resource.openldap = get_openldap_monitor_values( args )
+          resource.openldap_caches = get_openldap_caches( args )
+        rescue => e
+        end
       end
 
       private
