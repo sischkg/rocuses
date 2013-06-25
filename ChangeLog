@@ -1,3 +1,7 @@
+2013-06-26  Toshifumi Sakaguchi  <toshi@devel>
+
+	* rndcのPATH、statistics-fileのPATHを、設定ファイルから変更できる機能を追加
+
 2013-06-24  Toshifumi Sakaguchi  <STF1-Sakaguchi-T@marubeni-sys.com>
 
 	* OpenLDAPの接続数、Operation数、キャッシュエントリ数を取得・グラフ化する機能を追加
