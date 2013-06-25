@@ -2,6 +2,8 @@
 
 	* OpenLDAPの接続数、Operation数、キャッシュエントリ数を取得・グラフ化する機能を追加
 
+	* CPU使用率のグラフが表示できなかった件を修正
+
 2013-06-10  Toshifumi Sakaguchi  <toshi@mobile02>
 
 	* GraphTemplateをカテゴリに分類し、カテゴリ名を返すメソッド#categoryを追加

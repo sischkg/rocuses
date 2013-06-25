@@ -107,7 +107,7 @@ module Rocuses
       def make_graph_templates
         graph_templates = Array.new
 
-        if @cpu_usage
+        if @cpu_usages
           graph_templates << GraphTemplate::CPU.new( @cpu_usages )
         end
 
