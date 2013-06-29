@@ -58,6 +58,9 @@ module Rocuses
       # outgoing queriesの内訳
       attr_reader :outgoing_queries_of
 
+      # Socket IO
+      attr_reader :socket_io_statistics_of
+
       # ::time データ取得時刻
       # ::request 受信したrequestの数
       # ::request_ends0 受信したEDNS0 requestの数
@@ -74,42 +77,45 @@ module Rocuses
       # ::recursion 再起問い合わせを実行した回数
       # ::incoming_queries_of 受信したQueryの内訳
       # ::outgoing_queries_of 送信したQueryの内訳
+      # ::socket_io_statistics_of SocketのI/O情報
       def initialize( args )
         args = Utils::check_args( args,
                                   {
-                                    :time                       => :req,
-                                    :request_ipv4               => :op,
-                                    :request_edns0              => :op,
-                                    :request_tcp                => :op,
-                                    :rejected_resursive_request => :op,
-                                    :response                   => :op,
-                                    :response_edns0             => :op,
-                                    :success                    => :op,
-                                    :authorative_answer         => :op,
-                                    :non_authorative_answer     => :op,
-                                    :nxrrset                    => :op,
-                                    :servfail                   => :op,
-                                    :nxdomain                   => :op,
-                                    :recursion                  => :op,
-                                    :incoming_queries_of        => :op,
-                                    :outgoing_queries_of        => :op,
+                                    :time                        => :req,
+                                    :request_ipv4                => :op,
+                                    :request_edns0               => :op,
+                                    :request_tcp                 => :op,
+                                    :rejected_resursive_request  => :op,
+                                    :response                    => :op,
+                                    :response_edns0              => :op,
+                                    :success                     => :op,
+                                    :authorative_answer          => :op,
+                                    :non_authorative_answer      => :op,
+                                    :nxrrset                     => :op,
+                                    :servfail                    => :op,
+                                    :nxdomain                    => :op,
+                                    :recursion                   => :op,
+                                    :incoming_queries_of         => :op,
+                                    :outgoing_queries_of         => :op,
+                                    :socket_io_statistics_of     => :op,
                                   },
                                   {
-                                    :request_ipv4               => 0,
-                                    :request_edns0              => 0,
-                                    :request_tcp                => 0,
-                                    :rejected_resursive_request => 0,
-                                    :response                   => 0,
-                                    :response_edns0             => 0,
-                                    :success                    => 0,
-                                    :authorative_answer         => 0,
-                                    :non_authorative_answer     => 0,
-                                    :nxrrset                    => 0,
-                                    :servfail                   => 0,
-                                    :nxdomain                   => 0,
-                                    :recursion                  => 0,
-                                    :incoming_queries_of       => [],
-                                    :outgoing_queries_of       => [],
+                                    :request_ipv4                => 0,
+                                    :request_edns0               => 0,
+                                    :request_tcp                 => 0,
+                                    :rejected_resursive_request  => 0,
+                                    :response                    => 0,
+                                    :response_edns0              => 0,
+                                    :success                     => 0,
+                                    :authorative_answer          => 0,
+                                    :non_authorative_answer      => 0,
+                                    :nxrrset                     => 0,
+                                    :servfail                    => 0,
+                                    :nxdomain                    => 0,
+                                    :recursion                   => 0,
+                                    :incoming_queries_of         => [],
+                                    :outgoing_queries_of         => [],
+                                    :socket_io_statistics_of     => [],
                                   })
 
         @time                       = args[:time]
@@ -128,6 +134,7 @@ module Rocuses
         @recursion                  = args[:recursion]
         @incoming_queries_of        = args[:incoming_queries_of]
         @outgoing_queries_of        = args[:outgoing_queries_of]
+        @socket_io_statistics_of    = args[:socket_io_statistics_of]
       end
 
     end

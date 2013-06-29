@@ -1,3 +1,9 @@
+2013-06-30  Toshifumi Sakaguchi  <sischkg@gmail.com>
+
+	* Bind Socket IO Statisticsのグラフを作成する機能を追加
+
+	* Bindのグラフを調整
+
 2013-06-26  Toshifumi Sakaguchi  <sischkg@gmail.com>
 
 	* rndcのPATH、statistics-fileのPATHを、設定ファイルから変更できる機能を追加

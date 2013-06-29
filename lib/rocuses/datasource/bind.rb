@@ -50,6 +50,9 @@ module Rocuses
       # 再起問い合わせを実行した回数
       attr_reader :recursion
 
+      # Socket IO Statistics
+      attr_reader :socket_io_statistics_of
+
       # nodename:: nodename
       def initialize( nodename )
         @nodename = nodename
@@ -84,6 +87,13 @@ module Rocuses
           @servfail.                  update( resource.bind.time, resource.bind.servfail )
           @nxdomain.                  update( resource.bind.time, resource.bind.nxdomain )
           @recursion.                 update( resource.bind.time, resource.bind.recursion )
+
+          @socket_io_statistics_of = Hash.new
+          resource.bind.socket_io_statistics_of.each { |k,v|
+            socket_io_statistics = create_rrd( config, sprintf( 'socket_io_%s', Utils::escape_name( k ) ) )
+            socket_io_statistics.update( resource.bind.time, v )
+            @socket_io_statistics_of[k] = socket_io_statistics
+          }
         end
       end
 

@@ -134,6 +134,7 @@ module Rocuses
           graph_templates << GraphTemplate::Bind.new( @bind )
           graph_templates << GraphTemplate::BindQuery.new( @bind_incoming_queries, :in )
           graph_templates << GraphTemplate::BindQuery.new( @bind_outgoing_queries, :out )
+          graph_templates << GraphTemplate::BindSocketIO.new( @bind )
         end
         @bindcaches.each { |cache|
           graph_templates << GraphTemplate::BindCache.new( cache )

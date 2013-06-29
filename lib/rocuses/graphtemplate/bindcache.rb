@@ -71,7 +71,6 @@ module Rocuses
 
         graph = RRDTool::Graph.new( :title          => description(),
                                     :lower_limit    => 0,
-                                    :upper_limit    => 10 * 1000 * 1000 * 1000,
                                     :vertical_label => 'count',
                                     :rigid          => false )
 

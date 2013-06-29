@@ -124,22 +124,28 @@ module Rocuses
       # Name Server Statisticsを取得する
       def get_name_server_statistics( resource, statistics_file )
         if statistics_file =~ %r{
-            \+\+\sIncoming\sQueries\s\+\+
+            \+\+[ ]Incoming[ ]Queries[ ]\+\+
             (.*)
-            \+\+\sOutgoing\sQueries\s\+\+
+            \+\+[ ]Outgoing[ ]Queries[ ]\+\+
             (.*)
-            \+\+\sName\sServer\sStatistics\s\+\+
+            \+\+[ ]Name[ ]Server[ ]Statistics[ ]\+\+
             (.*)            
-            \+\+\sZone\sMaintenance\sStatistics\s\+\+
+            \+\+[ ]Zone[ ]Maintenance[ ]Statistics[ ]\+\+
+            .*
+            \+\+[ ]Socket[ ]I/O[ ]Statistics[ ]\+\+
+            (.*)
+            \+\+[ ]Per[ ]Zone[ ]Query[ ]Statistics[ ]\+\+
           }xm
           incoming_queries_of = parse_queries( $1 )
           outgoing_queries_of = parse_queries( $2 )
 
           stats = parse_name_server_statistics( $3 )
-          
-          stats[:time] = Time.now
-          stats[:incoming_queries_of] = incoming_queries_of
-          stats[:outgoing_queries_of] = outgoing_queries_of
+          socket_io_of = parse_socket_io_statistics( $4 )
+
+          stats[:time]                    = Time.now
+          stats[:incoming_queries_of]     = incoming_queries_of
+          stats[:outgoing_queries_of]     = outgoing_queries_of
+          stats[:socket_io_statistics_of] = socket_io_of
           resource.bind = Resource::Bind.new( stats )
         end
       end
@@ -259,6 +265,18 @@ module Rocuses
                                         :view  => view,
                                         :cache => cache_statistics )
       end
+
+      def parse_socket_io_statistics( socket_io_str )
+        socket_io_of = Hash.new
+        socket_io_str.split( "\n" ).each { |line|
+          if line =~ /\s*(\d+) (\S.*)\z/
+            socket_io_of[$2] = $1.to_i
+          end
+        }
+        socket_io_of.default = 0
+        return socket_io_of
+      end
+
     end
   end
 end
