@@ -58,6 +58,18 @@ module Rocuses
           @bindcaches << cache_ds
         }
 
+        if resource.openldap
+          @openldap = DataSource::OpenLDAP.new( @target.name )
+          @openldap.update( manager_config, resource )
+        end
+
+        @openldap_caches = Array.new
+        resource.openldap_caches.each { |cache|
+          cache_ds = DataSource::OpenLDAPCache.new( @target.name, cache.directory )
+          cache_ds.update( manager_config, resource )
+          @openldap_caches << cache_ds
+        }
+
         if resource.page_io
           @page_io = DataSource::PageIO.new( @target.name )
           @page_io.update( manager_config, resource )
@@ -90,12 +102,17 @@ module Rocuses
           nic_ds.update( manager_config, resource )
           @network_interfaces << nic_ds
         }
+
+        if resource.temperature
+          @temperature = DataSource::Temperature.new( @target.name )
+          @temperature.update( manager_config, resource )
+        end
       end
 
       def make_graph_templates
         graph_templates = Array.new
 
-        if @cpu_usage
+        if @cpu_usages
           graph_templates << GraphTemplate::CPU.new( @cpu_usages )
         end
 
@@ -122,9 +139,19 @@ module Rocuses
           graph_templates << GraphTemplate::Bind.new( @bind )
           graph_templates << GraphTemplate::BindQuery.new( @bind_incoming_queries, :in )
           graph_templates << GraphTemplate::BindQuery.new( @bind_outgoing_queries, :out )
+          graph_templates << GraphTemplate::BindSocketIO.new( @bind )
         end
         @bindcaches.each { |cache|
           graph_templates << GraphTemplate::BindCache.new( cache )
+        }
+
+        if @openldap
+          graph_templates << GraphTemplate::OpenLDAPConnection.new( @openldap )
+          graph_templates << GraphTemplate::OpenLDAPConcurrentConnection.new( @openldap )
+          graph_templates << GraphTemplate::OpenLDAPOperation.new( @openldap )
+        end
+        @openldap_caches.each { |cache|
+          graph_templates << GraphTemplate::OpenLDAPCache.new( cache )
         }
 
         @filesystems.each { |filesystem|
@@ -146,6 +173,10 @@ module Rocuses
           graph_templates << GraphTemplate::Traffic.new( :network_interface_datasources => [ nic ] )
           graph_templates << GraphTemplate::NICError.new( nic )
         }
+
+        if @temperature
+          graph_templates << GraphTemplate::Temperature.new( @temperature )
+        end
 
         return graph_templates
       end

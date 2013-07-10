@@ -76,7 +76,7 @@ module Rocuses
       def datasource_name( type )
         return sprintf( '%s_nic_%s_%s',
                         @nodename,
-                        @name.gsub( %r{[/ ]}, %q{_} ),
+                        Rocuses::Utils::escape_name( @name ),
                         type ) 
       end
     end

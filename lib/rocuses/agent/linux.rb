@@ -29,7 +29,9 @@ module Rocuses
         :Processe         => :get_processes,
         :DiskIO           => :get_disk_ios,
         :LoadAverage      => :get_load_average,
-        :NetworkInterface => :get_network_interfaces,        
+        :NetworkInterface => :get_network_interfaces,
+        :OpenLDAP         => :get_openldap,
+        :OpenLDAPCache    => :get_openldap_caches,
       }
 
       def enable_resource?( type )
@@ -60,7 +62,7 @@ module Rocuses
                 return true
               elsif line =~ /CentOS release 6/
                 return true
-              elsif line =~ /Fedora release 17/
+              elsif line =~ /Fedora release 1(7|8)/
                 return true
               end
             }
@@ -160,12 +162,12 @@ module Rocuses
       def get_virtual_memory_status( resource )
         begin
           IO.popen( '/usr/bin/free -b' ) { |input|
-            total_memory = 0
-            used_memory  = 0
+            total_memory  = 0
+            used_memory   = 0
             buffer_memory = 0
-            cache_memory = 0
-            total_swap   = 0
-            used_swap    = 0
+            cache_memory  = 0
+            total_swap    = 0
+            used_swap     = 0
 
             input.each { |line|
               if line =~ /Mem:\s+
@@ -208,7 +210,6 @@ module Rocuses
         end
       end
 
-
       # PageIOの統計情報を取得する
       def get_page_io_status( resource )
         begin
@@ -230,7 +231,6 @@ module Rocuses
           @logger.error( "cannot read /proc/stat( #{ e.to_s } )" )
         end
       end
-
 
       # ネットワークインターフェースの統計情報を取得する。
       def get_network_interface_status( resource )
@@ -424,6 +424,31 @@ module Rocuses
         end
       end
 
+      # hostnameのOpenLDAP(slapd)へ接続し、Monitorデータベースの情報を取得する。
+      # hostname:: 情報を取得するサーバのhostname
+      # port:: LDAP接続するPORT
+      # RETURN:: リソース情報 MJS::Perf::Resource::Data
+      def fetch_openldap( hostname, port, bind_dn, bind_password )
+        openldap_args =  Hash.new
+        OPENLDAP_MONITOR_ENTRY_OF.each { |key, entry_info|
+          begin
+            Net::LDAP.open( :host => hostname,
+                            :port => port,
+                            :auth => {
+                              :method   => :simple,
+                              :username => bind_dn,
+                              :password => bind_password
+                            } ) { |ldap|
+              openldap_args[:time] = Time.now
+              openldap_args[key] = get_openldap_monitor_value( ldap, entry_info[:dn], entry_info[:attribute] )
+            }            
+          rescue => e
+            raise FetchError.new( e.to_s )
+          end
+        }
+        return MJS::Perf::Resource::Data.new( :openldap => MJS::Perf::Resource::OpenLDAP.new( openldap_args ) )
+      end
+
       private
 
       # デバイスdeviceのSector Size(bytes)を取得する。
@@ -446,7 +471,6 @@ module Rocuses
         @logger.info( "cannot read secter size, and use default value 512" )
         return 512
       end
-
 
       def get_clock_tick()
         if @clock_tick

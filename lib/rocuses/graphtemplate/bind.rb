@@ -43,7 +43,7 @@ module Rocuses
 
         Utils::draw_line( graph,
                           {
-                            :label  => 'success: ',
+                            :label  => 'success:     ',
                             :value  => @bind_datasource.success,
                             :factor => 1,
                             :color  => '#000000',
@@ -51,7 +51,7 @@ module Rocuses
                           } )
         Utils::draw_line( graph,
                           {
-                            :label  => 'nxrrset: ',
+                            :label  => 'nxrrset:     ',
                             :value  => @bind_datasource.nxrrset,
                             :factor => 1,
                             :color  => '#0000ff',
@@ -59,7 +59,7 @@ module Rocuses
                           } )
         Utils::draw_line( graph,
                           {
-                            :label  => 'nxdomain: ',
+                            :label  => 'nxdomain:    ',
                             :value  => @bind_datasource.nxdomain,
                             :factor => 1,
                             :color  => '#00ff00',
@@ -67,7 +67,7 @@ module Rocuses
                           } )
         Utils::draw_line( graph,
                           {
-                            :label  => 'servfail: ',
+                            :label  => 'servfail:    ',
                             :value  => @bind_datasource.servfail,
                             :factor => 1,
                             :color  => '#ff0000',
@@ -75,7 +75,7 @@ module Rocuses
                           } )
         Utils::draw_line( graph,
                           {
-                            :label  => 'recursion: ',
+                            :label  => 'recursion:   ',
                             :value  => @bind_datasource.recursion,
                             :factor => 1,
                             :color  => '#ff00ff',
@@ -83,7 +83,7 @@ module Rocuses
                           } )
         Utils::draw_line( graph,
                           {
-                            :label  => 'request ipv4: ',
+                            :label  => 'request ipv4:',
                             :value  => @bind_datasource.request_ipv4,
                             :factor => 1,
                             :color  => '#ffff00',

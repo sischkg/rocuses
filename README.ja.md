@@ -6,6 +6,7 @@ monitoring servers tool.
 # 前提条件
 
 * ruby 1.9
+* ruby net-ldap 0.2.2
 * log4r
 * rrdtool 1.4.x
 
@@ -19,9 +20,15 @@ monitoring servers tool.
 
     # ln -s /usr/local/etc/rocuses /etc/
 
+エージェント用ユーザ・グループを作成する。
+
+    # groupadd rocus
+    # useradd -g rocus rocus
+
 エージェントのログ保存ディレクトリを作成する。
 
     # mkdir /var/log/rocus
+    # chown rocus:rocus /var/log/rocus
 
 ## マネージャのインストール方法
 
@@ -41,11 +48,11 @@ monitoring servers tool.
 
     # mkdir /var/log/rocuses
 	# chown rocuses:rocuses /var/log/rocuses
-    # chmod 775 /var/log/rocuses
+    # chmod 777 /var/log/rocuses
 
 # 設定
 ## エージェントの設定
-エージェントの設定は、`/etc/rocuses/agentconfig.xml`を作成する。
+エージェントは、`/etc/rocuses/agentconfig.xml`にて設定する。
 
     # cp /etc/rocuses/agentconfig.sample.xml /etc/rocuses/agentconfig.xml
     # vi /etc/rocuses/agentconfig.xml
@@ -56,6 +63,61 @@ monitoring servers tool.
 
     <manager hostname="manager1.in.example.com"/>
     <manager hostname="192.168.0.1"/>
+
+ISC Bindの情報を取得する場合は、named.confでstatitsics-fileの設定を行う。
+
+    named.conf
+
+    options {
+        ...
+        statistics-file "/var/named/data/named_stats.txt";
+        ...
+    };
+  
+エージェント設定ファイルにrndcのpathとstatistics-fileのpathを設定する。
+
+    agentconfig.xml
+
+    <rocuses>
+      <agent>
+        ...
+        <options>
+          <rndc path="/usr/sbin/rndc"/>
+          <named_stats path="/var/named/named.stats"/>
+          <!-- if named chroot to /var/named/chroot 
+          <named_stats path="/var/named/chroot/var/named/named.stats"/>
+          -->
+          ...
+        </options>
+      </agent>
+    <rocuses>     
+
+OpenLDAPの情報を取得するには、slapd.confにMonitor Backendを設定する。
+
+    slapd.conf
+
+    database monitor
+    rootdn cn=Admin,cn=Monitor
+    rootpw *****
+    access to dn.subtree="cn=Monitor"
+	   by dn.exact="cn=Admin,cn=Monitor" write
+	   by * none
+
+
+エージェント設定ファイルに、slapdのポート番号とBind DN、パスワードを設定する。
+
+    agentconfig.xml
+
+    <rocuses>
+      <agent>
+        ...
+        <options>
+          ...
+          <openldap port="389" bind_dn="cn=Admin,cn=Monitor" bind_password="****"/>
+          ...
+        </options>
+      </agent>
+    <rocuses>     
 
 ## マネージャの設定
 マネージャの設定は、`/etc/rocuses/managerconfig.xml`を作成する。
@@ -82,7 +144,6 @@ RRDToolのデータベースファイルの保存先ディレクトリを指定�
 データベースとグラフの保存先ディレクトリを作成する。
 
     # mkdir -p /var/rocuses/rra
-    # mkdir -p /var/rocuses/graph
     # mkdir -p /var/rocuses/data
     # chown -R rocuses:rocuses /var/rocuses
 
@@ -113,7 +174,7 @@ upstartへ登録する。
 
     # initctl start rocusagent
 
-## マネージャの実行（データ取得・グラフ作成）
+## マネージャの実行（データ取得）
 
     # su - rocuses
     rocuses$ crontab -e

@@ -6,6 +6,11 @@ require 'rocuses/resource'
 module Rocuses
   class Agent
     class NoOS
+
+      def initialize( agentconfig )
+        return true
+      end
+
       def name
         return "Rocuses::Agent::NoOS"
       end

@@ -9,7 +9,14 @@ module Rocuses
       end
 
       def fetch( target )
-        return Net::HTTP.get( target.hostname, '/resource', target.port )
+        response = Net::HTTP.start( target.hostname, target.port ) { |http|
+          http.get( '/resource' )
+        }
+        if response.code =~ /\A2../
+          return response.body
+        else
+          raise "cannot get valid response from #{ target.hostname }:#{target.port}( #{ response.body } )"
+        end
       end
     end
   end
