@@ -31,7 +31,7 @@ module Rocuses
       end
 
       def description
-        return "Temperature - #{ @tempurature_datasource.nodename }"
+        return "Temperature - #{ @temperature_datasource.nodename }"
       end
 
       def make_graph()

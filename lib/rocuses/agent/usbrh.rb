@@ -49,8 +49,10 @@ module Rocuses
       def get_temperature( resource )
         IO.popen( @usbrh_path ) { |input|
           line = input.gets
-          if line =~ /\A[\d\.]+\s+[\d\.]+\s*/
-            resource.temperature = Resource::Temperature.new( $1.to_f, $2.to_f )
+          if line =~ /\A([\d\.]+)\s+([\d\.]+)\s*/
+            resource.temperature = Resource::Temperature.new( :time        => Time.now,
+                                                              :temperature => $1.to_f,
+                                                              :humidity    => $2.to_f )
           end
         }
       end
