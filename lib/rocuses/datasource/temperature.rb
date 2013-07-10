@@ -26,7 +26,7 @@ module Rocuses
         @humidity    = create_rrd( config, 'humidity' )
 
         @temperature.update(  resource.temperature.time, resource.temperature.temperature )
-        @humidity.  .update(  resource.temperature.time, resource.temperature.humidity )
+        @humidity.   update(  resource.temperature.time, resource.temperature.humidity )
       end
 
       private

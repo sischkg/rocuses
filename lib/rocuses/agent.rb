@@ -71,7 +71,7 @@ module Rocuses
 
       TEMPERATURE_AGENTS.each { |temperature_agent|
         if path = temperature_agent.match_environment?( @agentconfig )
-          @temperature = temperature_agent.new( @agentconfig, path )
+          @temperature_agent = temperature_agent.new( @agentconfig, path )
           break
         end
       }

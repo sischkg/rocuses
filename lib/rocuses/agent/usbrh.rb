@@ -49,10 +49,11 @@ module Rocuses
       def get_temperature( resource )
         IO.popen( @usbrh_path ) { |input|
           line = input.gets
-          if line =~ /\A[\d\.]+\s+\[\d\.]+\s*/
+          if line =~ /\A[\d\.]+\s+[\d\.]+\s*/
             resource.tempreture = Tempreture.new( $1.to_f, $2.to_f )
           end
         }
+      end
 
       # RETURN:: true
       def self.match_environment?( agentconfig )

@@ -7,7 +7,7 @@ require 'rocuses/agentparameters'
 
 module Rocuses
   class Agent
-    class NoTemparature
+    class NoTemperature
       include Rocuses
       include Log4r
 
