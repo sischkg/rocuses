@@ -23,8 +23,12 @@ module Rocuses
       # dummy
       def get_cpu_status( resource )
       end
-
+ 
       # dummy
+      def get_cpu_average( resource )
+      end
+
+     # dummy
       def get_virtual_memory_status( resource )
       end
 
