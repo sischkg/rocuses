@@ -50,7 +50,7 @@ module Rocuses
         IO.popen( @usbrh_path ) { |input|
           line = input.gets
           if line =~ /\A[\d\.]+\s+[\d\.]+\s*/
-            resource.temperature = Temperature.new( $1.to_f, $2.to_f )
+            resource.temperature = Resource::Temperature.new( $1.to_f, $2.to_f )
           end
         }
       end
