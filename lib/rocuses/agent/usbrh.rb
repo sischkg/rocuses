@@ -23,7 +23,7 @@ module Rocuses
       end
 
       def enable_resource?( type )
-        if type.to_sym == :Tempreture
+        if type.to_sym == :Temperature
           return true
         else
           return false
@@ -31,7 +31,7 @@ module Rocuses
       end
 
       def list_enable_resources()
-        return [ :Tempreture ]
+        return [ :Temperature ]
       end
 
       # typeで指定したリソースの統計情報を取得し、resourceにその値を追加する
@@ -50,7 +50,7 @@ module Rocuses
         IO.popen( @usbrh_path ) { |input|
           line = input.gets
           if line =~ /\A[\d\.]+\s+[\d\.]+\s*/
-            resource.tempreture = Tempreture.new( $1.to_f, $2.to_f )
+            resource.temperature = Temperature.new( $1.to_f, $2.to_f )
           end
         }
       end
