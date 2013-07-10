@@ -1,3 +1,9 @@
+2013-07-11  Toshifumi Sakaguchi  <toshi@devel>
+
+	* Installマニュアルを更新
+
+	* USB温度計(USBRH)による温度のグラフを作成する機能を追加
+
 2013-06-30  Toshifumi Sakaguchi  <sischkg@gmail.com>
 
 	* Bind Socket IO Statisticsのグラフを作成する機能を追加

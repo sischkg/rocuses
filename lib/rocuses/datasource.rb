@@ -15,4 +15,5 @@ require 'rocuses/datasource/bindcache'
 require 'rocuses/datasource/bindquery'
 require 'rocuses/datasource/openldap'
 require 'rocuses/datasource/openldapcache'
+require 'rocuses/datasource/temperature'
 

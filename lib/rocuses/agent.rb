@@ -15,6 +15,8 @@ require 'rocuses/agent/bind'
 require 'rocuses/agent/nobind'
 require 'rocuses/agent/openldap'
 require 'rocuses/agent/noopenldap'
+require 'rocuses/agent/usbrh'
+require 'rocuses/agent/notemperature'
 require 'rocuses/config/agentconfig'
 
 module Log4r
@@ -27,9 +29,10 @@ end
 
 module Rocuses
   class Agent
-    OS_AGENTS = [ Rocuses::Agent::Linux, Rocuses::Agent::NoOS ]
-    BIND_AGENTS = [ Rocuses::Agent::Bind, Rocuses::Agent::NoBind ]
-    OPENLDAP_AGENTS = [ Rocuses::Agent::OpenLDAP, Rocuses::Agent::NoOpenLDAP ]
+    OS_AGENTS          = [ Rocuses::Agent::Linux, Rocuses::Agent::NoOS ]
+    BIND_AGENTS        = [ Rocuses::Agent::Bind, Rocuses::Agent::NoBind ]
+    OPENLDAP_AGENTS    = [ Rocuses::Agent::OpenLDAP, Rocuses::Agent::NoOpenLDAP ]
+    TEMPERATURE_AGENTS = [ Rocuses::Agent::Usbrh, Rocuses::Agent::NoTemperature ]
     LOG4R_CONFIG = '/etc/rocuses/log4r.xml'
 
     include Log4r
@@ -65,6 +68,14 @@ module Rocuses
           break
         end
       }
+
+      TEMPERATURE_AGENTS.each { |temperature_agent|
+        if path = temperature_agent.match_environment?( @agentconfig )
+          @temperature = temperature_agent.new( @agentconfig, path )
+          break
+        end
+      }
+
     end
 
     def get_resource_status_all( resource )
@@ -79,6 +90,7 @@ module Rocuses
       @os_agent.get_disk_ios( resource )
       @bind_agent.get_bind_statistics( resource )
       @openldap_agent.get_openldap_statistics( resource )
+      @temperature_agent.get_temperature( resource )
     end
 
     def get_resource_status( type, resource )
@@ -86,6 +98,7 @@ module Rocuses
         @os_agent.get_resource( type, resource )
         @bind_agent.get_resource( type, resource )
         @openldap_agent.get_resource( type, resource )
+        @temperature_agent.get_resource( type, resource )
       rescue ArgumentError => e
         @error_logger.info( "resource type #{ type } is not supported" )
       end

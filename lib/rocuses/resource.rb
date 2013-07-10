@@ -13,6 +13,7 @@ require 'rocuses/resource/linuxdiskio'
 require 'rocuses/resource/bind'
 require 'rocuses/resource/bindcache'
 require 'rocuses/resource/openldap'
+require 'rocuses/resource/temperature'
 
 module Rocuses
   # リソースを表すクラス
@@ -59,6 +60,9 @@ module Rocuses
 
     # OpenLDAP Cache
     attr_accessor :openldap_caches
+
+    # サーバ設置環境の温度・湿度
+    attr_accessor :temperature
 
     def initialize
       @cpus               = Array.new

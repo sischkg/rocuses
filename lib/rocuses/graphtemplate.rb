@@ -24,5 +24,6 @@ require 'rocuses/graphtemplate/openldapconnection'
 require 'rocuses/graphtemplate/openldapconcurrentconnection'
 require 'rocuses/graphtemplate/openldapoperation'
 require 'rocuses/graphtemplate/openldapcache'
+require 'rocuses/graphtemplate/temperature'
 require 'rocuses/graphtemplate/manager'
 

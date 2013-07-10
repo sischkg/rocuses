@@ -102,6 +102,11 @@ module Rocuses
           nic_ds.update( manager_config, resource )
           @network_interfaces << nic_ds
         }
+
+        if resource.temperature
+          @temperature = DataSource::Temperature.new( @target.name )
+          @temperature.update( manager_config, resource )
+        end
       end
 
       def make_graph_templates
@@ -168,6 +173,10 @@ module Rocuses
           graph_templates << GraphTemplate::Traffic.new( :network_interface_datasources => [ nic ] )
           graph_templates << GraphTemplate::NICError.new( nic )
         }
+
+        if @temperature
+          graph_templates << GraphTemplate::Temperature.new( @temperature )
+        end
 
         return graph_templates
       end
