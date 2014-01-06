@@ -212,7 +212,7 @@ module Rocuses
             when 'TCP requests received'
               statistics[:request_tcp] = count
             when 'recursive queries rejected'
-              statistics[:reject_recursive_requests_] = count
+              statistics[:rejected_recursive_request] = count
             when 'responses sent'
               statistics[:response] = count
             when 'responses with EDNS(0) sent'
