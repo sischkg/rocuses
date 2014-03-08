@@ -89,7 +89,7 @@ module Rocuses
 
       private
 
-      def create_rrd( config, name, ds_type = :COUNTER )
+      def create_rrd( config, name, ds_type = :DERIVE )
         ds = RRDTool::DataSource.new( :name        => datasource_name( name ),
                                       :type        => ds_type,
                                       :step        => config.step,
