@@ -16,6 +16,7 @@ class AgentLinuxTest < Test::Unit::TestCase
 
   must "matched Red Hat Enterprise Linux Server release 6" do
     generate_readable_mock( '/etc/redhat-release' => true )
+    generate_readable_mock( '/etc/debian_version' => false )
     generate_read_mock( '/etc/redhat-release' =>
                         [ 'Red Hat Enterprise Linux Server release 6' ] )
     assert( Rocuses::Agent::Linux.match_environment?( nil ), "matched RedHat Enterprise Linux Server 6" )
@@ -23,17 +24,22 @@ class AgentLinuxTest < Test::Unit::TestCase
 
   must "unmatched Red Hat Enterprise Linux Server release 5" do
     generate_readable_mock( '/etc/redhat-release' => true )
+    generate_readable_mock( '/etc/debian_version' => false )
     generate_read_mock( '/etc/redhat-release' =>
                         [ 'Red Hat Enterprise Linux Server release 5' ] )
     assert( ! Rocuses::Agent::Linux.match_environment?( nil ), "unmatched RedHat Enterprise Linux Server 5" )
   end
 
   must "return load average" do
+    generate_readable_mock( '/etc/redhat-release' => true )
+    generate_readable_mock( '/etc/debian_version' => false )
+    generate_read_mock( '/etc/redhat-release' =>
+                        [ 'Red Hat Enterprise Linux Server release 6' ] )
+
     generate_time_mock( CHECKED_TIME )
     generate_readable_mock( '/proc/loadavg' => true )
     generate_read_mock( '/proc/loadavg' =>
                         [ '1.11 2.22 3.33 2/300 10001' ] )
-    assert( ! Rocuses::Agent::Linux.match_environment?( nil ), "unmatched RedHat Enterprise Linux Server 5" )
 
     resource = Rocuses::Resource.new
     create_agent().get_load_average( resource )
@@ -282,6 +288,10 @@ class AgentLinuxTest < Test::Unit::TestCase
 
 
   must "read diskstats" do
+    generate_readable_mock( '/sys/block/sda/queue/physical_block_size'  => true )
+    generate_readable_mock( '/sys/block/sda1/queue/physical_block_size' => false )
+    generate_readable_mock( '/sys/block/sda/queue/hw_sector_size'       => false )
+    generate_readable_mock( '/sys/block/sda1/queue/hw_sector_size'      => false )
     generate_read_mock( '/proc/diskstats' => [ "  8       0 sda  31292 23536 1969110 143680 60310 55329 3358544 233720 0 64644 377440\n",
                                                "  8       0 sda1 31200 23500 1969000 143680 60300 55329 3358500 233720 0 64600 377400\n", ],
                         '/sys/block/sda/queue/physical_block_size' => [ "512\n" ] )

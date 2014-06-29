@@ -460,9 +460,12 @@ module Rocuses
         [ device, device.gsub( %r{\d+}, %q{} ) ].each { |name|
           [ "physical_block_size", "hw_sector_size" ].each { |filename|
             begin
-              File.open( "/sys/block/#{ name }/queue/#{filename}" ) { |input|
-                return input.gets.chomp!.to_i
-              }
+              path = "/sys/block/#{ name }/queue/#{filename}"
+              if File.readable?( path )
+                File.open( path ) { |input|
+                  return input.gets.chomp!.to_i
+                }
+              end
             rescue => e
               @logger.debug( "cannot read secter size from #{ filename }( #{ e.to_s } )" )
             end

@@ -58,9 +58,9 @@ module Rocuses
       def get_openldap_statistics( resource )
         args = {
           :hostname      => "localhost",
-          :port          => @agentconfig.openldap_port,
-          :bind_dn       => @agentconfig.openldap_bind_dn,
-          :bind_password => @agentconfig.openldap_bind_password,
+          :port          => @agentconfig.openldap.port,
+          :bind_dn       => @agentconfig.openldap.bind_dn,
+          :bind_password => @agentconfig.openldap.bind_password,
         }
 
         begin
