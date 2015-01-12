@@ -64,6 +64,8 @@ module Rocuses
                 return true
               elsif line =~ /Fedora release 1(7|8)/
                 return true
+              else line =~ %r{Scientific Linux release 6}
+                return true
               end
             }
           end
@@ -77,8 +79,6 @@ module Rocuses
               if line =~ %r{wheezy/sid}
                 return true
               elsif line =~ %r{7\.(0|1)}
-                return true
-              else line =~ %r{Scientific Linux release 6}
                 return true
               end
             }
