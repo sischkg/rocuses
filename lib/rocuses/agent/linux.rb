@@ -60,7 +60,7 @@ module Rocuses
               line = input.gets
               if line =~ /Red Hat Enterprise Linux Server release 6/
                 return true
-              elsif line =~ /CentOS release 6/
+              elsif line =~ /CentOS release (5|6)/
                 return true
               elsif line =~ /Fedora release 1(7|8)/
                 return true
