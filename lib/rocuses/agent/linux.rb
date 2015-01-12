@@ -78,6 +78,8 @@ module Rocuses
                 return true
               elsif line =~ %r{7\.(0|1)}
                 return true
+              else line =~ %r{Scientific Linux release 6}
+                return true
               end
             }
           end
