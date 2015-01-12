@@ -6,7 +6,7 @@ require 'rocuses/config/default'
 module Rocuses
   module Config
 
-    class Named
+    class Bind
       attr_reader :address
 
       attr_reader :port
@@ -70,8 +70,8 @@ module Rocuses
     #       <mta type="postfix"/>
     #       <mailq path="/usr/local/postfix/bin/mailq"/>
     #       <openldap address="127.0.0.1" port="389" bind_dn="cn=admin,cn=monitor" bind_password="pass"/>
-    #       <named address="192.168.0.100" port="10053"/>
-    #       <!- <named rndc_path="/usr/sbin/rndc" stats_path="/var/named/named.stats"/> ->
+    #       <bind address="192.168.0.100" port="10053"/>
+    #       <!- <bind rndc_path="/usr/sbin/rndc" stats_path="/var/named/named.stats"/> ->
     #     </options>
     #   </agent>
     # </rocuses>
@@ -104,7 +104,7 @@ module Rocuses
       attr_reader :openldap
 
       # Bindの設定
-      attr_reader :named
+      attr_reader :bind
 
       #
       def initialize
@@ -116,10 +116,10 @@ module Rocuses
         @user             = AGENT_USER
         @group            = AGENT_GROUP
         @managers         = Array.new
-        @named            = Named.new( :address    => NAMED_STATISTICS_CHANNEL_ADDRESS,
-                                       :port       => NAMED_STATISTICS_CHANNEL_PORT,
-                                       :rndc_path  => NAMED_RNDC_PATH,
-                                       :stats_path => NAMED_STATS_PATH )
+        @bind            = Bind.new( :address    => NAMED_STATISTICS_CHANNEL_ADDRESS,
+                                     :port       => NAMED_STATISTICS_CHANNEL_PORT,
+                                     :rndc_path  => NAMED_RNDC_PATH,
+                                     :stats_path => NAMED_STATS_PATH )
         @openldap         = OpenLDAP.new( :address       => OPENLDAP_ADDRESS,
                                           :port          => OPENLDAP_PORT,
                                           :bind_dn       => OPENLDAP_BIND_DN,
@@ -147,10 +147,10 @@ module Rocuses
                                   :bind_dn       => load_option( doc, 'openldap', 'bind_dn',       @openldap.bind_dn ),
                                   :bind_password => load_option( doc, 'openldap', 'bind_password', @openldap.bind_password ) )
 
-        @named = Named.new( :address    => load_option( doc, 'named', 'address',    @named.address ),
-                            :port       => load_option( doc, 'named', 'port',       @named.port ).to_i,
-                            :rndc_path  => load_option( doc, 'named', 'rndc_path',  @named.rndc_path ),
-                            :stats_path => load_option( doc, 'named', 'stats_path', @named.stats_path ) )
+        @bind = Bind.new( :address    => load_option( doc, 'bind', 'address',    @bind.address ),
+                          :port       => load_option( doc, 'bind', 'port',       @bind.port ).to_i,
+                          :rndc_path  => load_option( doc, 'bind', 'rndc_path',  @bind.rndc_path ),
+                          :stats_path => load_option( doc, 'bind', 'stats_path', @bind.stats_path ) )
       end
 
       private

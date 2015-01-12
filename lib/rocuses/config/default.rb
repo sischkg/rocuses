@@ -11,7 +11,7 @@ module Rocuses
       MANAGER_GROUP = "rocuses"
 
       NAMED_STATISTICS_CHANNEL_ADDRESS = "127.0.0.1"
-      NAMED_STATISTICS_CHANNEL_PORT    = 53
+      NAMED_STATISTICS_CHANNEL_PORT    = 10053
       NAMED_RNDC_PATH                  = "/usr/sbin/rndc"
       NAMED_STATS_PATH                 = "/var/named/named.stats"
 

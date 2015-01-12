@@ -74,7 +74,7 @@ module Rocuses
       end
 
       def self.bind_version( agentconfig )
-        ( [ agentconfig.named.rndc_path ] + RNDC_PATHS ).each { |rndc|
+        ( [ agentconfig.bind.rndc_path ] + RNDC_PATHS ).each { |rndc|
           if File.executable?( rndc )
             rndc_command = "#{ rndc } status 2> /dev/null"
             named_status = :down
@@ -179,7 +179,7 @@ module Rocuses
           sleep( 1 )
 
           statistics = %q{}
-          ( [ @agentconfig.named.stats_path ] + STATISTICS_FILES ).each { |statistics_file|
+          ( [ @agentconfig.bind.stats_path ] + STATISTICS_FILES ).each { |statistics_file|
             begin
               if File.readable?( statistics_file )
                 File.open( statistics_file ) { |input|

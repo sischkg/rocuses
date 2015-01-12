@@ -12,6 +12,7 @@ require 'rocuses/agentparameters'
 require 'rocuses/agent/linux'
 require 'rocuses/agent/noos'
 require 'rocuses/agent/bind'
+require 'rocuses/agent/bindstat'
 require 'rocuses/agent/nobind'
 require 'rocuses/agent/openldap'
 require 'rocuses/agent/noopenldap'
@@ -30,7 +31,7 @@ end
 module Rocuses
   class Agent
     OS_AGENTS          = [ Rocuses::Agent::Linux, Rocuses::Agent::NoOS ]
-    BIND_AGENTS        = [ Rocuses::Agent::Bind, Rocuses::Agent::NoBind ]
+    BIND_AGENTS        = [ Rocuses::Agent::BindStat, Rocuses::Agent::Bind, Rocuses::Agent::NoBind ]
     OPENLDAP_AGENTS    = [ Rocuses::Agent::OpenLDAP, Rocuses::Agent::NoOpenLDAP ]
     TEMPERATURE_AGENTS = [ Rocuses::Agent::Usbrh, Rocuses::Agent::NoTemperature ]
     LOG4R_CONFIG = '/etc/rocuses/log4r.xml'
@@ -137,11 +138,16 @@ module Rocuses
 
 
       mount( '/resource' ) { |request,response|
+        begin
         @error_logger.info( "request all from #{ request.peeraddr[2] } " )
-
+          
         resource = Resource.new
-        @agent.get_resource_status_all( resource )
-        response.body = resource.serialize
+          @agent.get_resource_status_all( resource )
+          response.body = resource.serialize
+        rescue => e
+          msg = e.to_s + e.backtrace.join( "\n" )
+          response.body = msg
+        end
       }
       
       mount('/type' ) { |request,response|
