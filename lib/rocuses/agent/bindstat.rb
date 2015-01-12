@@ -50,7 +50,6 @@ module Rocuses
         begin
           body = get_statistics_via_channel( agentconfig )
         rescue => e
-          pp e
           return false
         end
         return true
@@ -76,7 +75,6 @@ module Rocuses
             return http.get( '/' ).body
           }
         rescue => e
-          pp "cannot get http://#{ agentconfig.bind.address }:#{ agentconfig.bind.port }/ ( #{ e.to_s } )"
           raise e
         end
       end
@@ -144,21 +142,21 @@ module Rocuses
 
       def parse_views( doc )
         views = Array.new
-        doc.elements.each( "isc/bind/statistics/views" ) { |view|
-          name = view.elements["view/name"].text
+        doc.elements.each( "isc/bind/statistics/views/view" ) { |view|
+          name = view.elements["name"].text
 
           outgoing_queries = Hash.new
-          view.elements.each( "view/rdtype" ) { |rdtype|
+          view.elements.each( "rdtype" ) { |rdtype|
             outgoing_queries[ rdtype.elements["name"].text ] = rdtype.elements["counter"].text.to_i
           }
 
           resolver_statistics = Hash.new
-          view.elements.each( "view/resstat" ) { |resstat|
+          view.elements.each( "resstat" ) { |resstat|
             resolver_statistics[ resstat.elements["name"].text ] = resstat.elements["counter"].text.to_i
           }
 
           cache_db_rrsets = Hash.new
-          view.elements.each( "view/cache/rrset" ) { |rrset|
+          view.elements.each( "cache/rrset" ) { |rrset|
             cache_db_rrsets[ rrset.elements["name"].text ] = rrset.elements["counter"].text.to_i
           }
 
@@ -166,7 +164,6 @@ module Rocuses
                                                :outgoing_queries    => Resource::BindStat::OutgoingQueries.new( outgoing_queries ),
                                                :resolver_statistics => Resource::BindStat::ResolverStatistics.new( resolver_statistics ),
                                                :cache_db_rrsets     => Resource::BindStat::CacheDBRRSets.new( cache_db_rrsets ) )
-          @logger.error( "view #{ view.name }" )
           views.push( view )
         }
 
@@ -179,7 +176,6 @@ module Rocuses
           name    = node.elements["name"].text
           counter = node.elements["counter"].text.to_i
           counter_of[name] = counter
-          @logger.error( "#{ path }:#{ name }->#{ counter }" )
         }
 
         return class_obj.new( counter_of )
