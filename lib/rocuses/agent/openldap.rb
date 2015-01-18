@@ -101,7 +101,7 @@ module Rocuses
                         :port => args[:port],
                         :auth => {
                           :method   => :simple,
-                          :username => args[:bind_dn],
+                          :username => Net::LDAP::DN.escape( args[:bind_dn] ),
                           :password => args[:bind_password],
                         } ) { |ldap|
           yield( ldap )
