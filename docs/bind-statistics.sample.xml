@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/bind9.xsl"?>
+<isc version="1.0">
+  <bind>
+    <statistics version="2.2">
+      <views>
+        <view>
+          <name>_default</name>
+          <zones>
+            <zone>
+              <name>0.in-addr.arpa/IN</name>
+              <rdataclass>IN</rdataclass>
+              <serial>0</serial>
+            </zone>
+
+          </zones>
+
+          <!-- Outgoing Queries -->
+          <rdtype>
+            <name>A</name>
+            <counter>43537</counter>
+          </rdtype>
+
+          <!-- Resolver Statistics -->
+          <resstat>
+            <name>Queryv4</name>
+            <counter>116361</counter>
+          </resstat>
+
+          <cache name="_default">
+            <rrset>
+              <name>A</name>
+              <counter>450</counter>
+            </rrset>
+
+          </cache>
+        </view>
+        <view>
+          <name>_bind</name>
+          <zones>
+            <zone>
+              <name>authors.bind/CH</name>
+              <rdataclass>CH</rdataclass>
+              <serial>0</serial>
+            </zone>
+            <zone>
+              <name>hostname.bind/CH</name>
+              <rdataclass>CH</rdataclass>
+              <serial>0</serial>
+            </zone>
+            <zone>
+              <name>version.bind/CH</name>
+              <rdataclass>CH</rdataclass>
+              <serial>0</serial>
+            </zone>
+            <zone>
+              <name>id.server/CH</name>
+              <rdataclass>CH</rdataclass>
+              <serial>0</serial>
+            </zone>
+          </zones>
+          <resstat>
+            <name>Queryv4</name>
+            <counter>0</counter>
+          </resstat>
+          <cache name="_bind"/>
+        </view>
+      </views>
+      <socketmgr>
+        <sockets>
+          <socket>
+            <id>0x7f7754ca7010</id>
+            <name>statchannel</name>
+            <references>1</references>
+            <type>tcp</type>
+            <local-address>127.0.0.1#10053</local-address>
+            <states>
+              <state>listener</state>
+              <state>bound</state>
+            </states>
+          </socket>
+
+        </sockets>
+      </socketmgr>
+      <taskmgr>
+        <thread-model>
+          <type>threaded</type>
+          <worker-threads>2</worker-threads>
+          <default-quantum>5</default-quantum>
+          <tasks-running>1</tasks-running>
+        </thread-model>
+        <tasks>
+          <task>
+            <name>server</name>
+            <references>5</references>
+            <id>0x7f7754c89010</id>
+            <state>idle</state>
+            <quantum>5</quantum>
+          </task>
+
+        </tasks>
+      </taskmgr>
+      <server>
+        <boot-time>2013-06-06T03:17:42Z</boot-time>
+        <current-time>2013-06-30T14:35:53Z</current-time>
+
+        <!-- Incoming Requests -->
+        <requests>
+          <opcode>
+            <name>QUERY</name>
+            <counter>69453</counter>
+          </opcode>
+
+        </requests>
+
+        <!-- Incoming Queries -->
+        <queries-in>
+
+          <rdtype>
+            <name>A</name>
+            <counter>33355</counter>
+          </rdtype>
+
+        </queries-in>
+
+        <!-- Name Server Statistics -->
+        <nsstat>
+          <name>Requestv4</name>
+          <counter>69453</counter>
+        </nsstat>
+
+        <!-- Zone Mentenance Statistics -->
+        <zonestat>
+          <name>NotifyOutv4</name>
+          <counter>1</counter>
+        </zonestat>
+
+        <!-- Socket I/O Statistics -->
+        <sockstat>
+          <name>UDP4Open</name>
+          <counter>116363</counter>
+        </sockstat>
+
+      </server>
+      <memory>
+        <contexts>
+          <context>
+            <id>0x7f77558182d0</id>
+            <name>main</name>
+            <references>166</references>
+            <total>1598320</total>
+            <inuse>1104304</inuse>
+            <maxinuse>1445968</maxinuse>
+            <blocksize>786432</blocksize>
+            <pools>9</pools>
+            <hiwater>0</hiwater>
+            <lowater>0</lowater>
+          </context>
+        </contexts>
+        <summary>
+          <TotalUse>177761384</TotalUse>
+          <InUse>2389220</InUse>
+          <BlockSize>18350080</BlockSize>
+          <ContextSize>4440256</ContextSize>
+          <Lost>0</Lost>
+        </summary>
+      </memory>
+    </statistics>
+  </bind>
+</isc>

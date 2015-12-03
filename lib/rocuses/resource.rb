@@ -11,6 +11,7 @@ require 'rocuses/resource/diskio'
 require 'rocuses/resource/linuxdiskio'
 
 require 'rocuses/resource/bind'
+require 'rocuses/resource/bindstat'
 require 'rocuses/resource/bindcache'
 require 'rocuses/resource/openldap'
 require 'rocuses/resource/temperature'
@@ -54,6 +55,9 @@ module Rocuses
 
     # Bindキャッシュの統計情報
     attr_accessor :bindcaches
+
+    # bind statistics channel
+    attr_accessor :bindstat
 
     # OpenLDAP統計情報
     attr_accessor :openldap

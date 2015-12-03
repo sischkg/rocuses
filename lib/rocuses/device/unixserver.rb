@@ -51,6 +51,11 @@ module Rocuses
           @bind_outgoing_queries.update( manager_config, resource )
         end
 
+        if resource.bindstat
+          @bindstat = DataSource::BindStat.new( @target.name )
+          @bindstat.update( manager_config, resource )
+        end
+
         @bindcaches = Array.new
         resource.bindcaches.each { |cache|
           cache_ds = DataSource::BindCache.new( @target.name, cache.view )
@@ -144,6 +149,16 @@ module Rocuses
         @bindcaches.each { |cache|
           graph_templates << GraphTemplate::BindCache.new( cache )
         }
+
+        if @bindstat
+          graph_templates << GraphTemplate::BindStat::IncomingQueries.new( @bindstat ) 
+          graph_templates << GraphTemplate::BindStat::IncomingRequests.new( @bindstat ) 
+          graph_templates << GraphTemplate::BindStat::OutgoingQueries.new( @bindstat ) 
+          graph_templates << GraphTemplate::BindStat::CacheDBRRSets.new( @bindstat )
+          graph_templates << GraphTemplate::BindStat::QueryRTT.new( @bindstat )
+          graph_templates << GraphTemplate::BindStat::QueriesResponses.new( @bindstat )
+          graph_templates << GraphTemplate::BindStat::ReceivedErrors.new( @bindstat )
+       end
 
         if @openldap
           graph_templates << GraphTemplate::OpenLDAPConnection.new( @openldap )

@@ -60,9 +60,11 @@ module Rocuses
               line = input.gets
               if line =~ /Red Hat Enterprise Linux Server release 6/
                 return true
-              elsif line =~ /CentOS release 6/
+              elsif line =~ /CentOS release (5|6)/
                 return true
               elsif line =~ /Fedora release 1(7|8)/
+                return true
+              else line =~ %r{Scientific Linux release 6}
                 return true
               end
             }
@@ -460,9 +462,12 @@ module Rocuses
         [ device, device.gsub( %r{\d+}, %q{} ) ].each { |name|
           [ "physical_block_size", "hw_sector_size" ].each { |filename|
             begin
-              File.open( "/sys/block/#{ name }/queue/#{filename}" ) { |input|
-                return input.gets.chomp!.to_i
-              }
+              path = "/sys/block/#{ name }/queue/#{filename}"
+              if File.readable?( path )
+                File.open( path ) { |input|
+                  return input.gets.chomp!.to_i
+                }
+              end
             rescue => e
               @logger.debug( "cannot read secter size from #{ filename }( #{ e.to_s } )" )
             end

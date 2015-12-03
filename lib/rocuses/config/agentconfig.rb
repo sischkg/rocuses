@@ -6,6 +6,40 @@ require 'rocuses/config/default'
 module Rocuses
   module Config
 
+    class Bind
+      attr_reader :address
+
+      attr_reader :port
+
+      attr_reader :rndc_path
+
+      attr_reader :stats_path
+
+      def initialize( args )
+        @address    = args[:address]
+        @port       = args[:port]
+        @rndc_path  = args[:rndc_path]
+        @stats_path = args[:stats_path]
+      end
+    end
+
+    class OpenLDAP
+      attr_reader :address
+
+      attr_reader :port
+
+      attr_reader :bind_dn
+
+      attr_reader :bind_password
+
+      def initialize( args )
+        @address       = args[:address]
+        @port          = args[:port]
+        @bind_dn       = args[:bind_dn]
+        @bind_password = args[:bind_password]
+      end
+    end
+
     # Agent 設定管理
     # リソース取得エージェントの設定を管理する
     #
@@ -18,10 +52,11 @@ module Rocuses
     #  group        = config.group
     #  managers     = config.managers
     #
-    #  rndc        = config.rndc_path        # "/usr/local/bind/sbin/rndc"
     #  mailq       = config.mailq_path       # "/usr/local/postfix/bin/mailq"
     #  mta_tyoe    = config.mta_type         # "postfix"
-    #  named_stats = config.named_stats_path # "/var/named/named.stats"
+    #
+    #  named_config = config.named
+    #  openldap_config = config.openldap
     #
     # 設定XMLサンプル
     # <rocuses>
@@ -32,16 +67,18 @@ module Rocuses
     #     <user name="rocus"/>
     #     <group name="rocus"/>
     #     <options>
-    #       <rndc path="/usr/local/bind/sbin/rndc"/>
-    #       <named_stats path="/var/named/named.stats"/>
     #       <mta type="postfix"/>
     #       <mailq path="/usr/local/postfix/bin/mailq"/>
-    #       <openldap port="389" bind_dn="cn=admin,cn=monitor" bind_password="pass"/>
+    #       <openldap address="127.0.0.1" port="389" bind_dn="cn=admin,cn=monitor" bind_password="pass"/>
+    #       <bind address="192.168.0.100" port="10053"/>
+    #       <!- <bind rndc_path="/usr/sbin/rndc" stats_path="/var/named/named.stats"/> ->
     #     </options>
     #   </agent>
     # </rocuses>
     #
     class AgentConfig
+      include Rocuses::Config::Default
+
       # ManagerのhostnameのArray
       attr_reader :managers
 
@@ -57,42 +94,36 @@ module Rocuses
       # group of agent egid
       attr_reader :group
 
-      # BINDのrndcのパス
-      attr_reader :rndc_path
-
-      # bindのstatistics-fileのパス
-      attr_reader :named_stats_path
-
       # mta の種類 :postfix or :sendmail
       attr_reader :mta_type
 
       # mailqのパス
       attr_reader :mailq_path
 
-      # OpenLDAPのポート
-      attr_reader :openldap_port
+      # OpenLDAPの設定
+      attr_reader :openldap
 
-      # OpenLDAPのmonitorデータベースの値を取得するためのBind DN
-      attr_reader :openldap_bind_dn
-
-      # OpenLDAPのmonitorデータベースの値を取得するためのBindパスワード
-      attr_reader :openldap_bind_password
+      # Bindの設定
+      attr_reader :bind
 
       #
       def initialize
         # default values.
-        @rndc_path        = '/usr/sbin/rndc'
-        @named_stats_path = '/var/named/named.stats'
         @mta_type         = 'sendmail'
         @mailq_path       = '/usr/bin/mailq'
-        @openldap_port    = 389
-        @openldap_bind_dn = 'cn=admin,cn=monitor'
-        @openldap_bind_password = 'password'
-        @bind_address     = Rocuses::Config::Default::BIND_ADDRESS
-        @bind_port        = Rocuses::Config::Default::BIND_PORT
-        @user             = Rocuses::Config::Default::AGENT_USER
-        @group            = Rocuses::Config::Default::AGENT_GROUP
+        @bind_address     = BIND_ADDRESS
+        @bind_port        = BIND_PORT
+        @user             = AGENT_USER
+        @group            = AGENT_GROUP
         @managers         = Array.new
+        @bind            = Bind.new( :address    => NAMED_STATISTICS_CHANNEL_ADDRESS,
+                                     :port       => NAMED_STATISTICS_CHANNEL_PORT,
+                                     :rndc_path  => NAMED_RNDC_PATH,
+                                     :stats_path => NAMED_STATS_PATH )
+        @openldap         = OpenLDAP.new( :address       => OPENLDAP_ADDRESS,
+                                          :port          => OPENLDAP_PORT,
+                                          :bind_dn       => OPENLDAP_BIND_DN,
+                                          :bind_password => OPENLDAP_BIND_PASSWORD )
       end
 
 
@@ -110,9 +141,16 @@ module Rocuses
         @named_stats = load_option( doc, 'named_stats', 'path', @named_stats )
         @mta_type    = load_option( doc, 'mta',         'type', @mta_type )
         @mailq_path  = load_option( doc, 'mailq',       'path', @mailq_path )
-        @openldap_port          = load_option( doc, 'openldap', 'port',          @openldap_port ).to_i
-        @openldap_bind_dn       = load_option( doc, 'openldap', 'bind_dn',       @openldap_bind_dn )
-        @openldap_bind_password = load_option( doc, 'openldap', 'bind_password', @openldap_bind_password )
+
+        @openldap = OpenLDAP.new( :address       => load_option( doc, 'openldap', 'address',       @openldap.address ),
+                                  :port          => load_option( doc, 'openldap', 'port',          @openldap.port ).to_i,
+                                  :bind_dn       => load_option( doc, 'openldap', 'bind_dn',       @openldap.bind_dn ),
+                                  :bind_password => load_option( doc, 'openldap', 'bind_password', @openldap.bind_password ) )
+
+        @bind = Bind.new( :address    => load_option( doc, 'bind', 'address',    @bind.address ),
+                          :port       => load_option( doc, 'bind', 'port',       @bind.port ).to_i,
+                          :rndc_path  => load_option( doc, 'bind', 'rndc_path',  @bind.rndc_path ),
+                          :stats_path => load_option( doc, 'bind', 'stats_path', @bind.stats_path ) )
       end
 
       private
