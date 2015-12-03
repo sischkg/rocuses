@@ -21,7 +21,7 @@ module Rocuses
       end
 
       # dummy
-      def get_cpu_status( resource )
+      def get_cpus( resource )
       end
  
       # dummy

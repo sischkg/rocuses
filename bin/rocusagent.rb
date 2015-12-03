@@ -1,4 +1,4 @@
-#! /usr/bin/ruby1.8
+#! /usr/bin/ruby2.1
 # -*- coding: utf-8 -*-
 
 require 'pp'

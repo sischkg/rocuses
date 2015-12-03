@@ -76,7 +76,7 @@ module Rocuses
               line = input.gets
               if line =~ %r{wheezy/sid}
                 return true
-              elsif line =~ %r{7\.(0|1)}
+              elsif line =~ %r{(7|8)\.\d+}
                 return true
               end
             }
