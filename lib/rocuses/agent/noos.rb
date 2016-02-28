@@ -37,6 +37,10 @@ module Rocuses
       end
 
       # dummy
+      def get_page_io_status( resource )
+      end
+
+      # dummy
       def get_network_interface_status( resource )
       end
 

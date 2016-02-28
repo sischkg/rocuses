@@ -16,7 +16,7 @@ module Rocuses
         include Rocuses::Utils
         include Rocuses::GraphTemplate::BindStat::BindColors
 
-        GPRINT_FORMAT = '%5.0lf'
+        GPRINT_FORMAT = '%5.2lf'
 
         def initialize( bindstat )
           @bindstat = bindstat
@@ -47,7 +47,7 @@ module Rocuses
                                       :rigid          => false )
 
           @bindstat.outgoing_queries.sort { |a,b|
-            line_style_of( a[0] )[:priority] <=> line_style_of( b[0] )[:priority]
+            line_style_of_rr_type( a[0] )[:priority] <=> line_style_of_rr_type( b[0] )[:priority]
           }.each { |c|
             type  = c[0]
             count = c[1]
@@ -57,8 +57,8 @@ module Rocuses
                                 :value  => count,
                                 :factor => 1,
                                 :width  => 1,
-                                :color  => line_style_of( type )[:color],
-                                :dashes => line_style_of( type )[:daches],
+                                :color  => line_style_of_rr_type( type )[:color],
+                                :dashes => line_style_of_rr_type( type )[:daches],
                                 :format => GPRINT_FORMAT,
                               } )
           }

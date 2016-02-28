@@ -23,7 +23,7 @@ module Rocuses
           @graph_template_of.values.each { |graph_template|
             nodes += graph_template.nodenames
           }
-          return nodes.sort!.uniq!
+          return nodes.sort.uniq
         end
 
         def find_graph_template_by_nodename( nodename )

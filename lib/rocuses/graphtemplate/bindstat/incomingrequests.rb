@@ -16,7 +16,7 @@ module Rocuses
         include Rocuses::Utils
         include Rocuses::GraphTemplate::BindStat::BindColors
 
-        GPRINT_FORMAT = '%5.0lf'
+        GPRINT_FORMAT = '%5.2lf'
 
         def initialize( bindstat )
           @bindstat = bindstat
@@ -47,18 +47,18 @@ module Rocuses
                                       :rigid          => false )
 
           @bindstat.incoming_requests.sort { |a,b|
-            line_style_of( a[0] )[:priority] <=> line_style_of( b[0] )[:priority]
+            line_style_of_request_opcode( a[0] )[:priority] <=> line_style_of_request_opcode( b[0] )[:priority]
           }.each { |c|
             type  = c[0]
             count = c[1]
             Utils::draw_line( graph,
                               {
-                                :label  => sprintf( '%10s', type ),
+                                :label  => sprintf( '%10s', description_of_request_opcode( type ) ),
                                 :value  => count,
                                 :factor => 1,
                                 :width  => 1,
-                                :color  => line_style_of( type )[:color],
-                                :dashes => line_style_of( type )[:daches],
+                                :color  => line_style_of_request_opcode( type )[:color],
+                                :dashes => line_style_of_request_opcode( type )[:daches],
                                 :format => GPRINT_FORMAT,
                               } )
           }

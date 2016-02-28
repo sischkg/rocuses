@@ -45,25 +45,23 @@ module Rocuses
                                       :lower_limit    => 0,
                                       :vertical_label => 'count/sec',
                                       :rigid          => false )
-          count_of = {
-            'Queries via IPv4'   => @bindstat.resolver_statistics['Queryv4'],
-            'Queries via IPv6'   => @bindstat.resolver_statistics['Queryv6'],
-            'Responses via IPv4' => @bindstat.resolver_statistics['Responsev4'],
-            'Responses via IPv6' => @bindstat.resolver_statistics['Responsev6'],
-          }
-          count_of.sort { |a,b|
-            line_style_of( a[0] )[:priority] <=> line_style_of( b[0] )[:priority]
-          }.each { |c|
-            type  = c[0]
-            count = c[1]
+          symbols = [
+                     'Queryv4',
+                     'Queryv6',
+                     'Responsev4',
+                     'Responsev6',
+                    ]
+          symbols.sort { |a,b|
+            line_style_of_query_response_by_resolver( a )[:priority] <=> line_style_of_query_response_by_resolver( b )[:priority]
+          }.each { |symbol|
             Utils::draw_line( graph,
                               {
-                                :label  => sprintf( '%18s', type ),
-                                :value  => count,
+                                :label  => sprintf( '%18s', description_of_query_response_by_resolver( symbol ) ),
+                                :value  => @bindstat.resolver_statistics[symbol],
                                 :factor => 1,
                                 :width  => 1,
-                                :color  => line_style_of( type )[:color],
-                                :dashes => line_style_of( type )[:daches],
+                                :color  => line_style_of_query_response_by_resolver( symbol )[:color],
+                                :dashes => line_style_of_query_response_by_resolver( symbol )[:daches],
                                 :format => GPRINT_FORMAT,
                               } )
           }

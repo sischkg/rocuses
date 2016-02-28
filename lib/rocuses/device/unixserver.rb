@@ -158,6 +158,7 @@ module Rocuses
           graph_templates << GraphTemplate::BindStat::QueryRTT.new( @bindstat )
           graph_templates << GraphTemplate::BindStat::QueriesResponses.new( @bindstat )
           graph_templates << GraphTemplate::BindStat::ReceivedErrors.new( @bindstat )
+          graph_templates << GraphTemplate::BindStat::ResolverErrors.new( @bindstat )
        end
 
         if @openldap

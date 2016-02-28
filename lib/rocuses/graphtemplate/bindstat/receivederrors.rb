@@ -16,7 +16,7 @@ module Rocuses
         include Rocuses::Utils
         include Rocuses::GraphTemplate::BindStat::BindColors
 
-        GPRINT_FORMAT = '%5.0lf'
+        GPRINT_FORMAT = '%5.2lf'
 
         def initialize( bindstat )
           @bindstat = bindstat
@@ -45,6 +45,7 @@ module Rocuses
                                       :lower_limit    => 0,
                                       :vertical_label => 'count/sec',
                                       :rigid          => false )
+
           count_of = {
             'NXDOMAIN'   => @bindstat.resolver_statistics['NXDOMAIN'],
             'SERVFAIL'   => @bindstat.resolver_statistics['SERVFAIL'],
@@ -53,21 +54,20 @@ module Rocuses
             'EDNS0Fail'  => @bindstat.resolver_statistics['EDNS0Fail'],
             'Mismatch'   => @bindstat.resolver_statistics['Mismatch'],
             'Truncated'  => @bindstat.resolver_statistics['Truncated'],
-            'Lame'       => @bindstat.resolver_statistics['Lame'],
           }
           count_of.sort { |a,b|
-            line_style_of( a[0] )[:priority] <=> line_style_of( b[0] )[:priority]
+            line_style_of_received_error_by_resolver( a[0] )[:priority] <=> line_style_of_received_error_by_resolver( b[0] )[:priority]
           }.each { |c|
             type  = c[0]
             count = c[1]
             Utils::draw_line( graph,
                               {
-                                :label  => sprintf( '%10s', type ),
+                                :label  => sprintf( '%10s', description_of_received_error_by_resolver( type ) ),
                                 :value  => count,
                                 :factor => 1,
                                 :width  => 1,
-                                :color  => line_style_of( type )[:color],
-                                :dashes => line_style_of( type )[:daches],
+                                :color  => line_style_of_received_error_by_resolver( type )[:color],
+                                :dashes => line_style_of_received_error_by_resolver( type )[:daches],
                                 :format => GPRINT_FORMAT,
                               } )
           }
