@@ -80,7 +80,7 @@ module Rocuses
                 return true
               elsif line =~ %r{jessie/sid}
                 return true
-              elsif line =~ %r{7\.(0|1)}
+              elsif line =~ %r{(7|8)\.\d+}
                 return true
               end
             }

@@ -42,15 +42,6 @@ module Rocuses
           @swap.update( manager_config, resource )
         end
 
-        if resource.bind
-          @bind = DataSource::Bind.new( @target.name )
-          @bind.update( manager_config, resource )
-          @bind_incoming_queries = DataSource::BindQuery.new( @target.name, :in )
-          @bind_incoming_queries.update( manager_config, resource )
-          @bind_outgoing_queries = DataSource::BindQuery.new( @target.name, :out )
-          @bind_outgoing_queries.update( manager_config, resource )
-        end
-
         if resource.bindstat
           @bindstat = DataSource::BindStat.new( @target.name )
           @bindstat.update( manager_config, resource )
@@ -139,16 +130,6 @@ module Rocuses
         if @page_io
           graph_templates << GraphTemplate::PageIO.new( @page_io )
         end
-
-        if @bind
-          graph_templates << GraphTemplate::Bind.new( @bind )
-          graph_templates << GraphTemplate::BindQuery.new( @bind_incoming_queries, :in )
-          graph_templates << GraphTemplate::BindQuery.new( @bind_outgoing_queries, :out )
-          graph_templates << GraphTemplate::BindSocketIO.new( @bind )
-        end
-        @bindcaches.each { |cache|
-          graph_templates << GraphTemplate::BindCache.new( cache )
-        }
 
         if @bindstat
           graph_templates << GraphTemplate::BindStat::IncomingQueries.new( @bindstat ) 

@@ -11,7 +11,6 @@ require 'rocuses/utils'
 require 'rocuses/agentparameters'
 require 'rocuses/agent/linux'
 require 'rocuses/agent/noos'
-require 'rocuses/agent/bind'
 require 'rocuses/agent/bindstat'
 require 'rocuses/agent/nobind'
 require 'rocuses/agent/openldap'
@@ -31,7 +30,7 @@ end
 module Rocuses
   class Agent
     OS_AGENTS          = [ Rocuses::Agent::Linux, Rocuses::Agent::NoOS ]
-    BIND_AGENTS        = [ Rocuses::Agent::BindStat, Rocuses::Agent::Bind, Rocuses::Agent::NoBind ]
+    BIND_AGENTS        = [ Rocuses::Agent::BindStat, Rocuses::Agent::NoBind ]
     OPENLDAP_AGENTS    = [ Rocuses::Agent::OpenLDAP, Rocuses::Agent::NoOpenLDAP ]
     TEMPERATURE_AGENTS = [ Rocuses::Agent::Usbrh, Rocuses::Agent::NoTemperature ]
     LOG4R_CONFIG = '/etc/rocuses/log4r.xml'

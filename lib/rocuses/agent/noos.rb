@@ -23,10 +23,6 @@ module Rocuses
       # dummy
       def get_cpus( resource )
       end
-
-      # dummy
-      def get_cpu_status( resource )
-      end
  
       # dummy
       def get_cpu_average( resource )
