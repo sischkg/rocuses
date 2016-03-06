@@ -3,7 +3,7 @@
 %global ruby_minor_version 8
 %global ruby_patch_level 0
 %global ruby_version %{ruby_major_version}.%{ruby_minor_version}.%{ruby_patch_level}
-%global gemdir %{prefix}/lib/ruby/gems/%{ruby_major_version}.%{ruby_minor_version}.%{ruby_patch_level}
+%global gemdir %{prefix}/lib/ruby/gems/%{ruby_major_version}.%{ruby_minor_version}
 %global gem %{prefix}/bin/gem
 %global major_version 0
 %global minor_version 0
@@ -103,12 +103,12 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 
-/usr/lib/ruby/gems/1.8.0/gems/log4r-%{log4r_version}/
-/usr/lib/ruby/gems/1.8.0/gems/rocuses-%{version}/
-/usr/lib/ruby/gems/1.8.0/specifications/log4r-%{log4r_version}.gemspec
-/usr/lib/ruby/gems/1.8.0/specifications/rocuses-%{version}.gemspec
-/usr/lib/ruby/gems/1.8.0/cache/log4r-%{log4r_version}.gem
-/usr/lib/ruby/gems/1.8.0/cache/rocuses-%{version}.gem
+/usr/lib/ruby/gems/1.8/gems/log4r-%{log4r_version}/
+/usr/lib/ruby/gems/1.8/gems/rocuses-%{version}/
+/usr/lib/ruby/gems/1.8/specifications/log4r-%{log4r_version}.gemspec
+/usr/lib/ruby/gems/1.8/specifications/rocuses-%{version}.gemspec
+/usr/lib/ruby/gems/1.8/cache/log4r-%{log4r_version}.gem
+/usr/lib/ruby/gems/1.8/cache/rocuses-%{version}.gem
 /etc/rocuses/
 
 %attr(0755,root,root) /usr/bin/rocusagent.rb
@@ -121,8 +121,8 @@ rm -rf %{buildroot}
 
 %doc
 %defattr(-,root,root,-)
-/usr/lib/ruby/gems/1.8.0/doc/log4r-%{log4r_version}/
-/usr/lib/ruby/gems/1.8.0/doc/rocuses-%{version}/
+/usr/lib/ruby/gems/1.8/doc/log4r-%{log4r_version}/
+/usr/lib/ruby/gems/1.8/doc/rocuses-%{version}/
 
 %changelog
 

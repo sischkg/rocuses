@@ -31,10 +31,13 @@ module Rocuses
       @devices = Array.new
       @graph_template_manager = GraphTemplate::Manager.new
 
+      formatter = Log4r::PatternFormatter.new( :pattern     => "%d %C %l: %M",
+                                               :date_format => "%Y/%m/%d %H:%M:%S" )
       @logger.outputters  = DateFileOutputter.new( 'error_log',
                                                    {
                                                      :dirname      => LOG_DIRECTORY,
                                                      :date_pattern => 'error_log.%Y-%m-%d',
+                                                     :formatter    => formatter,
                                                    } )
       @manager_config = load_manager_config()
       @targets_config = load_targets_config()
@@ -53,22 +56,32 @@ module Rocuses
         if target.disable
           next
         end
+
+        @logger.info( sprintf( "fetching from %s(%s)", target.name, target.hostname ) )
         begin
           unix_server = Device::UnixServer.new( target )
 
           data = Fetch.new.fetch( target )
           resource = Resource.deserialize( data )
-          unix_server.update( @manager_config, resource )
+          errors = unix_server.update( @manager_config, resource )
+          errors.each { |e|
+              @logger.error( sprintf( "update error %s:%s: %s", target.name, target.hostname, e.to_s ) )
+          }
 
           @devices << unix_server
 
           unix_server.make_graph_templates.each { |graph_template|
-            @graph_template_manager.add_graph_template( graph_template )
+            begin
+              @graph_template_manager.add_graph_template( graph_template )
+            rescue => e
+              @logger.error( sprintf( "make graph_template error %s:%s: %s", target.name, target.hostname, e.to_s ) )
+              @logger.error( sprintf( "backtrace from %s:%s: %s", target.name, target.hostname, e.backtrace ) )
+            end
           }
 
         rescue => e
-          @logger.error( e.to_s )
-          @logger.error( e.backtrace )
+          @logger.error( sprintf( "fetching error from %s(%s): %s", target.name, target.hostname, e.to_s ) )
+          @logger.error( sprintf( "backtrace from %s(%s): %s", target.name, target.hostname, e.backtrace ) )
         end
       }
 
@@ -85,33 +98,50 @@ module Rocuses
           graph = graph_template.make_graph
 
           ManagerParameters::GRAPH_TIME_PERIOD_OF.each { |period_suffix,period|
-            end_time   = Time.now
-            begin_time = end_time - period
+            begin
+              end_time   = Time.now
+              begin_time = end_time - period
 
-            image = graph.make_image( :begin_time => begin_time,
-                                      :end_time   => end_time,
-                                      :width      => @manager_config.image_width,
-                                      :height     => @manager_config.image_height )
+              image = graph.make_image( :begin_time => begin_time,
+                                        :end_time   => end_time,
+                                        :width      => @manager_config.image_width,
+                                        :height     => @manager_config.image_height )
 
-            graph_info = Graph.new( :image      => image,
-                                    :name       => sprintf( "%s %s %s",
-                                                            graph_template.nodenames.join( %q{,} ),
-                                                            graph_template.name,
-                                                            period_suffix ),
-                                    :filename   => sprintf( "%s/%s_%s_%s.png",
-                                                            @manager_config.graph_directory,
-                                                            graph_template.nodenames.join( %q{_} ),
-                                                            graph_template.filename,
-                                                            period_suffix ),
-                                    :begin_time => begin_time,
-                                    :end_time   => end_time )
-            graphs << graph_info
+              graph_info = Graph.new( :image      => image,
+                                      :name       => sprintf( "%s %s %s",
+                                                              graph_template.nodenames.join( %q{,} ),
+                                                              graph_template.name,
+                                                              period_suffix ),
+                                      :filename   => sprintf( "%s/%s_%s_%s.png",
+                                                              @manager_config.graph_directory,
+                                                              graph_template.nodenames.join( %q{_} ),
+                                                              graph_template.filename,
+                                                              period_suffix ),
+                                      :begin_time => begin_time,
+                                      :end_time   => end_time )
+              graphs << graph_info
+            rescue => e
+              @logger.error( sprintf( "saving graph_info error from %s:%s: %s",
+                                      graph_info.nodenames.join( "," ),
+                                      graph_template.name,
+                                      e.to_s ) )
+              @logger.error( sprintf( "backtrace from %s:%s(%s): %s",
+                                      graph_template.nodenames.join( "," ),
+                                      graph_template.name,
+                                      e.backtrace ) )
+            end
           }
 
           save_graph_templates()
         rescue => e
-          @logger.error( e.to_s )
-          @logger.error( e.backtrace )
+          @logger.error( sprintf( "saving graph_template error from %s:%s: %s",
+                                  graph_template.nodenames.join( "," ),
+                                  graph_template.name,
+                                  e.to_s ) )
+          @logger.error( sprintf( "backtrace from %s:%s: %s",
+                                  graph_template.nodenames.join( "," ),
+                                  graph_template.name,
+                                  e.backtrace ) )
         end
       }
 

@@ -25,7 +25,7 @@ RETVAL=0
 # Set up some common variables before we launch into what might be
 # considered boilerplate by now.
 prog=rocusagent
-path=/usr/bin/rocusagent
+path=/usr/bin/rocusagent.rb
 lockfile=/var/lock/subsys/$prog
 pidfile=/var/run/rocusagent.pid
 
